@@ -18,7 +18,12 @@ function run_test() {
     ./obj_dir/V${MODULE}
 }
 
-MODULES="alu memory register_file ram_memory rom_memory decoder memory_control compare_unit cpu"
+if [ -z "$@" ]; then
+    MODULES="alu memory register_file ram_memory rom_memory decoder memory_control compare_unit cpu"
+else
+    MODULES="$@"
+fi
+
 for MODULE in $MODULES
 do
     verilate_module $MODULE
