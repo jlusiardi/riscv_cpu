@@ -26,13 +26,13 @@ fi
 
 for MODULE in $MODULES
 do
-    echo -e "\e[1m ---> verilate $MODULE <---\e[0m"
+    echo -e "\e[92m ---> verilate $MODULE <---\e[0m"
     verilate_module $MODULE
     if [ $? != 0 ]; then
         echo -e "\e[31mFailed to verilate $MODULE!\e[39m"
         exit 1
     fi
-    echo -e "\e[1m ---> compile $MODULE <---\e[0m"
+    echo -e "\e[92m ---> compile $MODULE <---\e[0m"
     make_module $MODULE
     if [ $? != 0 ]; then
         echo -e "\e[31mFailed to compile $MODULE!\e[39m"
@@ -42,6 +42,10 @@ done
 
 for MODULE in $MODULES
 do
-    echo -e "\e[1m ---> run $MODULE <---\e[0m"
+    echo -e "\e[92m ---> run $MODULE <---\e[0m"
     run_test $MODULE
+    if [ $? != 0 ]; then
+        echo -e "\e[31mFailed to test $MODULE!\e[39m"
+        exit 1
+    fi
 done
