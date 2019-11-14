@@ -36,8 +36,7 @@ module cpu(
     wire [6:0] w_func7;
     wire [31:0] w_immediate;
     /* verilator lint_off UNUSED */
-    // TODO what should happen if illegal
-    wire w_immediate_valid;
+    wire w_instr_valid;
     /* verilator lint_on UNUSED */
     wire [4:0] w_reg_src_0_addr;
     wire [4:0] w_reg_src_1_addr;
@@ -49,7 +48,7 @@ module cpu(
         .func3(w_func3),
         .func7(w_func7),
         .imm(w_immediate),
-        .imm_valid(w_immediate_valid),
+        .instr_valid(w_instr_valid),
         .reg_source_0(w_reg_src_0_addr),
         .reg_source_1(w_reg_src_1_addr),
         .reg_dest(w_reg_dest_addr)

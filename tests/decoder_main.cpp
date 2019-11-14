@@ -22,7 +22,7 @@ public:
     assert(top->reg_source_0 == Register::E::x1);
     assert(top->reg_source_1 == Register::E::x21);
     assert(top->imm == 0x00000000);
-    assert(top->imm_valid == 0b0);
+    assert(top->instr_valid == 0b1);
   }
 };
 
@@ -36,7 +36,7 @@ public:
     assert(top->opcode == 0b0110111);
     assert(top->reg_dest == Register::E::x17);
     assert(top->imm == 0x00001000);
-    assert(top->imm_valid == 0b1);
+    assert(top->instr_valid == 0b1);
   }
 };
 
@@ -51,7 +51,7 @@ public:
     assert(top->imm == 0x00000001);
     assert(top->reg_source_0 == 1);
     assert(top->reg_source_1 == 0);
-    assert(top->imm_valid == 0b1);
+    assert(top->instr_valid == 0b1);
   }
 };
 
@@ -67,7 +67,7 @@ public:
     assert(top->reg_source_0 == rs1);
     assert(top->reg_source_1 == rs2);
     assert(top->imm == offset);
-    assert(top->imm_valid == 0b1);
+    assert(top->instr_valid == 0b1);
   }
 
   virtual void test() {
@@ -97,7 +97,7 @@ public:
     assert(top->reg_dest == Register::E::x14);
     assert(top->imm == 1);
     assert(top->func3 == 0);
-    assert(top->imm_valid == 0b1);
+    assert(top->instr_valid == 0b1);
 
     top->instruction = create_ADDI(2, Register::E::x21, Register::E::x15);
 
@@ -108,7 +108,7 @@ public:
     assert(top->reg_dest == Register::E::x15);
     assert(top->imm == 2);
     assert(top->func3 == 0);
-    assert(top->imm_valid == 0b1);
+    assert(top->instr_valid == 0b1);
   }
 };
 
@@ -122,7 +122,7 @@ public:
     assert(top->opcode == 0b1101111);
     assert(top->reg_dest == 31);
     assert(top->imm == 4);
-    assert(top->imm_valid == 0b1);
+    assert(top->instr_valid == 0b1);
 
     top->instruction = create_JAL(-4, 31);
 
@@ -131,7 +131,18 @@ public:
     assert(top->opcode == 0b1101111);
     assert(top->reg_dest == 31);
     assert(top->imm == -4);
-    assert(top->imm_valid == 0b1);
+    assert(top->instr_valid == 0b1);
+  }
+};
+
+class TestDecodeRiscvIllegalOps : public GeneralTest<Vdecoder> {
+public:
+  virtual void test() {
+    top->instruction = 0x00000000;
+
+    step();
+
+    assert(top->instr_valid == 0b0);
   }
 };
 
@@ -143,5 +154,6 @@ int main(int argc, char **argv) {
   (new TestDecodeRiscvUtype())->run("vcds/decode_utype.vcd");
   (new TestDecodeRiscvJtype())->run("vcds/decode_jtype.vcd");
   (new TestDecodeRiscvRtype())->run("vcds/decode_rtype.vcd");
+  (new TestDecodeRiscvIllegalOps())->run("vcds/decode_illegalops.vcd");
   cout << "$$$$ Decoder passes tests" << endl;
 }

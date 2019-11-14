@@ -12,11 +12,13 @@
 `define RISCV_AUIPC         7'b0010111
 `define RISCV_JAL           7'b1101111
 `define RISCV_JALR          7'b1100111
-`define RISCV_ALU_OP_REGS   7'b0110011  // ALU ops directly operating on 3 registers
-`define RISCV_ALU_OP_IMM    7'b0010011  // ALU ops directly operating on 2 registers & immediate
-`define RISCV_LOAD          7'b0000011  // like INSTR_LOAD
-`define RISCV_STORE         7'b0100011  // like INSTR_STORE
-`define RISCV_BRANCH        7'b1100011  // like INSTR_JUMP
+`define RISCV_ALU_OP_REGS   7'b0110011
+`define RISCV_ALU_OP_IMM    7'b0010011
+`define RISCV_LOAD          7'b0000011
+`define RISCV_STORE         7'b0100011
+`define RISCV_BRANCH        7'b1100011
+`define RISCV_FENCE         7'b0001111
+`define RISCV_SYSTEM        7'b1110011
 
 `define RISCV_BEQ           3'b000
 `define RISCV_BNE           3'b001
@@ -42,6 +44,13 @@
 `define LOAD_UNSIGNED_HALFWORD 3'b101
 `define LOAD_WORD              3'b010
 `define STORE_WORD             3'b010
+
+`define BRANCH_EQ   3'b000
+`define BRANCH_NE   3'b001
+`define BRANCH_LT   3'b100
+`define BRANCH_GE   3'b101
+`define BRANCH_LTU  3'b110
+`define BRANCH_GEU  3'b111
 
 `define RISCV_STD_OP        7'b0000000
 `define RISCV_ALT_OP        7'b0100000
