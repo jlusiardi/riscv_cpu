@@ -31,13 +31,13 @@ module register_file_control(
 
     always @(*) begin
         if (use_alu_result) begin
-            assign output_value = alu_result;
+            output_value = alu_result;
         end else if (use_mem_result) begin
-            assign output_value = memory_result;
+            output_value = memory_result;
         end else if (use_immediate) begin
-            assign output_value = immediate;
+            output_value = immediate;
         end else if (use_pc) begin
-            assign output_value = pc + 4;
+            output_value = pc + 4;
         end
     end
 

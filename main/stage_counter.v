@@ -18,7 +18,7 @@ module stage_counter(
             if (data == (`NUM_STAGES - 1)) begin
                 data <= 0;
             end else begin
-                data <= data + 1;
+                data <= data + 1'b1;
             end
          //$display("                   Stage = 0x%h", data);
         end
