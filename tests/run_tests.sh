@@ -10,7 +10,7 @@ function verilate_module() {
 function make_module() {
     local MODULE=$1
     echo "make ${MODULE}"
-    make -C obj_dir -j -f V${MODULE}.mk V${MODULE}
+    make -j 4 -C obj_dir -j -f V${MODULE}.mk V${MODULE}
 }
 
 function run_test() {
@@ -26,11 +26,22 @@ fi
 
 for MODULE in $MODULES
 do
+    echo -e "\e[1m ---> verilate $MODULE <---\e[0m"
     verilate_module $MODULE
+    if [ $? != 0 ]; then
+        echo -e "\e[31mFailed to verilate $MODULE!\e[39m"
+        exit 1
+    fi
+    echo -e "\e[1m ---> compile $MODULE <---\e[0m"
     make_module $MODULE
+    if [ $? != 0 ]; then
+        echo -e "\e[31mFailed to compile $MODULE!\e[39m"
+        exit 1
+    fi
 done
 
 for MODULE in $MODULES
 do
+    echo -e "\e[1m ---> run $MODULE <---\e[0m"
     run_test $MODULE
 done
