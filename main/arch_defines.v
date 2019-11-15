@@ -37,6 +37,15 @@
 `define RISCV_SLT           3'b010
 `define RISCV_SLTU          3'b011
 
+`define RISCV_CSRRW         3'b001
+`define RISCV_CSRRWI        3'b101
+`define RISCV_CSRRS         3'b010
+`define RISCV_CSRRSI        3'b110
+`define RISCV_CSRRC         3'b011
+`define RISCV_CSRRCI        3'b111
+
+`define CSR_MISA            0x301
+
 `define LOAD_SIGNED_BYTE       3'b000
 `define STORE_BYTE             3'b000
 `define LOAD_UNSIGNED_BYTE     3'b100

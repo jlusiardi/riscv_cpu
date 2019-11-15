@@ -78,9 +78,18 @@ module decoder(
             instr_valid = (func3 == 3'b0);
         end
         else if (opcode == `RISCV_SYSTEM) begin
+            if ((func3 == `RISCV_CSRRW)
+                    |(func3 == `RISCV_CSRRS)
+                    |(func3 == `RISCV_CSRRC)
+                    |(func3 == `RISCV_CSRRWI)
+                    |(func3 == `RISCV_CSRRSI)
+                    |(func3 == `RISCV_CSRRCI)) begin
+                imm = i_imm;
+            end else begin
+                imm = 32'b0;
+            end
             instr_valid = 1'b1;
         end
-        // TODO include fence, ecall and ebreak here
         else begin
             imm = 32'b0;
             instr_valid = 1'b0;

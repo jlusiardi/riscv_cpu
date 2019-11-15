@@ -2,6 +2,7 @@
 
 #include <bitset>
 #include <cstdint>
+#include <iostream>
 
 const int STAGE_FETCH = 0;
 const int STAGE_DECODE = 1;
@@ -99,6 +100,13 @@ const int FUNC3_BGEU = 0b111;
 
 const int FUNC7_STD_OP = 0b0000000;
 const int FUNC7_ALT_OP = 0b0100000;
+
+struct CSR {
+    enum E {
+      MISA = 0x301,
+      MSCRATCH = 0x340,
+    };
+};
 
 /**
  * Macro to insert a 32bit value (mostly a risc-v instruction) into a target
@@ -441,4 +449,52 @@ uint32_t create_CSRRW(uint32_t csr, Register::E rs1, Register::E rd) {
   return tmp;
 }
 
-// implement the other 5 csr function but limit immediate (in rs1 field) to 5bit
+uint32_t create_CSRRS(uint32_t csr, Register::E rs1, Register::E rd) {
+  int32_t tmp = 0;
+  tmp |= (0b111111111111 & csr) << 20;
+  tmp |= (0b11111 & rs1) << 15;
+  tmp |= SystemFunc3::E::CSRRS << 12;
+  tmp |= (0b11111 & rd) << 7;
+  tmp |= Opcode::E::SYSTEM;
+  return tmp;
+}
+
+uint32_t create_CSRRC(CSR::E csr, Register::E rs1, Register::E rd) {
+  int32_t tmp = 0;
+  tmp |= (0b111111111111 & csr) << 20;
+  tmp |= (0b11111 & rs1) << 15;
+  tmp |= SystemFunc3::E::CSRRC << 12;
+  tmp |= (0b11111 & rd) << 7;
+  tmp |= Opcode::E::SYSTEM;
+  return tmp;
+}
+
+uint32_t create_CSRRWI(uint32_t csr, Register::E rs1, Register::E rd) {
+  int32_t tmp = 0;
+  tmp |= (0b111111111111 & csr) << 20;
+  tmp |= (0b11111 & rs1) << 15;
+  tmp |= SystemFunc3::E::CSRRWI << 12;
+  tmp |= (0b11111 & rd) << 7;
+  tmp |= Opcode::E::SYSTEM;
+  return tmp;
+}
+
+uint32_t create_CSRRSI(uint32_t csr, Register::E rs1, Register::E rd) {
+  int32_t tmp = 0;
+  tmp |= (0b111111111111 & csr) << 20;
+  tmp |= (0b11111 & rs1) << 15;
+  tmp |= SystemFunc3::E::CSRRSI << 12;
+  tmp |= (0b11111 & rd) << 7;
+  tmp |= Opcode::E::SYSTEM;
+  return tmp;
+}
+
+uint32_t create_CSRRCI(uint32_t csr, Register::E rs1, Register::E rd) {
+  int32_t tmp = 0;
+  tmp |= (0b111111111111 & csr) << 20;
+  tmp |= (0b11111 & rs1) << 15;
+  tmp |= SystemFunc3::E::CSRRCI << 12;
+  tmp |= (0b11111 & rd) << 7;
+  tmp |= Opcode::E::SYSTEM;
+  return tmp;
+}

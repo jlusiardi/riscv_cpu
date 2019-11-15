@@ -573,8 +573,49 @@ class TestVcpuJal: public GeneralTest<Vcpu> {
     }
 };
 
+class TestVcpuCsrReadMisa: public GeneralTest<Vcpu> {
+  public:
+    virtual void test() {
+      insert_4bytes(top->ROM, 0, create_CSRRS(CSR::E::MISA, Register::E::x0, Register::E::x1));
+
+      step();
+      top->rst = 1;
+
+      clock_cycles(STAGE_COUNT);
+      ASSERT_EQUALS(top->PC, 4);
+      ASSERT_EQUALS(top->REGISTERS[0], 0b01000000000000000000000100000000);
+    }
+};
+
+class TestVcpuCsrWriteReadScratch: public GeneralTest<Vcpu> {
+  public:
+    virtual void test() {
+      insert_4bytes(top->ROM, 0, create_LUI(74565, Register::E::x1));
+      insert_4bytes(top->ROM, 4, create_ADDI(1656, Register::E::x1, Register::E::x1));
+      insert_4bytes(top->ROM, 8, create_CSRRW(CSR::E::MSCRATCH, Register::E::x0, Register::E::x1));
+      insert_4bytes(top->ROM, 12, create_CSRRS(CSR::E::MSCRATCH, Register::E::x0, Register::E::x1));
+
+      step();
+      top->rst = 1;
+
+      clock_cycles(STAGE_COUNT);
+      ASSERT_EQUALS(top->PC, 4);
+
+      clock_cycles(STAGE_COUNT);
+      ASSERT_EQUALS(top->PC, 8);
+
+      clock_cycles(STAGE_COUNT);
+      ASSERT_EQUALS(top->PC, 12);
+
+      clock_cycles(STAGE_COUNT);
+      ASSERT_EQUALS(top->PC, 16);
+    }
+};
+
 int main(const int argc, char** argv) {
   cout << "---- CPU RISCV tests passed" << endl;
+  (new TestVcpuCsrReadMisa())->run("vcds/cpu_csr_read_misa.vcd");
+  (new TestVcpuCsrWriteReadScratch())->run("vcds/cpu_csr_write_read_mscratch.vcd");
   (new TestVcpuStageCounter())->run("vcds/cpu_stage_counter.vcd");
   (new TestVcpuAddi())->run("vcds/cpu_addis.vcd");
   (new TestVcpuAdd())->run("vcds/cpu_adds.vcd");
@@ -597,4 +638,5 @@ int main(const int argc, char** argv) {
   (new TestVcpuJalr())->run("vcds/cpu_jalr.vcd");
   (new TestVcpuJal())->run("vcds/cpu_jal.vcd");
   cout << "$$$$ CPU RISCV tests passed" << endl;
+  HANDLE_ERROR_COUNTER;
 }

@@ -176,6 +176,8 @@ module cpu(
     );
 
     register_file_control register_file_control(
+        .func3(w_func3),
+        .csr_result(w_csr_value),
         .stage(w_stage),
         .opcode(w_opcode),
         .alu_result(w_alu_result),
@@ -191,6 +193,17 @@ module cpu(
         .rs2_value(w_register_src_1_register_int),
         .cmp_op(w_func3),
         .jump_condition(w_jump_condition)
+    );
+
+    wire [31:0] w_csr_value;
+    csr csr(
+        .operation(w_func3),
+        .csr_number(w_current_instruction[31:20]),
+        .rs1(w_reg_src_0_addr),
+        .input_value(32'b0),
+        .csr_value(w_csr_value),
+        .write_enable(1),
+        .clk(clk)
     );
 
 endmodule
