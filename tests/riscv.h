@@ -63,6 +63,17 @@ struct Opcode {
     };
 };
 
+struct SystemFunc3 {
+    enum E {
+        CSRRW  = 0b001,
+        CSRRWI = 0b101,
+        CSRRS  = 0b010,
+        CSRRSI = 0b110,
+        CSRRC  = 0b011,
+        CSRRCI = 0b111,
+    };
+};
+
 const int FUNC3_ADD = 0b000;
 const int FUNC3_XOR = 0b100;
 const int FUNC3_OR  = 0b110;
@@ -419,3 +430,15 @@ uint32_t create_EBREAK() {
   tmp |= Opcode::E::SYSTEM;
   return tmp;
 }
+
+uint32_t create_CSRRW(uint32_t csr, Register::E rs1, Register::E rd) {
+  int32_t tmp = 0;
+  tmp |= (0b111111111111 & csr) << 20;
+  tmp |= (0b11111 & rs1) << 15;
+  tmp |= SystemFunc3::E::CSRRW << 12;
+  tmp |= (0b11111 & rd) << 7;
+  tmp |= Opcode::E::SYSTEM;
+  return tmp;
+}
+
+// implement the other 5 csr function but limit immediate (in rs1 field) to 5bit
