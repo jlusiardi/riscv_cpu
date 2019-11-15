@@ -16,8 +16,8 @@ module register_file_control(
     );
 
     wire use_alu_result;
-    assign use_alu_result = (opcode == `RISCV_ALU_OP_REGS)
-                            || (opcode == `RISCV_ALU_OP_IMM)
+    assign use_alu_result = (opcode == `RISCV_OP)
+                            || (opcode == `RISCV_OP_IMM)
                             || (opcode == `RISCV_AUIPC);
 
     wire use_mem_result;

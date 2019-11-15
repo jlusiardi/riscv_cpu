@@ -21,7 +21,7 @@ class TestMemoryControl: public GeneralTest<Vmemory_control> {
       // in memory stage, the read and write address is computed from offset
       // and rs1_value
       top->stage = STAGE_MEMORY;
-      top->opcode = OPCODE_STORE;
+      top->opcode = Opcode::E::STORE;
       top->pc_value = 0x00000004;
       top->offset = 0x00000030;
       top->rs1_value = 0x00000010;
@@ -32,7 +32,7 @@ class TestMemoryControl: public GeneralTest<Vmemory_control> {
       assert(top->write_data == 0x00000042);
       assert(top->write_enable == 1);
 
-      top->opcode = OPCODE_LOAD;
+      top->opcode = Opcode::E::LOAD;
       top->pc_value = 0x00000004;
       top->offset = 0x00000030;
       top->rs1_value = 0x00000010;

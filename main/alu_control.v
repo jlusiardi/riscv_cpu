@@ -23,10 +23,10 @@ module alu_control(
         if (opcode == `RISCV_AUIPC) begin
             alu_in1_i = pc_value;
             alu_in2_i = immediate;
-        end else if (opcode == `RISCV_ALU_OP_REGS) begin
+        end else if (opcode == `RISCV_OP) begin
             alu_in1_i = rs1;
             alu_in2_i = rs2;
-        end else if (opcode == `RISCV_ALU_OP_IMM) begin
+        end else if (opcode == `RISCV_OP_IMM) begin
             alu_in1_i = rs1;
             alu_in2_i = immediate;
         end else begin

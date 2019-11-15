@@ -39,11 +39,11 @@ module decoder(
             imm = i_imm;
             instr_valid = 1'b1;
         end
-        else if (opcode == `RISCV_ALU_OP_REGS) begin
+        else if (opcode == `RISCV_OP) begin
             imm = 32'b0;
             instr_valid = 1'b1;
         end
-        else if (opcode == `RISCV_ALU_OP_IMM) begin
+        else if (opcode == `RISCV_OP_IMM) begin
             imm = i_imm;
             instr_valid = 1'b1;
         end
@@ -72,6 +72,12 @@ module decoder(
         end
         else if (opcode == `RISCV_JAL) begin
             imm = j_imm;
+            instr_valid = 1'b1;
+        end
+        else if (opcode == `RISCV_MEM_MISC) begin
+            instr_valid = (func3 == 3'b0);
+        end
+        else if (opcode == `RISCV_SYSTEM) begin
             instr_valid = 1'b1;
         end
         // TODO include fence, ecall and ebreak here

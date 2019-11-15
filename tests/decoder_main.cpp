@@ -17,7 +17,7 @@ public:
 
     step();
 
-    assert(top->opcode == OPCODE_ALU_REG);
+    assert(top->opcode == Opcode::E::OP);
     assert(top->reg_dest == Register::E::x17);
     assert(top->reg_source_0 == Register::E::x1);
     assert(top->reg_source_1 == Register::E::x21);
@@ -33,7 +33,7 @@ public:
 
     step();
 
-    assert(top->opcode == 0b0110111);
+    assert(top->opcode == Opcode::E::LUI);
     assert(top->reg_dest == Register::E::x17);
     assert(top->imm == 0x00001000);
     assert(top->instr_valid == 0b1);
@@ -47,7 +47,7 @@ public:
 
     step();
 
-    assert(top->opcode == 0b0100011);
+    assert(top->opcode == Opcode::E::STORE);
     assert(top->imm == 0x00000001);
     assert(top->reg_source_0 == 1);
     assert(top->reg_source_1 == 0);
@@ -62,7 +62,7 @@ public:
 
     step();
 
-    assert(top->opcode == 0b1100011);
+    assert(top->opcode == Opcode::E::BRANCH);
     assert(top->func3 == 0b000);
     assert(top->reg_source_0 == rs1);
     assert(top->reg_source_1 == rs2);
@@ -92,7 +92,7 @@ public:
 
     step();
 
-    assert(top->opcode == 0b0010011);
+    assert(top->opcode == Opcode::E::OP_IMM);
     assert(top->reg_source_0 == Register::E::x17);
     assert(top->reg_dest == Register::E::x14);
     assert(top->imm == 1);
@@ -103,7 +103,7 @@ public:
 
     step();
 
-    assert(top->opcode == 0b0010011);
+    assert(top->opcode == Opcode::E::OP_IMM);
     assert(top->reg_source_0 == Register::E::x21);
     assert(top->reg_dest == Register::E::x15);
     assert(top->imm == 2);
@@ -119,7 +119,7 @@ public:
 
     step();
 
-    assert(top->opcode == 0b1101111);
+    assert(top->opcode == Opcode::E::JAL);
     assert(top->reg_dest == 31);
     assert(top->imm == 4);
     assert(top->instr_valid == 0b1);
@@ -128,9 +128,42 @@ public:
 
     step();
 
-    assert(top->opcode == 0b1101111);
+    assert(top->opcode == Opcode::E::JAL);
     assert(top->reg_dest == 31);
     assert(top->imm == -4);
+    assert(top->instr_valid == 0b1);
+  }
+};
+
+class TestDecodeFence : public GeneralTest<Vdecoder> {
+public:
+  virtual void test() {
+    top->instruction = create_FENCE(1, 2, 3, Register::E::x1, Register::E::x2);
+
+    step();
+
+    assert(top->instr_valid == 0b1);
+  }
+};
+
+class TestDecodeEcall : public GeneralTest<Vdecoder> {
+public:
+  virtual void test() {
+    top->instruction = create_ECALL();
+
+    step();
+
+    assert(top->instr_valid == 0b1);
+  }
+};
+
+class TestDecodeEbreak : public GeneralTest<Vdecoder> {
+public:
+  virtual void test() {
+    top->instruction = create_EBREAK();
+
+    step();
+
     assert(top->instr_valid == 0b1);
   }
 };
@@ -154,6 +187,9 @@ int main(int argc, char **argv) {
   (new TestDecodeRiscvUtype())->run("vcds/decode_utype.vcd");
   (new TestDecodeRiscvJtype())->run("vcds/decode_jtype.vcd");
   (new TestDecodeRiscvRtype())->run("vcds/decode_rtype.vcd");
+  (new TestDecodeFence())->run("vcds/decode_fence.vcd");
+  (new TestDecodeEcall())->run("vcds/decode_ecall.vcd");
+  (new TestDecodeEbreak())->run("vcds/decode_ebreak.vcd");
   (new TestDecodeRiscvIllegalOps())->run("vcds/decode_illegalops.vcd");
   cout << "$$$$ Decoder passes tests" << endl;
 }

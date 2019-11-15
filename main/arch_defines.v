@@ -12,14 +12,15 @@
 `define RISCV_AUIPC         7'b0010111
 `define RISCV_JAL           7'b1101111
 `define RISCV_JALR          7'b1100111
-`define RISCV_ALU_OP_REGS   7'b0110011
-`define RISCV_ALU_OP_IMM    7'b0010011
+`define RISCV_OP            7'b0110011
+`define RISCV_OP_IMM        7'b0010011
 `define RISCV_LOAD          7'b0000011
 `define RISCV_STORE         7'b0100011
 `define RISCV_BRANCH        7'b1100011
-`define RISCV_FENCE         7'b0001111
+`define RISCV_MEM_MISC      7'b0001111
 `define RISCV_SYSTEM        7'b1110011
 
+`define RISCV_FENCE         3'b000
 `define RISCV_BEQ           3'b000
 `define RISCV_BNE           3'b001
 `define RISCV_BLT           3'b100

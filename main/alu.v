@@ -50,7 +50,7 @@ module alu(
         `RISCV_AUIPC: begin
             out_r = rs1 + rs2;
         end
-        `RISCV_ALU_OP_IMM: begin
+        `RISCV_OP_IMM: begin
           case (func3)
             // ADDI
             `RISCV_ADD: out_r = out_add;
@@ -76,7 +76,7 @@ module alu(
           default: out_r = 32'h0;
           endcase
         end
-        `RISCV_ALU_OP_REGS: begin
+        `RISCV_OP: begin
           case (func3)
             `RISCV_SLL: out_r = out_sll;
             // XOR

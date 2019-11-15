@@ -15,7 +15,7 @@ class TestAluADDI: public GeneralTest<Valu> {
     virtual void test() {
       step();
 
-      top->opcode = OPCODE_ALU_IMMEDIATE;
+      top->opcode = Opcode::E::OP_IMM;
       top->func3 = FUNC3_ADD;
       top->rs1 = 23;
       top->rs2 = 42;
@@ -38,7 +38,7 @@ class TestAluADD: public GeneralTest<Valu> {
     virtual void test() {
       step();
 
-      top->opcode = OPCODE_ALU_REG;
+      top->opcode = Opcode::E::OP;
       top->func3 = FUNC3_ADD;
       top->rs1 = 23;
       top->rs2 = 42;
@@ -61,7 +61,7 @@ class TestAluXORI: public GeneralTest<Valu> {
     virtual void test() {
       step();
 
-      top->opcode = OPCODE_ALU_IMMEDIATE;
+      top->opcode = Opcode::E::OP_IMM;
       top->func3 = FUNC3_XOR;
       top->rs1 = 0b1100;
       top->rs2 = 0b1010;
@@ -77,7 +77,7 @@ class TestAluXOR: public GeneralTest<Valu> {
     virtual void test() {
       step();
 
-      top->opcode = OPCODE_ALU_REG;
+      top->opcode = Opcode::E::OP;
       top->func3 = FUNC3_XOR;
       top->rs1 = 0b1100;
       top->rs2 = 0b1010;
@@ -93,7 +93,7 @@ class TestAluORI: public GeneralTest<Valu> {
     virtual void test() {
       step();
 
-      top->opcode = OPCODE_ALU_IMMEDIATE;
+      top->opcode = Opcode::E::OP_IMM;
       top->func3 = FUNC3_OR;
       top->rs1 = 0b1100;
       top->rs2 = 0b1010;
@@ -109,7 +109,7 @@ class TestAluOR: public GeneralTest<Valu> {
     virtual void test() {
       step();
 
-      top->opcode = OPCODE_ALU_REG;
+      top->opcode = Opcode::E::OP;
       top->func3 = FUNC3_OR;
       top->rs1 = 0b1100;
       top->rs2 = 0b1010;
@@ -125,7 +125,7 @@ class TestAluANDI: public GeneralTest<Valu> {
     virtual void test() {
       step();
 
-      top->opcode = OPCODE_ALU_IMMEDIATE;
+      top->opcode = Opcode::E::OP_IMM;
       top->func3 = FUNC3_AND;
       top->rs1 = 0b1100;
       top->rs2 = 0b1010;
@@ -141,7 +141,7 @@ class TestAluAND: public GeneralTest<Valu> {
     virtual void test() {
       step();
 
-      top->opcode = OPCODE_ALU_REG;
+      top->opcode = Opcode::E::OP;
       top->func3 = FUNC3_AND;
       top->rs1 = 0b1100;
       top->rs2 = 0b1010;
@@ -157,7 +157,7 @@ class TestAluSRLI: public GeneralTest<Valu> {
     virtual void test() {
       step();
 
-      top->opcode = OPCODE_ALU_IMMEDIATE;
+      top->opcode = Opcode::E::OP_IMM;
       top->func3 = FUNC3_SRL;
       top->func7 = FUNC7_STD_OP;
       top->rs1 = 0b10000000000000000000000000000010;
@@ -181,7 +181,7 @@ class TestAluSRL: public GeneralTest<Valu> {
     virtual void test() {
       step();
 
-      top->opcode = OPCODE_ALU_IMMEDIATE;
+      top->opcode = Opcode::E::OP_IMM;
       top->func3 = FUNC3_SRL;
       top->func7 = FUNC7_STD_OP;
       top->rs1 = 0b10000000000000000000000000000010;
@@ -205,7 +205,7 @@ class TestAluSRAI: public GeneralTest<Valu> {
     virtual void test() {
       step();
 
-      top->opcode = OPCODE_ALU_IMMEDIATE;
+      top->opcode = Opcode::E::OP_IMM;
       top->func3 = FUNC3_SRL;
       top->func7 = FUNC7_ALT_OP;
       top->rs1 = 0b10000000000000000000000000000010;
@@ -229,7 +229,7 @@ class TestAluSRA: public GeneralTest<Valu> {
     virtual void test() {
       step();
 
-      top->opcode = OPCODE_ALU_IMMEDIATE;
+      top->opcode = Opcode::E::OP_IMM;
       top->func3 = FUNC3_SRL;
       top->func7 = FUNC7_ALT_OP;
       top->rs1 = 0b10000000000000000000000000000010;
@@ -253,7 +253,7 @@ class TestAluSLTI: public GeneralTest<Valu> {
     virtual void test() {
       step();
 
-      top->opcode = OPCODE_ALU_IMMEDIATE;
+      top->opcode = Opcode::E::OP_IMM;
       top->func3 = FUNC3_SLT;
       top->rs1 = 0x23;
       top->rs2 = 0x34;
@@ -290,7 +290,7 @@ class TestAluSLTIU: public GeneralTest<Valu> {
     virtual void test() {
       step();
 
-      top->opcode = OPCODE_ALU_IMMEDIATE;
+      top->opcode = Opcode::E::OP_IMM;
       top->func3 = FUNC3_SLTU;
       top->rs1 = 0x23;
       top->rs2 = 0x34;
@@ -327,7 +327,7 @@ class TestAluSLT: public GeneralTest<Valu> {
     virtual void test() {
       step();
 
-      top->opcode = OPCODE_ALU_REG;
+      top->opcode = Opcode::E::OP;
       top->func3 = FUNC3_SLT;
       top->rs1 = 0x23;
       top->rs2 = 0x34;
@@ -364,7 +364,7 @@ class TestAluSLTU: public GeneralTest<Valu> {
     virtual void test() {
       step();
 
-      top->opcode = OPCODE_ALU_REG;
+      top->opcode = Opcode::E::OP;
       top->func3 = FUNC3_SLTU;
       top->rs1 = 0x23;
       top->rs2 = 0x34;
@@ -401,7 +401,7 @@ class TestAluSUB: public GeneralTest<Valu> {
     virtual void test() {
       step();
 
-      top->opcode = OPCODE_ALU_REG;
+      top->opcode = Opcode::E::OP;
       top->func3 = FUNC3_ADD;
       top->func7 = FUNC7_ALT_OP;
       top->rs1 = 23;
