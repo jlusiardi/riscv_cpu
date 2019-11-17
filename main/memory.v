@@ -5,7 +5,7 @@
 
 /*
     rom @ 0x00000000 - 0x00000200
-    ram @ 0x00000400 - 0x00000800
+    ram @ 0x00001000 - 0x00002000
  */
 module memory(
         input [31:0] read_address,

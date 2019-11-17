@@ -1,5 +1,6 @@
 #include <iostream>
 #include <bitset>
+#include <fstream>
 
 #include "verilated.h"
 #include "Vcpu.h"
@@ -612,6 +613,38 @@ class TestVcpuCsrWriteReadScratch: public GeneralTest<Vcpu> {
     }
 };
 
+class TestRomFromFile: public GeneralTest<Vcpu> {
+  public:
+    void load_rom(string filename) {
+      ifstream myfile;
+      char * memblock;
+      streampos size;
+
+      myfile.open(filename, ios::binary|ios::ate);
+      size = myfile.tellg();
+      memblock = new char[size];
+      myfile.seekg(ios::beg);
+      myfile.read(memblock, size);
+
+      for (int p = 0; p < size; p++) {
+        top->ROM[p] = memblock[p];
+      }
+      delete[] memblock;
+    }
+
+    virtual void test() {
+      load_rom("TestRomFromFile.rom");
+
+      step();
+      top->rst = 1;
+
+      while(top->PC != 0x2c) {
+        clock_cycles(STAGE_COUNT);
+      }
+      ASSERT_EQUALS(top->RAM[0], 'A');
+    }
+};
+
 int main(const int argc, char** argv) {
   cout << "---- CPU RISCV tests passed" << endl;
   (new TestVcpuCsrReadMisa())->run("vcds/cpu_csr_read_misa.vcd");
@@ -637,6 +670,7 @@ int main(const int argc, char** argv) {
   (new TestVcpuSlli())->run("vcds/cpu_slli.vcd");
   (new TestVcpuJalr())->run("vcds/cpu_jalr.vcd");
   (new TestVcpuJal())->run("vcds/cpu_jal.vcd");
+  (new TestRomFromFile())->run("vcds/cpu_rom_from_file.vcd");
   cout << "$$$$ CPU RISCV tests passed" << endl;
   HANDLE_ERROR_COUNTER;
 }
