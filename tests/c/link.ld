@@ -2,42 +2,14 @@ OUTPUT_FORMAT(elf32-littleriscv)
 
 ENTRY(_start);
 
-SECTIONS
-{
-    /* This should be your memory offset (VMA) where the code and data
-     * will be loaded. In Linux this is 0x400000, multiboot loader is
-     * 0x100000 etc */
-    . = 0x000000;
+MEMORY {
+  rom (rx) : ORIGIN = 0x00000000, LENGTH = 2048
+  ram (wx) : ORIGIN = 0x00000400, LENGTH = 4096
+}
 
-    /* Place special section .text.prologue before everything else */
+SECTIONS {
     .text : {
-        *(.text.prologue);
-        *(.text*);
-    }
-
-    /* Output the data sections */
-    .data : {
-        *(.data*);
-    }
-
-    .rodata : {
-        *(.rodata*);
-    }
-
-    /* The BSS section for uniitialized data */
-    .bss : {
-        __bss_start = .;
-        *(COMMON);
-        *(.bss);
-        . = ALIGN(4);
-        __bss_end = .;
-    }
-
-    /* Size of the BSS section in case it is needed */
-    __bss_size = ((__bss_end)-(__bss_start));
-
-    /* Remove the note that may be placed before the code by LD */
-    /DISCARD/ : {
-        *(.note.gnu.build-id);
-    }
+            *(.text.prologue);
+            *(.text*);
+        } > rom
 }

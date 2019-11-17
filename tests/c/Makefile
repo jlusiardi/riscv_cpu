@@ -5,4 +5,6 @@ all:
 	riscv32-unknown-elf-objcopy -O binary a.out a.rom
 
 	riscv32-unknown-elf-objdump -d a.out
+	riscv32-unknown-elf-size a.out
 	hexdump -C a.rom
+	
