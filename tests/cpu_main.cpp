@@ -645,6 +645,41 @@ class TestRomFromFile: public GeneralTest<Vcpu> {
     }
 };
 
+class TestFibonacci: public GeneralTest<Vcpu> {
+  public:
+    void load_rom(string filename) {
+      ifstream myfile;
+      char * memblock;
+      streampos size;
+
+      myfile.open(filename, ios::binary|ios::ate);
+      size = myfile.tellg();
+      memblock = new char[size];
+      myfile.seekg(ios::beg);
+      myfile.read(memblock, size);
+
+      for (int p = 0; p < size; p++) {
+        top->ROM[p] = memblock[p];
+      }
+      delete[] memblock;
+    }
+
+    virtual void test() {
+      load_rom("FibonacciRom.rom");
+
+      step();
+      top->rst = 1;
+
+      uint32_t pc_old = -1;
+      while(top->PC != pc_old) {
+        pc_old = top->PC;
+        clock_cycles(STAGE_COUNT);
+      }
+      ASSERT_EQUALS(top->RAM[0], 2);
+      ASSERT_EQUALS(top->RAM[4], 3);
+    }
+};
+
 int main(const int argc, char** argv) {
   cout << "---- CPU RISCV tests passed" << endl;
   (new TestVcpuCsrReadMisa())->run("vcds/cpu_csr_read_misa.vcd");
@@ -671,6 +706,7 @@ int main(const int argc, char** argv) {
   (new TestVcpuJalr())->run("vcds/cpu_jalr.vcd");
   (new TestVcpuJal())->run("vcds/cpu_jal.vcd");
   (new TestRomFromFile())->run("vcds/cpu_rom_from_file.vcd");
+  (new TestFibonacci())->run("vcds/cpu_rom_fibonacci.vcd");
   cout << "$$$$ CPU RISCV tests passed" << endl;
   HANDLE_ERROR_COUNTER;
 }
