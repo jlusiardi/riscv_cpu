@@ -44,7 +44,18 @@
 `define RISCV_CSRRC         3'b011
 `define RISCV_CSRRCI        3'b111
 
+`define CSR_MVENDORID       0xF11
+`define CSR_MARCHID         0xF12
+`define CSR_MIMPID          0xF13
+`define CSR_MHARTID         0xF14
+
 `define CSR_MISA            0x301
+
+`define CSR_MSCRATCH        0x340
+`define CSR_MEPC            0x341
+`define CSR_MCAUSE          0x342
+`define CSR_MTVAL           0x343
+`define CSR_MIP             0x344
 
 `define LOAD_SIGNED_BYTE       3'b000
 `define STORE_BYTE             3'b000

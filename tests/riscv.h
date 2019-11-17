@@ -103,8 +103,12 @@ const int FUNC7_ALT_OP = 0b0100000;
 
 struct CSR {
     enum E {
-      MISA = 0x301,
-      MSCRATCH = 0x340,
+        MVENDORID = 0xF11,
+        MARCHID = 0xF12,
+        MIMPID = 0xF13,
+        MHARTID = 0xF14,
+        MISA = 0x301,
+        MSCRATCH = 0x340,
     };
 };
 
