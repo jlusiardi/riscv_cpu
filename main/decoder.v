@@ -34,6 +34,7 @@ module decoder(
     begin
         if (opcode == `RISCV_JALR)  begin
             imm = i_imm;
+            instr_valid = 1'b1;
         end
         else if (opcode == `RISCV_LOAD) begin
             imm = i_imm;
@@ -75,9 +76,11 @@ module decoder(
             instr_valid = 1'b1;
         end
         else if (opcode == `RISCV_MEM_MISC) begin
+            imm = 32'b0;
             instr_valid = (func3 == 3'b0);
         end
         else if (opcode == `RISCV_SYSTEM) begin
+            imm = 32'b0;
             instr_valid = 1'b1;
         end
         // TODO include fence, ecall and ebreak here

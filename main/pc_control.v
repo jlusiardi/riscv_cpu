@@ -21,6 +21,8 @@ module pc_control(
       if (opcode == `RISCV_BRANCH) begin
          if (jump_condition == 1'b1) begin
             pc_intern = pc_input + offset;
+         end else begin
+            pc_intern = pc_input + 4;
          end
       end else if (opcode == `RISCV_JALR) begin
          pc_intern = rs1 + offset;

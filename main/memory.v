@@ -63,6 +63,8 @@ module memory(
                 default:
                     read_data = 32'b0;
             endcase
+        end else begin
+            read_data = 32'b0;
         end
 
         illegal_read_address = ram_illegal_read_address & rom_illegal_read_address;

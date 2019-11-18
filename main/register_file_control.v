@@ -38,6 +38,8 @@ module register_file_control(
             output_value = immediate;
         end else if (use_pc) begin
             output_value = pc + 4;
+        end else begin
+            output_value = 32'b0;
         end
     end
 
