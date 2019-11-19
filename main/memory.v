@@ -64,7 +64,9 @@ module memory(
                     read_data = 32'b0;
             endcase
         end else begin
-            read_data = 32'b0;
+            // TODO dO nothing on intention and ignore quartus warning (should 
+            // be fixed by adding something like read_enable?
+            //read_data = 32'b0;
         end
 
         illegal_read_address = ram_illegal_read_address & rom_illegal_read_address;
