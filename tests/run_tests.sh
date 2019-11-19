@@ -40,11 +40,18 @@ do
     fi
 done
 
+ERROR=0
 for MODULE in $MODULES
 do
     echo -e "\e[92m ---> run $MODULE <---\e[0m"
     run_test $MODULE
-    if [ $? != 0 ]; then
-        echo -e "\e[31mFailed to test $MODULE!\e[39m"
+    STATUS=$?
+    if [ $STATUS != 0 ]; then
+        ((ERROR=ERROR+STATUS))
+        echo -e "\e[31m${STATUS} Failed tests in $MODULE!\e[39m"
     fi
 done
+if [ $ERROR != 0 ]; then
+    echo -e "\e[31mThere were ${ERROR} failed tests!\e[39m"
+    exit 1
+fi

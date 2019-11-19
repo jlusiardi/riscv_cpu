@@ -17,7 +17,7 @@ int ERROR_COUNTER = 0;
 
 #define HANDLE_ERROR_COUNTER {\
         if (ERROR_COUNTER > 0) { \
-            exit(1); \
+            exit(ERROR_COUNTER); \
         } \
 }
 
