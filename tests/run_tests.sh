@@ -46,6 +46,5 @@ do
     run_test $MODULE
     if [ $? != 0 ]; then
         echo -e "\e[31mFailed to test $MODULE!\e[39m"
-        exit 1
     fi
 done

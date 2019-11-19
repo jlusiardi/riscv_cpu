@@ -17,12 +17,12 @@ public:
     top->rs2_value = 23;
     top->cmp_op = FUNC3_BEQ;
     step();
-    assert(top->jump_condition == 0b1);
+    ASSERT_EQUALS(top->jump_condition, 0b1);
     
     top->rs1_value = 23;
     top->rs2_value = 42;
     step();
-    assert(top->jump_condition == 0b0);
+    ASSERT_EQUALS(top->jump_condition, 0b0);
     
   }
 };
@@ -34,12 +34,12 @@ public:
     top->rs2_value = 23;
     top->cmp_op = FUNC3_BNE;
     step();
-    assert(top->jump_condition == 0b0);
+    ASSERT_EQUALS(top->jump_condition, 0b0);
     
     top->rs1_value = 23;
     top->rs2_value = 42;
     step();
-    assert(top->jump_condition == 0b1);
+    ASSERT_EQUALS(top->jump_condition, 0b1);
     
   }
 };
@@ -51,23 +51,23 @@ public:
     top->rs2_value = 23;
     top->cmp_op = FUNC3_BLT;
     step();
-    assert(top->jump_condition == 0b1);
+    ASSERT_EQUALS(top->jump_condition, 0b1);
     
     top->rs1_value = 13;
     top->rs2_value = 23;
     step();
-    assert(top->jump_condition == 0b1);
+    ASSERT_EQUALS(top->jump_condition, 0b1);
     
     top->rs1_value = 23;
     top->rs2_value = 23;
     step();
-    assert(top->jump_condition == 0b0);
+    ASSERT_EQUALS(top->jump_condition, 0b0);
     
     
     top->rs1_value = 23;
     top->rs2_value = 42;
     step();
-    assert(top->jump_condition == 0b1);
+    ASSERT_EQUALS(top->jump_condition, 0b1);
     
   }
 };
@@ -79,18 +79,18 @@ public:
     top->rs2_value = 23;
     top->cmp_op = FUNC3_BLTU;
     step();
-    assert(top->jump_condition == 0b0);
+    ASSERT_EQUALS(top->jump_condition, 0b0);
     
     top->rs1_value = 23;
     top->rs2_value = 23;
     step();
-    assert(top->jump_condition == 0b0);
+    ASSERT_EQUALS(top->jump_condition, 0b0);
     
     
     top->rs1_value = 23;
     top->rs2_value = 42;
     step();
-    assert(top->jump_condition == 0b1);
+    ASSERT_EQUALS(top->jump_condition, 0b1);
   }
 };
 
@@ -101,23 +101,23 @@ public:
     top->rs2_value = -23;
     top->cmp_op = FUNC3_BGE;
     step();
-    assert(top->jump_condition == 0b1);
+    ASSERT_EQUALS(top->jump_condition, 0b1);
     
     top->rs1_value = 23;
     top->rs2_value = 13;
     step();
-    assert(top->jump_condition == 0b1);
+    ASSERT_EQUALS(top->jump_condition, 0b1);
     
     top->rs1_value = 23;
     top->rs2_value = 23;
     step();
-    assert(top->jump_condition == 0b1);
+    ASSERT_EQUALS(top->jump_condition, 0b1);
     
     
     top->rs1_value = 23;
     top->rs2_value = 42;
     step();
-    assert(top->jump_condition == 0b0);
+    ASSERT_EQUALS(top->jump_condition, 0b0);
     
   }
 };
@@ -129,18 +129,18 @@ public:
     top->rs2_value = -23;
     top->cmp_op = FUNC3_BGEU;
     step();
-    assert(top->jump_condition == 0b0);
+    ASSERT_EQUALS(top->jump_condition, 0b0);
     
     top->rs1_value = 23;
     top->rs2_value = 23;
     step();
-    assert(top->jump_condition == 0b1);
+    ASSERT_EQUALS(top->jump_condition, 0b1);
     
     
     top->rs1_value = 42;
     top->rs2_value = 23;
     step();
-    assert(top->jump_condition == 0b1);
+    ASSERT_EQUALS(top->jump_condition, 0b1);
   }
 };
 
@@ -153,4 +153,5 @@ int main(int argc, char **argv) {
   (new TestCompareUnitBGE())->run("vcds/compare_unit_bge.vcd");
   (new TestCompareUnitBGEU())->run("vcds/compare_unit_bgeu.vcd");
   cout << "$$$$ compare_unit passes tests" << endl;
+  HANDLE_ERROR_COUNTER;
 }

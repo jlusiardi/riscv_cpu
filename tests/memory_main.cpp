@@ -29,22 +29,22 @@ class TestMemory: public GeneralTest<Vmemory> {
       top->write_data = 0xC0FFEE23;
       top->read_address = 4095;
       clock_cycle();
-      assert(top->illegal_write_address == 0);
-      assert(top->illegal_read_address == 1);
+      ASSERT_EQUALS(top->illegal_write_address, 0);
+      ASSERT_EQUALS(top->illegal_read_address, 1);
       
       // read the ram
       top->write_enable = 0;
       top->read_address = 4096;
       top->size_and_sign = FUNC3_LW;
       clock_cycle();
-      assert(top->illegal_read_address == 0);
-      assert(top->read_data == 0xC0FFEE23);
+      ASSERT_EQUALS(top->illegal_read_address, 0);
+      ASSERT_EQUALS(top->read_data, 0xC0FFEE23);
 
       // read from rom
       top->read_address = 4;
       clock_cycle();
-      assert(top->illegal_read_address == 0);
-      assert(top->read_data == 0x00000001);
+      ASSERT_EQUALS(top->illegal_read_address, 0);
+      ASSERT_EQUALS(top->read_data, 0x00000001);
 
       // both adresses are illegal
       top->write_enable = 1;
@@ -52,8 +52,8 @@ class TestMemory: public GeneralTest<Vmemory> {
       top->write_data = 0xC0FFEE23;
       top->read_address = 4095;
       clock_cycle();
-      assert(top->illegal_write_address == 1);
-      assert(top->illegal_read_address == 1);
+      ASSERT_EQUALS(top->illegal_write_address, 1);
+      ASSERT_EQUALS(top->illegal_read_address, 1);
     }
 };
 
@@ -63,4 +63,5 @@ int main(int argc, char** argv) {
   cout << "---- Main Memory" << endl;
   (new TestMemory())->run("vcds/memory.vcd");
   cout << "$$$$ Main Memory" << endl;
+  HANDLE_ERROR_COUNTER;
 }

@@ -26,11 +26,11 @@ class TestVcpuAddi: public GeneralTest<Vcpu> {
       clock_cycle();
       top->rst = 1;
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[0] == 1);
+      ASSERT_EQUALS(top->REGISTERS[0], 1);
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[1] == 2);
+      ASSERT_EQUALS(top->REGISTERS[1], 2);
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[2] == 4);
+      ASSERT_EQUALS(top->REGISTERS[2], 4);
     }
 };
 
@@ -46,11 +46,11 @@ class TestVcpuAdd: public GeneralTest<Vcpu> {
       clock_cycle();
       top->rst = 1;
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[0] == 2);
+      ASSERT_EQUALS(top->REGISTERS[0], 2);
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[1] == 4);
+      ASSERT_EQUALS(top->REGISTERS[1], 4);
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[2] == 6);
+      ASSERT_EQUALS(top->REGISTERS[2], 6);
     }
 };
 
@@ -67,13 +67,13 @@ class TestVcpuSub: public GeneralTest<Vcpu> {
       clock_cycle();
       top->rst = 1;
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[0] == 2);
+      ASSERT_EQUALS(top->REGISTERS[0], 2);
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[1] == 3);
+      ASSERT_EQUALS(top->REGISTERS[1], 3);
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[2] == 1);
+      ASSERT_EQUALS(top->REGISTERS[2], 1);
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[2] == -1);
+      ASSERT_EQUALS(top->REGISTERS[2], -1);
     }
 };
 
@@ -88,9 +88,9 @@ class TestVcpuLi: public GeneralTest<Vcpu> {
       clock_cycle();
       top->rst = 1;
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[14] == 0b10101010101010101011000000000000);
+      ASSERT_EQUALS(top->REGISTERS[14], 0b10101010101010101011000000000000);
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[14] == 0b10101010101010101010101010101010);
+      ASSERT_EQUALS(top->REGISTERS[14], 0b10101010101010101010101010101010);
     }
 };
 
@@ -106,11 +106,11 @@ class TestVcpuAuipc: public GeneralTest<Vcpu> {
       clock_cycle();
       top->rst = 1;
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[0] == 0xfffff000);
+      ASSERT_EQUALS(top->REGISTERS[0], 0xfffff000);
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[1] == 0xfffff004);
+      ASSERT_EQUALS(top->REGISTERS[1], 0xfffff004);
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[2] == 0xfffff008);
+      ASSERT_EQUALS(top->REGISTERS[2], 0xfffff008);
     }
 };
 
@@ -135,16 +135,16 @@ class TestVcpuLb: public GeneralTest<Vcpu> {
       top->rst = 1;
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[1] == 0x1000);
+      ASSERT_EQUALS(top->REGISTERS[1], 0x1000);
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[0] == 0x78);
+      ASSERT_EQUALS(top->REGISTERS[0], 0x78);
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[0] == 0xFFFFFFFF);
+      ASSERT_EQUALS(top->REGISTERS[0], 0xFFFFFFFF);
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[0] == 0x00000021);
+      ASSERT_EQUALS(top->REGISTERS[0], 0x00000021);
     }
 };
 
@@ -167,15 +167,15 @@ class TestVcpuLbu: public GeneralTest<Vcpu> {
       top->rst = 1;
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[1] == 0x1000);
+      ASSERT_EQUALS(top->REGISTERS[1], 0x1000);
       clock_cycles(STAGE_COUNT);
 
       // storing -1 (or 0xffffffff) into 32bit and reading only 8 bit unsigned,
       // stuffing it into 32bit makes this 0xff
-      assert(top->REGISTERS[0] == 0xff);
+      ASSERT_EQUALS(top->REGISTERS[0], 0xff);
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[0] == 0x21);
+      ASSERT_EQUALS(top->REGISTERS[0], 0x21);
     }
 };
 
@@ -200,16 +200,16 @@ class TestVcpuLh: public GeneralTest<Vcpu> {
       top->rst = 1;
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[1] == 0x1000);
+      ASSERT_EQUALS(top->REGISTERS[1], 0x1000);
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[0] == 0x00005678);
+      ASSERT_EQUALS(top->REGISTERS[0], 0x00005678);
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[0] == 0xFFFFFFFF);
+      ASSERT_EQUALS(top->REGISTERS[0], 0xFFFFFFFF);
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[0] == 0x00004321);
+      ASSERT_EQUALS(top->REGISTERS[0], 0x00004321);
     }
 };
 
@@ -226,12 +226,12 @@ class TestVcpuLhu: public GeneralTest<Vcpu> {
       top->rst = 1;
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[1] == 0x1000);
+      ASSERT_EQUALS(top->REGISTERS[1], 0x1000);
       clock_cycles(STAGE_COUNT);
 
       // storing -1 (or 0xffffffff) into 32bit and reading only 8 bit unsigned,
       // stuffing it into 32bit makes this 0xff
-      assert(top->REGISTERS[0] == 0xffff);
+      ASSERT_EQUALS(top->REGISTERS[0], 0xffff);
     }
 };
 
@@ -251,16 +251,16 @@ class TestVcpuLw: public GeneralTest<Vcpu> {
       top->rst = 1;
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[1] == 0x1000);
+      ASSERT_EQUALS(top->REGISTERS[1], 0x1000);
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[0] == 0x12345678);
+      ASSERT_EQUALS(top->REGISTERS[0], 0x12345678);
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[0] == 0xC0FFEE23);
+      ASSERT_EQUALS(top->REGISTERS[0], 0xC0FFEE23);
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[0] == 0xEE231234);
+      ASSERT_EQUALS(top->REGISTERS[0], 0xEE231234);
     }
 };
 
@@ -282,24 +282,24 @@ class TestVcpuSw: public GeneralTest<Vcpu> {
       top->rst = 1;
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[0] == 0x1000);
+      ASSERT_EQUALS(top->REGISTERS[0], 0x1000);
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[1] == 0x87654000);
+      ASSERT_EQUALS(top->REGISTERS[1], 0x87654000);
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[1] == 0x87654321);
+      ASSERT_EQUALS(top->REGISTERS[1], 0x87654321);
       clock_cycles(STAGE_COUNT);
 
-      assert(top->RAM[0] == 0xCA);
-      assert(top->RAM[5] == 0xCA);
-      assert(top->RAM[1] == 0x21);
-      assert(top->RAM[2] == 0x43);
-      assert(top->RAM[3] == 0x65);
-      assert(top->RAM[4] == 0x87);
+      ASSERT_EQUALS(top->RAM[0], 0xCA);
+      ASSERT_EQUALS(top->RAM[5], 0xCA);
+      ASSERT_EQUALS(top->RAM[1], 0x21);
+      ASSERT_EQUALS(top->RAM[2], 0x43);
+      ASSERT_EQUALS(top->RAM[3], 0x65);
+      ASSERT_EQUALS(top->RAM[4], 0x87);
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[0] == 0x87654321);
+      ASSERT_EQUALS(top->REGISTERS[0], 0x87654321);
     }
 };
 
@@ -321,21 +321,21 @@ class TestVcpuSh: public GeneralTest<Vcpu> {
       top->rst = 1;
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[0] == 0x1000);
+      ASSERT_EQUALS(top->REGISTERS[0], 0x1000);
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[1] == 0x87654000);
+      ASSERT_EQUALS(top->REGISTERS[1], 0x87654000);
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[1] == 0x87654321);
+      ASSERT_EQUALS(top->REGISTERS[1], 0x87654321);
       clock_cycles(STAGE_COUNT);
-      assert(top->RAM[0] == 0xCA);
-      assert(top->RAM[3] == 0xCA);
-      assert(top->RAM[1] == 0x21);
-      assert(top->RAM[2] == 0x43);
+      ASSERT_EQUALS(top->RAM[0], 0xCA);
+      ASSERT_EQUALS(top->RAM[3], 0xCA);
+      ASSERT_EQUALS(top->RAM[1], 0x21);
+      ASSERT_EQUALS(top->RAM[2], 0x43);
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[0] == 0x00004321);
+      ASSERT_EQUALS(top->REGISTERS[0], 0x00004321);
     }
 };
 
@@ -357,21 +357,21 @@ class TestVcpuSb: public GeneralTest<Vcpu> {
       top->rst = 1;
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[0] == 0x1000);
+      ASSERT_EQUALS(top->REGISTERS[0], 0x1000);
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[1] == 0x87654000);
+      ASSERT_EQUALS(top->REGISTERS[1], 0x87654000);
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[1] == 0x87654321);
+      ASSERT_EQUALS(top->REGISTERS[1], 0x87654321);
       clock_cycles(STAGE_COUNT);
 
-      assert(top->RAM[0] == 0xCA);
-      assert(top->RAM[2] == 0xCA);
-      assert(top->RAM[1] == 0x21);
+      ASSERT_EQUALS(top->RAM[0], 0xCA);
+      ASSERT_EQUALS(top->RAM[2], 0xCA);
+      ASSERT_EQUALS(top->RAM[1], 0x21);
       clock_cycles(STAGE_COUNT);
 
-      assert(top->REGISTERS[0] == 0x00000021);
+      ASSERT_EQUALS(top->REGISTERS[0], 0x00000021);
     }
 };
 
@@ -382,26 +382,26 @@ class TestVcpuStageCounter: public GeneralTest<Vcpu> {
         insert_4bytes(top->ROM, 4 * i, create_ADDI(0, Register::E::x0, Register::E::x0));
       }
       top->rst = 1;
-      assert(top->STAGE == 0);
+      ASSERT_EQUALS(top->STAGE, 0);
       clock_cycle();
-      assert(top->STAGE == 1);
+      ASSERT_EQUALS(top->STAGE, 1);
       clock_cycle();
-      assert(top->STAGE == 2);
+      ASSERT_EQUALS(top->STAGE, 2);
       clock_cycle();
-      assert(top->STAGE == 3);
+      ASSERT_EQUALS(top->STAGE, 3);
       clock_cycle();
-      assert(top->STAGE == 4);
+      ASSERT_EQUALS(top->STAGE, 4);
       for (int i = 0; i < 5; i++) {
         clock_cycle();
-        assert(top->STAGE == 0);
+        ASSERT_EQUALS(top->STAGE, 0);
         clock_cycle();
-        assert(top->STAGE == 1);
+        ASSERT_EQUALS(top->STAGE, 1);
         clock_cycle();
-        assert(top->STAGE == 2);
+        ASSERT_EQUALS(top->STAGE, 2);
         clock_cycle();
-        assert(top->STAGE == 3);
+        ASSERT_EQUALS(top->STAGE, 3);
         clock_cycle();
-        assert(top->STAGE == 4);
+        ASSERT_EQUALS(top->STAGE, 4);
       }
   }
 };
@@ -418,24 +418,24 @@ class TestVcpuBeq: public GeneralTest<Vcpu> {
 
       step();
       top->rst = 1;
-      assert(top->PC == 0);
+      ASSERT_EQUALS(top->PC, 0);
       clock_cycles(STAGE_COUNT);
-      assert(top->PC == 8);
+      ASSERT_EQUALS(top->PC, 8);
 
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[1] == 42);
-      assert(top->PC == 12);
+      ASSERT_EQUALS(top->REGISTERS[1], 42);
+      ASSERT_EQUALS(top->PC, 12);
 
       clock_cycles(STAGE_COUNT);
-      assert(top->PC == 16);
+      ASSERT_EQUALS(top->PC, 16);
 
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[2] == 65);
-      assert(top->PC == 20);
+      ASSERT_EQUALS(top->REGISTERS[2], 65);
+      ASSERT_EQUALS(top->PC, 20);
 
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[3] == 56);
-      assert(top->PC == 24);
+      ASSERT_EQUALS(top->REGISTERS[3], 56);
+      ASSERT_EQUALS(top->PC, 24);
     }
 };
 
@@ -451,24 +451,24 @@ class TestVcpuBne: public GeneralTest<Vcpu> {
 
       step();
       top->rst = 1;
-      assert(top->PC == 0);
+      ASSERT_EQUALS(top->PC, 0);
       clock_cycles(STAGE_COUNT);
-      assert(top->PC == 4);
+      ASSERT_EQUALS(top->PC, 4);
 
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[0] == 23);
-      assert(top->PC == 8);
+      ASSERT_EQUALS(top->REGISTERS[0], 23);
+      ASSERT_EQUALS(top->PC, 8);
 
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[1] == 42);
-      assert(top->PC == 12);
+      ASSERT_EQUALS(top->REGISTERS[1], 42);
+      ASSERT_EQUALS(top->PC, 12);
 
       clock_cycles(STAGE_COUNT);
-      assert(top->PC == 20);
+      ASSERT_EQUALS(top->PC, 20);
 
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[3] == 56);
-      assert(top->PC == 24);
+      ASSERT_EQUALS(top->REGISTERS[3], 56);
+      ASSERT_EQUALS(top->PC, 24);
     }
 };
 
@@ -481,16 +481,16 @@ class TestVcpuSrai: public GeneralTest<Vcpu> {
 
       step();
       top->rst = 1;
-      assert(top->PC == 0);
+      ASSERT_EQUALS(top->PC, 0);
       clock_cycles(STAGE_COUNT);
-      assert(top->PC == 4);
+      ASSERT_EQUALS(top->PC, 4);
 
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[0] == 0b10000000000000000000000000000010);
-      assert(top->PC == 8);
+      ASSERT_EQUALS(top->REGISTERS[0], 0b10000000000000000000000000000010);
+      ASSERT_EQUALS(top->PC, 8);
 
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[1] == 0b11000000000000000000000000000001);
+      ASSERT_EQUALS(top->REGISTERS[1], 0b11000000000000000000000000000001);
     }
 };
 
@@ -503,16 +503,16 @@ class TestVcpuSrli: public GeneralTest<Vcpu> {
 
       step();
       top->rst = 1;
-      assert(top->PC == 0);
+      ASSERT_EQUALS(top->PC, 0);
       clock_cycles(STAGE_COUNT);
-      assert(top->PC == 4);
+      ASSERT_EQUALS(top->PC, 4);
 
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[0] == 0b10000000000000000000000000000010);
-      assert(top->PC == 8);
+      ASSERT_EQUALS(top->REGISTERS[0], 0b10000000000000000000000000000010);
+      ASSERT_EQUALS(top->PC, 8);
 
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[1] == 0b01000000000000000000000000000001);
+      ASSERT_EQUALS(top->REGISTERS[1], 0b01000000000000000000000000000001);
     }
 };
 
@@ -525,16 +525,16 @@ class TestVcpuSlli: public GeneralTest<Vcpu> {
 
       step();
       top->rst = 1;
-      assert(top->PC == 0);
+      ASSERT_EQUALS(top->PC, 0);
       clock_cycles(STAGE_COUNT);
-      assert(top->PC == 4);
+      ASSERT_EQUALS(top->PC, 4);
 
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[0] == 0b10000000000000000000000000000010);
-      assert(top->PC == 8);
+      ASSERT_EQUALS(top->REGISTERS[0], 0b10000000000000000000000000000010);
+      ASSERT_EQUALS(top->PC, 8);
 
       clock_cycles(STAGE_COUNT);
-      assert(top->REGISTERS[1] == 0b00000000000000000000000000000100);
+      ASSERT_EQUALS(top->REGISTERS[1], 0b00000000000000000000000000000100);
     }
 };
 
@@ -548,12 +548,12 @@ class TestVcpuJalr: public GeneralTest<Vcpu> {
       top->rst = 1;
 
       clock_cycles(STAGE_COUNT);
-      assert(top->PC == 4);
-      assert(top->REGISTERS[0] == 16);
+      ASSERT_EQUALS(top->PC, 4);
+      ASSERT_EQUALS(top->REGISTERS[0], 16);
 
       clock_cycles(STAGE_COUNT);
-      assert(top->PC == 24);
-      assert(top->REGISTERS[1] == 8);
+      ASSERT_EQUALS(top->PC, 24);
+      ASSERT_EQUALS(top->REGISTERS[1], 8);
     }
 };
 
@@ -568,8 +568,8 @@ class TestVcpuJal: public GeneralTest<Vcpu> {
       top->rst = 1;
 
       clock_cycles(STAGE_COUNT);
-      assert(top->PC == 8);
-      assert(top->REGISTERS[1] == 4);
+      ASSERT_EQUALS(top->PC, 8);
+      ASSERT_EQUALS(top->REGISTERS[1], 4);
     }
 };
 
@@ -597,4 +597,5 @@ int main(const int argc, char** argv) {
   (new TestVcpuJalr())->run("vcds/cpu_jalr.vcd");
   (new TestVcpuJal())->run("vcds/cpu_jal.vcd");
   cout << "$$$$ CPU RISCV tests passed" << endl;
+  HANDLE_ERROR_COUNTER;
 }

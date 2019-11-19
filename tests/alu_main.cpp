@@ -22,13 +22,13 @@ class TestAluADDI: public GeneralTest<Valu> {
 
       step();
 
-      assert(top->out == 65);
+      ASSERT_EQUALS(top->out, 65);
 
       top->rs2 = -42;
 
       step();
 
-      assert(top->out == -19);
+      ASSERT_EQUALS(top->out, -19);
 
     }
 };
@@ -45,13 +45,13 @@ class TestAluADD: public GeneralTest<Valu> {
 
       step();
 
-      assert(top->out == 65);
+      ASSERT_EQUALS(top->out, 65);
 
       top->rs2 = -42;
 
       step();
 
-      assert(top->out == -19);
+      ASSERT_EQUALS(top->out, -19);
 
     }
 };
@@ -68,7 +68,7 @@ class TestAluXORI: public GeneralTest<Valu> {
 
       step();
 
-      assert(top->out == 0b0110);
+      ASSERT_EQUALS(top->out, 0b0110);
     }
 };
 
@@ -84,7 +84,7 @@ class TestAluXOR: public GeneralTest<Valu> {
 
       step();
 
-      assert(top->out == 0b0110);
+      ASSERT_EQUALS(top->out, 0b0110);
     }
 };
 
@@ -100,7 +100,7 @@ class TestAluORI: public GeneralTest<Valu> {
 
       step();
 
-      assert(top->out == 0b1110);
+      ASSERT_EQUALS(top->out, 0b1110);
     }
 };
 
@@ -116,7 +116,7 @@ class TestAluOR: public GeneralTest<Valu> {
 
       step();
 
-      assert(top->out == 0b1110);
+      ASSERT_EQUALS(top->out, 0b1110);
     }
 };
 
@@ -132,7 +132,7 @@ class TestAluANDI: public GeneralTest<Valu> {
 
       step();
 
-      assert(top->out == 0b1000);
+      ASSERT_EQUALS(top->out, 0b1000);
     }
 };
 
@@ -148,7 +148,7 @@ class TestAluAND: public GeneralTest<Valu> {
 
       step();
 
-      assert(top->out == 0b1000);
+      ASSERT_EQUALS(top->out, 0b1000);
     }
 };
 
@@ -165,14 +165,14 @@ class TestAluSRLI: public GeneralTest<Valu> {
 
       step();
 
-      assert(top->out == 0b01000000000000000000000000000001);
+      ASSERT_EQUALS(top->out, 0b01000000000000000000000000000001);
 
       top->rs1 = 0b00000000000000000000000000010010;
       top->rs2 = 0b00000000000000000000000000000010;
 
       step();
 
-      assert(top->out == 0b00000000000000000000000000000100);
+      ASSERT_EQUALS(top->out, 0b00000000000000000000000000000100);
     }
 };
 
@@ -189,14 +189,14 @@ class TestAluSRL: public GeneralTest<Valu> {
 
       step();
 
-      assert(top->out == 0b01000000000000000000000000000001);
+      ASSERT_EQUALS(top->out, 0b01000000000000000000000000000001);
 
       top->rs1 = 0b00000000000000000000000000010010;
       top->rs2 = 0b00000000000000000000000000000010;
 
       step();
 
-      assert(top->out == 0b00000000000000000000000000000100);
+      ASSERT_EQUALS(top->out, 0b00000000000000000000000000000100);
     }
 };
 
@@ -213,14 +213,14 @@ class TestAluSRAI: public GeneralTest<Valu> {
 
       step();
 
-      assert(top->out == 0b11000000000000000000000000000001);
+      ASSERT_EQUALS(top->out, 0b11000000000000000000000000000001);
 
       top->rs1 = 0b00000000000000000000000000010010;
       top->rs2 = 0b00000000000000000000000000000010;
 
       step();
 
-      assert(top->out == 0b00000000000000000000000000000100);
+      ASSERT_EQUALS(top->out, 0b00000000000000000000000000000100);
     }
 };
 
@@ -237,14 +237,14 @@ class TestAluSRA: public GeneralTest<Valu> {
 
       step();
 
-      assert(top->out == 0b11000000000000000000000000000001);
+      ASSERT_EQUALS(top->out, 0b11000000000000000000000000000001);
 
       top->rs1 = 0b00000000000000000000000000010010;
       top->rs2 = 0b00000000000000000000000000000010;
 
       step();
 
-      assert(top->out == 0b00000000000000000000000000000100);
+      ASSERT_EQUALS(top->out, 0b00000000000000000000000000000100);
     }
 };
 
@@ -260,28 +260,28 @@ class TestAluSLTI: public GeneralTest<Valu> {
 
       step();
 
-      assert(top->out == 1);
+      ASSERT_EQUALS(top->out, 1);
 
       top->rs1 = 0x23;
       top->rs2 = 0x23;
 
       step();
 
-      assert(top->out == 0);
+      ASSERT_EQUALS(top->out, 0);
 
       top->rs1 = 0x24;
       top->rs2 = 0x23;
 
       step();
 
-      assert(top->out == 0);
+      ASSERT_EQUALS(top->out, 0);
 
       top->rs1 = -0x23;
       top->rs2 = 0x23;
 
       step();
 
-      assert(top->out == 1);
+      ASSERT_EQUALS(top->out, 1);
     }
 };
 
@@ -297,28 +297,28 @@ class TestAluSLTIU: public GeneralTest<Valu> {
 
       step();
 
-      assert(top->out == 1);
+      ASSERT_EQUALS(top->out, 1);
 
       top->rs1 = 0x23;
       top->rs2 = 0x23;
 
       step();
 
-      assert(top->out == 0);
+      ASSERT_EQUALS(top->out, 0);
 
       top->rs1 = 0x24;
       top->rs2 = 0x23;
 
       step();
 
-      assert(top->out == 0);
+      ASSERT_EQUALS(top->out, 0);
 
       top->rs1 = -0x23;
       top->rs2 = 0x23;
 
       step();
 
-      assert(top->out == 0);
+      ASSERT_EQUALS(top->out, 0);
     }
 };
 
@@ -334,28 +334,28 @@ class TestAluSLT: public GeneralTest<Valu> {
 
       step();
 
-      assert(top->out == 1);
+      ASSERT_EQUALS(top->out, 1);
 
       top->rs1 = 0x23;
       top->rs2 = 0x23;
 
       step();
 
-      assert(top->out == 0);
+      ASSERT_EQUALS(top->out, 0);
 
       top->rs1 = 0x24;
       top->rs2 = 0x23;
 
       step();
 
-      assert(top->out == 0);
+      ASSERT_EQUALS(top->out, 0);
 
       top->rs1 = -0x23;
       top->rs2 = 0x23;
 
       step();
 
-      assert(top->out == 1);
+      ASSERT_EQUALS(top->out, 1);
     }
 };
 
@@ -371,28 +371,28 @@ class TestAluSLTU: public GeneralTest<Valu> {
 
       step();
 
-      assert(top->out == 1);
+      ASSERT_EQUALS(top->out, 1);
 
       top->rs1 = 0x23;
       top->rs2 = 0x23;
 
       step();
 
-      assert(top->out == 0);
+      ASSERT_EQUALS(top->out, 0);
 
       top->rs1 = 0x24;
       top->rs2 = 0x23;
 
       step();
 
-      assert(top->out == 0);
+      ASSERT_EQUALS(top->out, 0);
 
       top->rs1 = -0x23;
       top->rs2 = 0x23;
 
       step();
 
-      assert(top->out == 0);
+      ASSERT_EQUALS(top->out, 0);
     }
 };
 
@@ -409,13 +409,13 @@ class TestAluSUB: public GeneralTest<Valu> {
 
       step();
 
-      assert(top->out == -19);
+      ASSERT_EQUALS(top->out, -19);
 
       top->rs2 = -42;
 
       step();
 
-      assert(top->out == 65);
+      ASSERT_EQUALS(top->out, 65);
 
     }
 };
@@ -440,4 +440,5 @@ int main(int argc, char** argv) {
   (new TestAluSLTU())->run("vcds/alu_sltu.vcd");
   (new TestAluSUB())->run("vcds/alu_sub.vcd");
   cout << "$$$$ ALU tests pass" << endl;
+  HANDLE_ERROR_COUNTER;
 }

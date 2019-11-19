@@ -15,8 +15,8 @@ class TestMemoryControl: public GeneralTest<Vmemory_control> {
       top->offset = 0x00000040;
       top->rs1_value = 0x00000040;
       step();
-      assert(top->read_address == 0x00000004);
-      assert(top->write_enable == 0);
+      ASSERT_EQUALS(top->read_address, 0x00000004);
+      ASSERT_EQUALS(top->write_enable, 0);
 
       // in memory stage, the read and write address is computed from offset
       // and rs1_value
@@ -27,10 +27,10 @@ class TestMemoryControl: public GeneralTest<Vmemory_control> {
       top->rs1_value = 0x00000010;
       top->memory_write_data = 0x00000042;
       step();
-      assert(top->read_address == 0x00000040);
-      assert(top->write_address == 0x00000040);
-      assert(top->write_data == 0x00000042);
-      assert(top->write_enable == 1);
+      ASSERT_EQUALS(top->read_address, 0x00000040);
+      ASSERT_EQUALS(top->write_address, 0x00000040);
+      ASSERT_EQUALS(top->write_data, 0x00000042);
+      ASSERT_EQUALS(top->write_enable, 1);
 
       top->opcode = Opcode::E::LOAD;
       top->pc_value = 0x00000004;
@@ -38,10 +38,10 @@ class TestMemoryControl: public GeneralTest<Vmemory_control> {
       top->rs1_value = 0x00000010;
       top->memory_write_data = 0x00000042;
       step();
-      assert(top->read_address == 0x00000040);
-      assert(top->write_address == 0x00000040);
-      assert(top->write_data == 0x00000042);
-      assert(top->write_enable == 0);
+      ASSERT_EQUALS(top->read_address, 0x00000040);
+      ASSERT_EQUALS(top->write_address, 0x00000040);
+      ASSERT_EQUALS(top->write_data, 0x00000042);
+      ASSERT_EQUALS(top->write_enable, 0);
 
    }
 };
@@ -52,4 +52,5 @@ int main(int argc, char** argv) {
   cout << "---- Main Memory Control" << endl;
   (new TestMemoryControl())->run("vcds/memory_controll.vcd");
   cout << "$$$$ Main Memory Control" << endl;
+  HANDLE_ERROR_COUNTER;
 }

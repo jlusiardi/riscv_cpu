@@ -25,52 +25,11 @@ class TestRegisterFileRiscv: public GeneralTest<Vregister_file> {
 
       clock_cycle();
 
-      assert(top->read_data_0 == expect);
+      ASSERT_EQUALS(top->read_data_0, expect);
     }
 
     virtual void test() {
       perform_test_for(2, 538, 538);
-/*      
-      clock_cycle();
-
-      top->write_address = 2;
-      top->write_data = 538;
-      top->write_enable = 1;
-
-      clock_cycle();
-
-      top->read_address_0 = 2;
-
-      clock_cycle();
-
-      assert(top->read_data_0 == 538);
-
-      top->write_address = 15;
-      top->write_data = 3;
-
-      clock_cycle();
-
-      top->write_enable = 0;
-      top->write_address = 0;
-      top->read_address_1 = 15;
-
-      clock_cycle();
-
-      assert(top->read_data_1 == 3);
-
-      top->write_enable = 0;
-
-      top->write_address = 15;
-      top->write_data = 0;
-
-      clock_cycle();
-
-      top->read_address_0 = 15;
-
-      clock_cycle();
-
-      assert(top->read_data_0 == 3);
-*/
     }
 };
 
@@ -78,4 +37,5 @@ int main(int argc, char** argv) {
   cout << "---- Testing register file" << endl;
   (new TestRegisterFileRiscv())->run("vcds/register_file.vcd");
   cout << "#### Register file tests pass" << endl;
+  HANDLE_ERROR_COUNTER;
 }

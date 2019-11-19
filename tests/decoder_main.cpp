@@ -17,12 +17,12 @@ public:
 
     step();
 
-    assert(top->opcode == Opcode::E::OP);
-    assert(top->reg_dest == Register::E::x17);
-    assert(top->reg_source_0 == Register::E::x1);
-    assert(top->reg_source_1 == Register::E::x21);
-    assert(top->imm == 0x00000000);
-    assert(top->instr_valid == 0b1);
+    ASSERT_EQUALS(top->opcode, Opcode::E::OP);
+    ASSERT_EQUALS(top->reg_dest, Register::E::x17);
+    ASSERT_EQUALS(top->reg_source_0, Register::E::x1);
+    ASSERT_EQUALS(top->reg_source_1, Register::E::x21);
+    ASSERT_EQUALS(top->imm, 0x00000000);
+    ASSERT_EQUALS(top->instr_valid, 0b1);
   }
 };
 
@@ -33,10 +33,10 @@ public:
 
     step();
 
-    assert(top->opcode == Opcode::E::LUI);
-    assert(top->reg_dest == Register::E::x17);
-    assert(top->imm == 0x00001000);
-    assert(top->instr_valid == 0b1);
+    ASSERT_EQUALS(top->opcode, Opcode::E::LUI);
+    ASSERT_EQUALS(top->reg_dest, Register::E::x17);
+    ASSERT_EQUALS(top->imm, 0x00001000);
+    ASSERT_EQUALS(top->instr_valid, 0b1);
   }
 };
 
@@ -47,11 +47,11 @@ public:
 
     step();
 
-    assert(top->opcode == Opcode::E::STORE);
-    assert(top->imm == 0x00000001);
-    assert(top->reg_source_0 == 1);
-    assert(top->reg_source_1 == 0);
-    assert(top->instr_valid == 0b1);
+    ASSERT_EQUALS(top->opcode, Opcode::E::STORE);
+    ASSERT_EQUALS(top->imm, 0x00000001);
+    ASSERT_EQUALS(top->reg_source_0, 1);
+    ASSERT_EQUALS(top->reg_source_1, 0);
+    ASSERT_EQUALS(top->instr_valid, 0b1);
   }
 };
 
@@ -62,12 +62,12 @@ public:
 
     step();
 
-    assert(top->opcode == Opcode::E::BRANCH);
-    assert(top->func3 == 0b000);
-    assert(top->reg_source_0 == rs1);
-    assert(top->reg_source_1 == rs2);
-    assert(top->imm == offset);
-    assert(top->instr_valid == 0b1);
+    ASSERT_EQUALS(top->opcode, Opcode::E::BRANCH);
+    ASSERT_EQUALS(top->func3, 0b000);
+    ASSERT_EQUALS(top->reg_source_0, rs1);
+    ASSERT_EQUALS(top->reg_source_1, rs2);
+    ASSERT_EQUALS(top->imm, offset);
+    ASSERT_EQUALS(top->instr_valid, 0b1);
   }
 
   virtual void test() {
@@ -92,23 +92,23 @@ public:
 
     step();
 
-    assert(top->opcode == Opcode::E::OP_IMM);
-    assert(top->reg_source_0 == Register::E::x17);
-    assert(top->reg_dest == Register::E::x14);
-    assert(top->imm == 1);
-    assert(top->func3 == 0);
-    assert(top->instr_valid == 0b1);
+    ASSERT_EQUALS(top->opcode, Opcode::E::OP_IMM);
+    ASSERT_EQUALS(top->reg_source_0, Register::E::x17);
+    ASSERT_EQUALS(top->reg_dest, Register::E::x14);
+    ASSERT_EQUALS(top->imm, 1);
+    ASSERT_EQUALS(top->func3, 0);
+    ASSERT_EQUALS(top->instr_valid, 0b1);
 
     top->instruction = create_ADDI(2, Register::E::x21, Register::E::x15);
 
     step();
 
-    assert(top->opcode == Opcode::E::OP_IMM);
-    assert(top->reg_source_0 == Register::E::x21);
-    assert(top->reg_dest == Register::E::x15);
-    assert(top->imm == 2);
-    assert(top->func3 == 0);
-    assert(top->instr_valid == 0b1);
+    ASSERT_EQUALS(top->opcode, Opcode::E::OP_IMM);
+    ASSERT_EQUALS(top->reg_source_0, Register::E::x21);
+    ASSERT_EQUALS(top->reg_dest, Register::E::x15);
+    ASSERT_EQUALS(top->imm, 2);
+    ASSERT_EQUALS(top->func3, 0);
+    ASSERT_EQUALS(top->instr_valid, 0b1);
   }
 };
 
@@ -119,19 +119,19 @@ public:
 
     step();
 
-    assert(top->opcode == Opcode::E::JAL);
-    assert(top->reg_dest == 31);
-    assert(top->imm == 4);
-    assert(top->instr_valid == 0b1);
+    ASSERT_EQUALS(top->opcode, Opcode::E::JAL);
+    ASSERT_EQUALS(top->reg_dest, 31);
+    ASSERT_EQUALS(top->imm, 4);
+    ASSERT_EQUALS(top->instr_valid, 0b1);
 
     top->instruction = create_JAL(-4, 31);
 
     step();
 
-    assert(top->opcode == Opcode::E::JAL);
-    assert(top->reg_dest == 31);
-    assert(top->imm == -4);
-    assert(top->instr_valid == 0b1);
+    ASSERT_EQUALS(top->opcode, Opcode::E::JAL);
+    ASSERT_EQUALS(top->reg_dest, 31);
+    ASSERT_EQUALS(top->imm, -4);
+    ASSERT_EQUALS(top->instr_valid, 0b1);
   }
 };
 
@@ -142,7 +142,7 @@ public:
 
     step();
 
-    assert(top->instr_valid == 0b1);
+    ASSERT_EQUALS(top->instr_valid, 0b1);
   }
 };
 
@@ -153,7 +153,7 @@ public:
 
     step();
 
-    assert(top->instr_valid == 0b1);
+    ASSERT_EQUALS(top->instr_valid, 0b1);
   }
 };
 
@@ -164,7 +164,7 @@ public:
 
     step();
 
-    assert(top->instr_valid == 0b1);
+    ASSERT_EQUALS(top->instr_valid, 0b1);
   }
 };
 
@@ -175,7 +175,7 @@ public:
 
     step();
 
-    assert(top->instr_valid == 0b0);
+    ASSERT_EQUALS(top->instr_valid, 0b0);
   }
 };
 
@@ -192,4 +192,5 @@ int main(int argc, char **argv) {
   (new TestDecodeEbreak())->run("vcds/decode_ebreak.vcd");
   (new TestDecodeRiscvIllegalOps())->run("vcds/decode_illegalops.vcd");
   cout << "$$$$ Decoder passes tests" << endl;
+  HANDLE_ERROR_COUNTER;
 }
