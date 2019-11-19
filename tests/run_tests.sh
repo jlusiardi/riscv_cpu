@@ -18,6 +18,21 @@ function run_test() {
     ./obj_dir/V${MODULE}
 }
 
+function check_for_binary() {
+    COMMAND=`command -v $1`
+    if [ $? != 0 ]; then
+        echo -e "\e[31mFailed to find >$1< in path ($PATH)!\e[39m"
+        exit 1
+    else
+        echo -e "\e[92mUsing $COMMAND for $1.\e[0m"
+    fi
+}
+
+check_for_binary verilator
+check_for_binary make
+check_for_binary g++
+check_for_binary ar
+
 if [ -z "$@" ]; then
     MODULES="alu memory register_file ram_memory rom_memory decoder memory_control compare_unit cpu"
 else
