@@ -101,6 +101,16 @@ const int FUNC7_ALT_OP = 0b0100000;
         (TARGET)[(POSITION) + 3] = (instr >> 24) & 0xFF; \
     }
 
+/**
+ * Macro to read a 32bit value from a source
+ * consisting of 8bit slots (like ROM or RAM).
+ */
+#define read_4bytes(SRC, POSITION) \
+        (((SRC)[(POSITION) + 0]) \
+         + 256 * ((SRC)[(POSITION) + 1]) \
+         + 256 * 256 * ((SRC)[(POSITION) + 2]) \
+         + 256 * 256 * 256 * ((SRC)[(POSITION) + 3]))
+
 uint32_t create_LUI(int32_t immediate, Register::E rd) {
   int32_t tmp = (0xFFFFF & immediate) << 12;
   tmp = tmp | (0b11111 & rd) << 7;

@@ -8,8 +8,8 @@ int ERROR_COUNTER = 0;
 
 #define ASSERT_EQUALS(RESULT, EXPECTED) {\
         if (!((RESULT) == (EXPECTED))) {\
-            std::cout << "\x1B[31m[FAIL] " << std::hex << (RESULT) << " != " \
-                      << std::hex << (EXPECTED) << " in " << __FILE__ << ":" \
+            std::cout << "\x1B[31m[FAIL] " << std::hex << (int)(RESULT) << " != " \
+                      << std::hex << (EXPECTED) << " (expected) in " << __FILE__ << ":" \
                       << std::dec << __LINE__ << "\x1B[0m" << std::endl;\
             ERROR_COUNTER++;\
         }\
