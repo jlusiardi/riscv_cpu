@@ -105,11 +105,24 @@ const int FUNC7_ALT_OP = 0b0100000;
  * Macro to read a 32bit value from a source
  * consisting of 8bit slots (like ROM or RAM).
  */
-#define read_4bytes(SRC, POSITION) \
+#define read_word(SRC, POSITION) \
         (((SRC)[(POSITION) + 0]) \
          + 256 * ((SRC)[(POSITION) + 1]) \
          + 256 * 256 * ((SRC)[(POSITION) + 2]) \
          + 256 * 256 * 256 * ((SRC)[(POSITION) + 3]))
+
+#define read_unsigned_halfword(SRC, POSITION) \
+        (unsigned short)(((SRC)[(POSITION) + 0]) \
+         + 256 * ((SRC)[(POSITION) + 1]))
+
+#define read_halfword(SRC, POSITION) \
+        (signed short)(read_unsigned_halfword((SRC), (POSITION)))
+
+#define read_unsigned_byte(SRC, POSITION) \
+        (unsigned char)((SRC)[(POSITION) + 0])
+
+#define read_byte(SRC, POSITION) \
+        (signed char)(read_unsigned_byte((SRC), (POSITION)))
 
 uint32_t create_LUI(int32_t immediate, Register::E rd) {
   int32_t tmp = (0xFFFFF & immediate) << 12;
