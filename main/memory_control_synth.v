@@ -7,9 +7,7 @@ module memory_control_synth(
         input clk,
         input start,
         input[31:0] address,
-        /* verilator lint_off UNUSED */
         input[2:0] mode,
-        /* verilator lint_on UNUSED */
         output done,
         output[31:0] read_data
     );
