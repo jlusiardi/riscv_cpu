@@ -9,6 +9,14 @@ Go to the *test/* directory and run `./run_tests.sh` to run the tests.
 -t RAMADDRESS:BYTE_COUNT:EXPECTED_VALUE
 -t ByteCount@RamAddress=ExpectedValue   -t 4@0=123
 
+### Quartus Map
+
+In quartus dir:
+
+```
+quartus_map --64bit --read_settings_files=on --write_settings_files=off riscv_cpu -c riscv_cpu
+```
+
 ### Compile Toolchain
 
 Follow the instructions from the [riscv-gnu-toolchain repository ](https://github.com/riscv/riscv-gnu-toolchain).

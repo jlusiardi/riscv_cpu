@@ -78,7 +78,6 @@ class GeneralTest {
       top->clk = 1;
       step();
       top->clk = 0;
-      step();
     }
 
     /**
