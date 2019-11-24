@@ -19,15 +19,15 @@ module memory_control_synth(
     reg[31:0] address_reg;
     /* verilator lint_off UNUSED */
     /* verilator lint_off UNDRIVEN */
-    reg[7:0] read_data_reg;
+    wire[7:0] read_data_reg;
     reg[31:0] result_data_reg;
     reg[7:0] write_data_reg;
     reg first;
     /* verilator lint_on UNDRIVEN */
     /* verilator lint_on UNUSED */
     reg active;
+    reg done_reg;
 
-    
     memory_synth mem ( 
         .read_data(read_data_reg),
         .address(address_reg + {28'b0, offset}),
@@ -65,10 +65,10 @@ module memory_control_synth(
                                      | ({24'b0, read_data_reg});
                 end
                 if (offset == 0 && counter == 1) begin
-                    done <= 1;
+                    done_reg <= 1;
                 end;
                 if (counter == 0) begin
-                    done <= 0;
+                    done_reg <= 0;
                     result_data_reg <= 32'b0;
                 end else begin
                     counter <= counter - 1;
@@ -79,5 +79,6 @@ module memory_control_synth(
     end
 
     assign read_data = result_data_reg;
+    assign done = done_reg;
 
 endmodule

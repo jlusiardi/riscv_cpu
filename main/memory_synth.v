@@ -41,15 +41,16 @@ module memory_synth(
         .clk(clk)
     );
 
+    reg[7:0] read_data_reg;
+
     always @(*) begin
         if (rom_illegal_address == 0) 
-            read_data = rom_read_data;
+            read_data_reg = rom_read_data;
         else if (ram_illegal_address == 0) 
-            read_data = ram_read_data;
+            read_data_reg = ram_read_data;
         else
-            read_data = 8'b0;
-
-//        illegal_read_address = ram_illegal_read_address & rom_illegal_read_address;
-//        illegal_write_address = ram_illegal_write_address;
+            read_data_reg = 8'b0;
     end
+
+    assign read_data = read_data_reg;
 endmodule
