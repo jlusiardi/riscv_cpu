@@ -38,7 +38,7 @@
 
 set_global_assignment -name FAMILY "Cyclone II"
 set_global_assignment -name DEVICE EP2C5T144I8
-set_global_assignment -name TOP_LEVEL_ENTITY cpu
+set_global_assignment -name TOP_LEVEL_ENTITY memory_control_synth
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION "13.0 SP1"
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "21:03:20  NOVEMBER 13, 2019"
 set_global_assignment -name LAST_QUARTUS_VERSION "13.0 SP1"
@@ -47,9 +47,18 @@ set_global_assignment -name MIN_CORE_JUNCTION_TEMP "-40"
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 125
 set_global_assignment -name DEVICE_FILTER_PIN_COUNT 144
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVTTL"
+set_location_assignment PIN_17 -to clk
+set_location_assignment PIN_144 -to rst
+set_global_assignment -name SYNTH_TIMING_DRIVEN_SYNTHESIS OFF
+set_global_assignment -name ALLOW_ANY_RAM_SIZE_FOR_RECOGNITION ON
+set_global_assignment -name ALLOW_ANY_ROM_SIZE_FOR_RECOGNITION ON
+set_global_assignment -name VERILOG_FILE ../main/ram_memory_synth.v
+set_global_assignment -name VERILOG_FILE ../main/rom_memory_synth.v
+set_global_assignment -name VERILOG_FILE ../main/memory_synth.v
+set_global_assignment -name VERILOG_FILE ../main/memory_control_synth.v
 set_global_assignment -name VERILOG_FILE ../main/alu.v -hdl_version SystemVerilog_2005
 set_global_assignment -name VERILOG_FILE ../main/stage_counter.v -hdl_version SystemVerilog_2005
 set_global_assignment -name VERILOG_FILE ../main/rom_memory.v -hdl_version SystemVerilog_2005
@@ -66,9 +75,7 @@ set_global_assignment -name VERILOG_FILE ../main/cpu.v -hdl_version SystemVerilo
 set_global_assignment -name VERILOG_FILE ../main/compare_unit.v -hdl_version SystemVerilog_2005
 set_global_assignment -name VERILOG_FILE ../main/arch_defines.v -hdl_version SystemVerilog_2005
 set_global_assignment -name VERILOG_FILE ../main/alu_control.v -hdl_version SystemVerilog_2005
-set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
-set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
-set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVTTL"
-set_location_assignment PIN_17 -to clk
-set_location_assignment PIN_144 -to rst
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
