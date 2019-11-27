@@ -26,7 +26,7 @@ check_for_binary g++
 check_for_binary ar
 
 if [ -z "$@" ]; then
-    MODULES="alu memory register_file ram_memory ram_memory_synth rom_memory decoder memory_control compare_unit cpu memory_control_synth memory_synth ram_memory_synth rom_memory_synth"
+    MODULES="alu memory register_file ram_memory ram_memory_synth rom_memory decoder memory_control compare_unit cpu memory_control_synth memory_synth ram_memory_synth rom_memory_synth cpu_synth"
 else
     MODULES="$@"
 fi

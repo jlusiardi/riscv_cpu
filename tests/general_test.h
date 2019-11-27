@@ -3,6 +3,7 @@
 #include <verilated_vcd_c.h>
 #include <string>
 #include <iostream>
+#include "riscv.h"
 
 int ERROR_COUNTER = 0;
 
@@ -20,6 +21,15 @@ int ERROR_COUNTER = 0;
             exit(ERROR_COUNTER); \
         } \
 }
+
+/**
+ * Macro to execute exactly one instruction by performin clock cycles until the
+ * next stage is the fetch stage.
+ */
+#define EXECUTE_INSTR \
+        do {\
+            clock_cycle();\
+        } while (top->STAGE != STAGE_FETCH);
 
 template<class TOP>
 class GeneralTest {

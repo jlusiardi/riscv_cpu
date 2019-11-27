@@ -89,7 +89,7 @@ public:
     // wait until the PC gets stationary ('while(while(1){})')
     while (top->PC != pc_old) {
       pc_old = top->PC;
-      clock_cycles(STAGE_COUNT);
+      EXECUTE_INSTR;
     }
     if (this->test_file != "") {
       perform_tests(this->test_file);

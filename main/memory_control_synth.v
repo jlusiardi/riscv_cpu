@@ -4,14 +4,22 @@
 `endif // ARCH_DEFINES
 
 module memory_control_synth(
-        input clk,
-        input start,
-        input[31:0] address,
-        input[2:0] mode,
-        input write_enable,
-        input[31:0] write_data,
-        output done,
-        output[31:0] read_data
+        input clk,              // the system's clock
+        input start,            // indiction of the start of a memory operation,
+                                // while high on a positive clock edge store all 
+                                // input data into registers and start the
+                                // process
+        input[31:0] address,    // the address to read/write 
+        input[2:0] mode,        // the mode of operation (aka the FUNC3 of the 
+                                // load/store opcode
+        input write_enable,     // high means write is enabled, low is a read op
+        input[31:0] write_data, // if write_enable, this is the data to write
+        output done,            // high for one clock cycle to indicate that the
+                                // operation was done
+        output[31:0] read_data, // if not write_enable this is the data that was 
+                                // read
+        output active           // high as long as the operation is going on 
+                                // (from the clock's first pos edge to done)
     );
 
     reg[2:0] counter;
@@ -21,7 +29,7 @@ module memory_control_synth(
     reg[31:0] result_data_reg;
     reg[31:0] write_all_data_reg;
     reg first;
-    reg active;
+    reg ongoing;
     reg done_reg;
     reg write_enable_reg;
 
@@ -48,6 +56,7 @@ module memory_control_synth(
             write_enable_reg <= write_enable;
             write_all_data_reg <= write_data;
             active <= 1;
+            ongoing <= 1;
             first <= 1;
             if (mode[1:0] == 2'b0) begin
                 counter <= 1;
@@ -60,7 +69,7 @@ module memory_control_synth(
                 offset <= 3;
             end
         end else begin
-            if (active == 1) begin
+            if (ongoing == 1) begin
                 if (first == 1) begin
                     first <= 0;
                     if (mode[2] == 0 && read_data_reg[7] == 1) begin
@@ -75,9 +84,11 @@ module memory_control_synth(
                 if (offset == 0 && counter == 1) begin
                     done_reg <= 1;
                     write_enable_reg <= 0;
+                    active <= 0;
                 end;
                 if (counter == 0) begin
                     done_reg <= 0;
+                    active <= 0;
                     result_data_reg <= 32'b0;
                 end else begin
                     counter <= counter - 1;
