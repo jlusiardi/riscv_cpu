@@ -17,9 +17,9 @@ using namespace std;
 class TestVcpuAddi: public GeneralTest<Vcpu_synth> {
   public:
     virtual void test() {
-      insert_4bytes(top->ROM, 0, create_ADDI(1, Register::E::x0, Register::E::x1));
-      insert_4bytes(top->ROM, 4, create_ADDI(2, Register::E::x0, Register::E::x2));
-      insert_4bytes(top->ROM, 8, create_ADDI(3, Register::E::x1, Register::E::x3));
+      insert_4bytes(top->ROM, 0, create_ADDI(Register::E::x1, Register::E::x0, 1));
+      insert_4bytes(top->ROM, 4, create_ADDI(Register::E::x2, Register::E::x0, 2));
+      insert_4bytes(top->ROM, 8, create_ADDI(Register::E::x3, Register::E::x1, 3));
 
       top->rst = 0;
       clock_cycle();
@@ -37,9 +37,9 @@ class TestVcpuAddi: public GeneralTest<Vcpu_synth> {
 class TestVcpuAdd: public GeneralTest<Vcpu_synth> {
   public:
     virtual void test() {
-      insert_4bytes(top->ROM, 0, create_ADDI(2, Register::E::x0, Register::E::x1));
-      insert_4bytes(top->ROM, 4, create_ADD(Register::E::x1, Register::E::x1, Register::E::x2));
-      insert_4bytes(top->ROM, 8, create_ADD(Register::E::x2, Register::E::x1, Register::E::x3));
+      insert_4bytes(top->ROM, 0, create_ADDI(Register::E::x1, Register::E::x0, 2));
+      insert_4bytes(top->ROM, 4, create_ADD(Register::E::x2, Register::E::x1, Register::E::x1));
+      insert_4bytes(top->ROM, 8, create_ADD(Register::E::x3, Register::E::x1, Register::E::x2));
 
       top->rst = 0;
       clock_cycle();
@@ -57,8 +57,8 @@ class TestVcpuAdd: public GeneralTest<Vcpu_synth> {
 class TestVcpuSub: public GeneralTest<Vcpu_synth> {
   public:
     virtual void test() {
-      insert_4bytes(top->ROM, 0, create_ADDI(2, Register::E::x0, Register::E::x1));
-      insert_4bytes(top->ROM, 4, create_ADDI(3, Register::E::x0, Register::E::x2));
+      insert_4bytes(top->ROM, 0, create_ADDI(Register::E::x1, Register::E::x0, 2));
+      insert_4bytes(top->ROM, 4, create_ADDI(Register::E::x2, Register::E::x0, 3));
       insert_4bytes(top->ROM, 8, create_SUB(Register::E::x2, Register::E::x1, Register::E::x3));
       insert_4bytes(top->ROM, 12, create_SUB(Register::E::x1, Register::E::x2, Register::E::x3));
 
@@ -80,8 +80,8 @@ class TestVcpuSub: public GeneralTest<Vcpu_synth> {
 class TestVcpuLi: public GeneralTest<Vcpu_synth> {
   public:
     virtual void test() {
-      insert_4bytes(top->ROM, 0, create_LUI(0xaaaab, Register::E::x15));
-      insert_4bytes(top->ROM, 4, create_ADDI(-1366, Register::E::x15, Register::E::x15));
+      insert_4bytes(top->ROM, 0, create_LUI(Register::E::x15, 0xaaaab));
+      insert_4bytes(top->ROM, 4, create_ADDI(Register::E::x15, Register::E::x15, -1366));
 
       top->rst = 0;
       clock_cycle();
@@ -97,9 +97,9 @@ class TestVcpuLi: public GeneralTest<Vcpu_synth> {
 class TestVcpuAuipc: public GeneralTest<Vcpu_synth> {
   public:
     virtual void test() {
-      insert_4bytes(top->ROM, 0, create_AUIPC(1048575, Register::E::x1));
-      insert_4bytes(top->ROM, 4, create_AUIPC(1048575, Register::E::x2));
-      insert_4bytes(top->ROM, 8, create_AUIPC(1048575, Register::E::x3));
+      insert_4bytes(top->ROM, 0, create_AUIPC(Register::E::x1, 1048575));
+      insert_4bytes(top->ROM, 4, create_AUIPC(Register::E::x2, 1048575));
+      insert_4bytes(top->ROM, 8, create_AUIPC(Register::E::x3, 1048575));
 
       top->rst = 0;
       clock_cycle();
@@ -114,20 +114,13 @@ class TestVcpuAuipc: public GeneralTest<Vcpu_synth> {
     }
 };
 
-class TestVcpuLb: public GeneralTest<Vcpu_synth> {
+class TestVcpuLb_no_signextend: public GeneralTest<Vcpu_synth> {
   public:
     virtual void test() {
-      insert_4bytes(top->RAM, 0, 0x12345678);
-      insert_4bytes(top->RAM, 4, 0xFFFFFFFF);
-      top->RAM[8] = 0x21;
-      top->RAM[9] = 0x43;
-      top->RAM[10] = 0x65;
-      top->RAM[11] = 0x87;
-
-      insert_4bytes(top->ROM, 0, create_LUI(0x00001, Register::E::x2));
-      insert_4bytes(top->ROM, 4, create_LB(0, Register::E::x2, Register::E::x1));
-      insert_4bytes(top->ROM, 8, create_LB(4, Register::E::x2, Register::E::x1));
-      insert_4bytes(top->ROM, 12, create_LB(8, Register::E::x2, Register::E::x1));
+      top->REGISTERS[0] = 0x0000;
+      top->REGISTERS[1] = 0x1000;
+      top->RAM[0] = 0x78;
+      insert_4bytes(top->ROM, 0, create_LB(Register::E::x1, 0, Register::E::x2));
 
       top->rst = 0;
       clock_cycle();
@@ -135,16 +128,25 @@ class TestVcpuLb: public GeneralTest<Vcpu_synth> {
       top->rst = 1;
       EXECUTE_INSTR;
 
-      ASSERT_EQUALS(top->REGISTERS[1], 0x1000);
-      EXECUTE_INSTR;
-
       ASSERT_EQUALS(top->REGISTERS[0], 0x78);
+    }
+};
+
+class TestVcpuLb_signextend: public GeneralTest<Vcpu_synth> {
+  public:
+    virtual void test() {
+      top->REGISTERS[0] = 0x0000;
+      top->REGISTERS[1] = 0x1000;
+      top->RAM[0] = 0x88;
+      insert_4bytes(top->ROM, 0, create_LB(Register::E::x1, 0, Register::E::x2));
+
+      top->rst = 0;
+      clock_cycle();
+      clock_cycle();
+      top->rst = 1;
       EXECUTE_INSTR;
 
-      ASSERT_EQUALS(top->REGISTERS[0], 0xFFFFFFFF);
-      EXECUTE_INSTR;
-
-      ASSERT_EQUALS(top->REGISTERS[0], 0x00000021);
+      ASSERT_EQUALS(top->REGISTERS[0], 0xFFFFFF88);
     }
 };
 
@@ -157,9 +159,9 @@ class TestVcpuLbu: public GeneralTest<Vcpu_synth> {
       top->RAM[10] = 0x65;
       top->RAM[11] = 0x87;
 
-      insert_4bytes(top->ROM, 0, create_LUI(0x00001, Register::E::x2));
-      insert_4bytes(top->ROM, 4, create_LBU(3, Register::E::x2, Register::E::x1));
-      insert_4bytes(top->ROM, 8, create_LBU(8, Register::E::x2, Register::E::x1));
+      insert_4bytes(top->ROM, 0, create_LUI(Register::E::x2, 0x00001));
+      insert_4bytes(top->ROM, 4, create_LBU(Register::E::x1, 3, Register::E::x2));
+      insert_4bytes(top->ROM, 8, create_LBU(Register::E::x1, 8, Register::E::x2));
 
       top->rst = 0;
       clock_cycle();
@@ -189,10 +191,10 @@ class TestVcpuLh: public GeneralTest<Vcpu_synth> {
       top->RAM[10] = 0x65;
       top->RAM[11] = 0x87;
 
-      insert_4bytes(top->ROM, 0, create_LUI(0x00001, Register::E::x2));
-      insert_4bytes(top->ROM, 4, create_LH(0, Register::E::x2, Register::E::x1));
-      insert_4bytes(top->ROM, 8, create_LH(4, Register::E::x2, Register::E::x1));
-      insert_4bytes(top->ROM, 12, create_LH(8, Register::E::x2, Register::E::x1));
+      insert_4bytes(top->ROM, 0, create_LUI(Register::E::x2, 0x00001));
+      insert_4bytes(top->ROM, 4, create_LH(Register::E::x1, 0, Register::E::x2));
+      insert_4bytes(top->ROM, 8, create_LH(Register::E::x1, 4, Register::E::x2));
+      insert_4bytes(top->ROM, 12, create_LH(Register::E::x1, 8, Register::E::x2));
 
       top->rst = 0;
       clock_cycle();
@@ -217,8 +219,8 @@ class TestVcpuLhu: public GeneralTest<Vcpu_synth> {
   public:
     virtual void test() {
       insert_4bytes(top->RAM, 3, -1);
-      insert_4bytes(top->ROM, 0, create_LUI(0x00001, Register::E::x2));
-      insert_4bytes(top->ROM, 4, create_LHU(3, Register::E::x2, Register::E::x1));
+      insert_4bytes(top->ROM, 0, create_LUI(Register::E::x2, 0x00001));
+      insert_4bytes(top->ROM, 4, create_LHU(Register::E::x1, 3, Register::E::x2));
 
       top->rst = 0;
       clock_cycle();
@@ -240,10 +242,10 @@ class TestVcpuLw: public GeneralTest<Vcpu_synth> {
     virtual void test() {
       insert_4bytes(top->RAM, 0, 0x12345678);
       insert_4bytes(top->RAM, 4, 0xC0FFEE23);
-      insert_4bytes(top->ROM, 0, create_LUI(0x00001, Register::E::x2));
-      insert_4bytes(top->ROM, 4, create_LW(0, Register::E::x2, Register::E::x1));
-      insert_4bytes(top->ROM, 8, create_LW(4, Register::E::x2, Register::E::x1));
-      insert_4bytes(top->ROM, 12, create_LW(2, Register::E::x2, Register::E::x1));
+      insert_4bytes(top->ROM, 0, create_LUI(Register::E::x2, 0x00001));
+      insert_4bytes(top->ROM, 4, create_LW(Register::E::x1, 0, Register::E::x2));
+      insert_4bytes(top->ROM, 8, create_LW(Register::E::x1, 4, Register::E::x2));
+      insert_4bytes(top->ROM, 12, create_LW(Register::E::x1, 2, Register::E::x2));
 
       top->rst = 0;
       clock_cycle();
@@ -269,12 +271,13 @@ class TestVcpuSw: public GeneralTest<Vcpu_synth> {
     virtual void test() {
       top->RAM[0] = 0xCA;
       top->RAM[5] = 0xCA;
-      insert_4bytes(top->ROM, 0, create_LUI(0x00001, Register::E::x1));
-      insert_4bytes(top->ROM, 4, create_LUI(0x87654, Register::E::x2));
-      insert_4bytes(top->ROM, 8, create_ADDI(801, Register::E::x2, Register::E::x2));
-      // sw x2, 0(x1)
-      insert_4bytes(top->ROM, 12, create_SW(1, Register::E::x1, Register::E::x2));
-      insert_4bytes(top->ROM, 16, create_LW(1, Register::E::x2, Register::E::x1));
+      insert_4bytes(top->ROM, 0, create_LUI(Register::E::x1, 0x00001));
+      insert_4bytes(top->ROM, 4, create_LUI(Register::E::x2, 0x87654));
+      insert_4bytes(top->ROM, 8, create_ADDI(Register::E::x2, Register::E::x2, 801));
+      // sw x2, 1(x1)
+      insert_4bytes(top->ROM, 12, create_SW(Register::E::x2, 1, Register::E::x1));
+      // sw x3, 1(x1)
+      insert_4bytes(top->ROM, 16, create_LW(Register::E::x3, 1, Register::E::x1));
 
       top->rst = 0;
       clock_cycle();
@@ -299,21 +302,25 @@ class TestVcpuSw: public GeneralTest<Vcpu_synth> {
       ASSERT_EQUALS(top->RAM[4], 0x87);
       EXECUTE_INSTR;
 
-      ASSERT_EQUALS(top->REGISTERS[0], 0x87654321);
+      ASSERT_EQUALS(top->REGISTERS[2], 0x87654321);
     }
 };
 
 class TestVcpuSh: public GeneralTest<Vcpu_synth> {
   public:
     virtual void test() {
+      top->REGISTERS[0] = 0x1000;
+      top->REGISTERS[1] = 0x87654321;
+      top->REGISTERS[2] = 0x12345678;
+
       top->RAM[0] = 0xCA;
+      top->RAM[1] = 0xCA;
+      top->RAM[2] = 0xCA;
       top->RAM[3] = 0xCA;
-      insert_4bytes(top->ROM, 0, create_LUI(0x00001, Register::E::x1));
-      insert_4bytes(top->ROM, 4, create_LUI(0x87654, Register::E::x2));
-      insert_4bytes(top->ROM, 8, create_ADDI(801, Register::E::x2, Register::E::x2));
-      // sw x2, 0(x1)
-      insert_4bytes(top->ROM, 12, create_SH(1, Register::E::x1, Register::E::x2));
-      insert_4bytes(top->ROM, 16, create_LH(1, Register::E::x2, Register::E::x1));
+      // sh x2, 1(x1)
+      insert_4bytes(top->ROM, 0, create_SH(Register::E::x2, 1, Register::E::x1));
+      // lh x3, 1(x1)
+      insert_4bytes(top->ROM, 4, create_LH(Register::E::x3, 1, Register::E::x1));
 
       top->rst = 0;
       clock_cycle();
@@ -321,35 +328,30 @@ class TestVcpuSh: public GeneralTest<Vcpu_synth> {
       top->rst = 1;
       EXECUTE_INSTR;
 
-      ASSERT_EQUALS(top->REGISTERS[0], 0x1000);
-      EXECUTE_INSTR;
-
-      ASSERT_EQUALS(top->REGISTERS[1], 0x87654000);
-      EXECUTE_INSTR;
-
-      ASSERT_EQUALS(top->REGISTERS[1], 0x87654321);
-      EXECUTE_INSTR;
       ASSERT_EQUALS(top->RAM[0], 0xCA);
-      ASSERT_EQUALS(top->RAM[3], 0xCA);
       ASSERT_EQUALS(top->RAM[1], 0x21);
       ASSERT_EQUALS(top->RAM[2], 0x43);
+      ASSERT_EQUALS(top->RAM[3], 0xCA);
       EXECUTE_INSTR;
 
-      ASSERT_EQUALS(top->REGISTERS[0], 0x00004321);
+      ASSERT_EQUALS(top->REGISTERS[2], 0x00004321);
     }
 };
 
 class TestVcpuSb: public GeneralTest<Vcpu_synth> {
   public:
     virtual void test() {
+      top->REGISTERS[0] = 0x1000;
+      top->REGISTERS[1] = 0x87654321;
+      top->REGISTERS[2] = 0x12345678;
+
       top->RAM[0] = 0xCA;
+      top->RAM[1] = 0xCA;
       top->RAM[2] = 0xCA;
-      insert_4bytes(top->ROM, 0, create_LUI(0x00001, Register::E::x1));
-      insert_4bytes(top->ROM, 4, create_LUI(0x87654, Register::E::x2));
-      insert_4bytes(top->ROM, 8, create_ADDI(801, Register::E::x2, Register::E::x2));
-      // sw x2, 0(x1)
-      insert_4bytes(top->ROM, 12, create_SB(1, Register::E::x1, Register::E::x2));
-      insert_4bytes(top->ROM, 16, create_LB(1, Register::E::x2, Register::E::x1));
+      // sw x2, 1(x1)
+      insert_4bytes(top->ROM, 0, create_SB(Register::E::x2, 1, Register::E::x1));
+      // lb x3, 1(x1)
+      insert_4bytes(top->ROM, 4, create_LB(Register::E::x3, 1, Register::E::x1));
 
       top->rst = 0;
       clock_cycle();
@@ -357,21 +359,12 @@ class TestVcpuSb: public GeneralTest<Vcpu_synth> {
       top->rst = 1;
       EXECUTE_INSTR;
 
-      ASSERT_EQUALS(top->REGISTERS[0], 0x1000);
-      EXECUTE_INSTR;
-
-      ASSERT_EQUALS(top->REGISTERS[1], 0x87654000);
-      EXECUTE_INSTR;
-
-      ASSERT_EQUALS(top->REGISTERS[1], 0x87654321);
-      EXECUTE_INSTR;
-
       ASSERT_EQUALS(top->RAM[0], 0xCA);
-      ASSERT_EQUALS(top->RAM[2], 0xCA);
       ASSERT_EQUALS(top->RAM[1], 0x21);
+      ASSERT_EQUALS(top->RAM[2], 0xCA);
       EXECUTE_INSTR;
 
-      ASSERT_EQUALS(top->REGISTERS[0], 0x00000021);
+      ASSERT_EQUALS(top->REGISTERS[2], 0x00000021);
     }
 };
 
@@ -379,7 +372,7 @@ class TestVcpuStageCounter: public GeneralTest<Vcpu_synth> {
   public:
     virtual void test() {
       for (int i =0; i<512; i++) {
-        insert_4bytes(top->ROM, 4 * i, create_ADDI(0, Register::E::x0, Register::E::x0));
+        insert_4bytes(top->ROM, 4 * i, create_ADDI(Register::E::x0, Register::E::x0, 0));
       }
       top->rst = 1;
       ASSERT_EQUALS(top->STAGE, 0);
@@ -409,12 +402,12 @@ class TestVcpuStageCounter: public GeneralTest<Vcpu_synth> {
 class TestVcpuBeq: public GeneralTest<Vcpu_synth> {
   public:
     virtual void test() {
-      insert_4bytes(top->ROM, 0, create_BEQ(8, Register::E::x0, Register::E::x0));
-      insert_4bytes(top->ROM, 4, create_ADDI(23, Register::E::x0, Register::E::x1));
-      insert_4bytes(top->ROM, 8, create_ADDI(42, Register::E::x0, Register::E::x2));
-      insert_4bytes(top->ROM, 12, create_BEQ(8, Register::E::x2, Register::E::x0));
-      insert_4bytes(top->ROM, 16, create_ADDI(65, Register::E::x0, Register::E::x3));
-      insert_4bytes(top->ROM, 20, create_ADDI(56, Register::E::x0, Register::E::x4));
+      insert_4bytes(top->ROM, 0, create_BEQ(Register::E::x0, Register::E::x0, 8));
+      insert_4bytes(top->ROM, 4, create_ADDI(Register::E::x1, Register::E::x0, 23));
+      insert_4bytes(top->ROM, 8, create_ADDI(Register::E::x2, Register::E::x0, 42));
+      insert_4bytes(top->ROM, 12, create_BEQ(Register::E::x2, Register::E::x0, 8));
+      insert_4bytes(top->ROM, 16, create_ADDI(Register::E::x3, Register::E::x0, 65));
+      insert_4bytes(top->ROM, 20, create_ADDI(Register::E::x4, Register::E::x0, 56));
 
       step();
       top->rst = 1;
@@ -442,12 +435,12 @@ class TestVcpuBeq: public GeneralTest<Vcpu_synth> {
 class TestVcpuBne: public GeneralTest<Vcpu_synth> {
   public:
     virtual void test() {
-      insert_4bytes(top->ROM, 0, create_BNE(8, Register::E::x0, Register::E::x0));
-      insert_4bytes(top->ROM, 4, create_ADDI(23, Register::E::x0, Register::E::x1));
-      insert_4bytes(top->ROM, 8, create_ADDI(42, Register::E::x0, Register::E::x2));
-      insert_4bytes(top->ROM, 12, create_BNE(8, Register::E::x2, Register::E::x0));
-      insert_4bytes(top->ROM, 16, create_ADDI(65, Register::E::x0, Register::E::x3));
-      insert_4bytes(top->ROM, 20, create_ADDI(56, Register::E::x0, Register::E::x4));
+      insert_4bytes(top->ROM, 0, create_BNE(Register::E::x0, Register::E::x0, 8));
+      insert_4bytes(top->ROM, 4, create_ADDI(Register::E::x1, Register::E::x0, 23));
+      insert_4bytes(top->ROM, 8, create_ADDI(Register::E::x2, Register::E::x0, 42));
+      insert_4bytes(top->ROM, 12, create_BNE(Register::E::x2, Register::E::x0, 8));
+      insert_4bytes(top->ROM, 16, create_ADDI(Register::E::x3, Register::E::x0, 65));
+      insert_4bytes(top->ROM, 20, create_ADDI(Register::E::x4, Register::E::x0, 56));
 
       step();
       top->rst = 1;
@@ -475,8 +468,8 @@ class TestVcpuBne: public GeneralTest<Vcpu_synth> {
 class TestVcpuSrai: public GeneralTest<Vcpu_synth> {
   public:
     virtual void test() {
-      insert_4bytes(top->ROM, 0, create_LUI(524288, Register::E::x1));
-      insert_4bytes(top->ROM, 4, create_ADDI(2, Register::E::x1, Register::E::x1));
+      insert_4bytes(top->ROM, 0, create_LUI(Register::E::x1, 524288));
+      insert_4bytes(top->ROM, 4, create_ADDI(Register::E::x1, Register::E::x1, 2));
       insert_4bytes(top->ROM, 8, create_SRAI(1, Register::E::x1, Register::E::x2));
 
       step();
@@ -497,8 +490,8 @@ class TestVcpuSrai: public GeneralTest<Vcpu_synth> {
 class TestVcpuSrli: public GeneralTest<Vcpu_synth> {
   public:
     virtual void test() {
-      insert_4bytes(top->ROM, 0, create_LUI(524288, Register::E::x1));
-      insert_4bytes(top->ROM, 4, create_ADDI(2, Register::E::x1, Register::E::x1));
+      insert_4bytes(top->ROM, 0, create_LUI(Register::E::x1, 524288));
+      insert_4bytes(top->ROM, 4, create_ADDI(Register::E::x1, Register::E::x1, 2));
       insert_4bytes(top->ROM, 8, create_SRLI(1, Register::E::x1, Register::E::x2));
 
       step();
@@ -519,8 +512,8 @@ class TestVcpuSrli: public GeneralTest<Vcpu_synth> {
 class TestVcpuSlli: public GeneralTest<Vcpu_synth> {
   public:
     virtual void test() {
-      insert_4bytes(top->ROM, 0, create_LUI(524288, Register::E::x1));
-      insert_4bytes(top->ROM, 4, create_ADDI(2, Register::E::x1, Register::E::x1));
+      insert_4bytes(top->ROM, 0, create_LUI(Register::E::x1, 524288));
+      insert_4bytes(top->ROM, 4, create_ADDI(Register::E::x1, Register::E::x1, 2));
       insert_4bytes(top->ROM, 8, create_SLLI(1, Register::E::x1, Register::E::x2));
 
       step();
@@ -541,8 +534,8 @@ class TestVcpuSlli: public GeneralTest<Vcpu_synth> {
 class TestVcpuJalr: public GeneralTest<Vcpu_synth> {
   public:
     virtual void test() {
-      insert_4bytes(top->ROM, 0, create_ADDI(16, Register::E::x0, Register::E::x1));
-      insert_4bytes(top->ROM, 4, create_JALR(8, Register::E::x1, Register::E::x2));
+      insert_4bytes(top->ROM, 0, create_ADDI(Register::E::x1, Register::E::x0, 16));
+      insert_4bytes(top->ROM, 4, create_JALR(Register::E::x2, 8, Register::E::x1));
 
       step();
       top->rst = 1;
@@ -560,9 +553,9 @@ class TestVcpuJalr: public GeneralTest<Vcpu_synth> {
 class TestVcpuJal: public GeneralTest<Vcpu_synth> {
   public:
     virtual void test() {
-      insert_4bytes(top->ROM, 0, create_JAL(8, Register::E::x2));
-      insert_4bytes(top->ROM, 4, create_ADDI(0, Register::E::x0, Register::E::x0));
-      insert_4bytes(top->ROM, 8, create_ADDI(0, Register::E::x0, Register::E::x0));
+      insert_4bytes(top->ROM, 0, create_JAL(Register::E::x2, 8));
+      insert_4bytes(top->ROM, 4, create_ADDI(Register::E::x0, Register::E::x0, 0));
+      insert_4bytes(top->ROM, 8, create_ADDI(Register::E::x0, Register::E::x0, 0));
 
       step();
       top->rst = 1;
@@ -577,12 +570,12 @@ int main(const int argc, char** argv) {
   cout << "---- CPU RISCV tests passed" << endl;
 //  (new TestVcpuStageCounter())->run("vcds/cpu_stage_counter.vcd");
   (new TestVcpuAddi())->run("vcds/cpu_addis.vcd");
-/*
   (new TestVcpuAdd())->run("vcds/cpu_adds.vcd");
   (new TestVcpuSub())->run("vcds/cpu_subs.vcd");
   (new TestVcpuLi())->run("vcds/cpu_li.vcd");
   (new TestVcpuAuipc())->run("vcds/cpu_auipc.vcd");
-  (new TestVcpuLb())->run("vcds/cpu_lb.vcd");
+  (new TestVcpuLb_no_signextend())->run("vcds/cpu_synth_lb.vcd");
+  (new TestVcpuLb_signextend())->run("vcds/cpu_synth_lb_signextend.vcd");
   (new TestVcpuLbu())->run("vcds/cpu_lbu.vcd");
   (new TestVcpuLh())->run("vcds/cpu_lb.vcd");
   (new TestVcpuLhu())->run("vcds/cpu_lbu.vcd");
@@ -597,7 +590,6 @@ int main(const int argc, char** argv) {
   (new TestVcpuSlli())->run("vcds/cpu_slli.vcd");
   (new TestVcpuJalr())->run("vcds/cpu_jalr.vcd");
   (new TestVcpuJal())->run("vcds/cpu_jal.vcd");
-*/
   cout << "$$$$ CPU RISCV tests passed" << endl;
   HANDLE_ERROR_COUNTER;
 }

@@ -9,12 +9,16 @@ module cpu_synth(
     );
 
     wire [2:0] w_stage;
+    wire w_start_fetch;
+    wire w_start_memory;
 
     stage_counter_synth stage_counter(
         .clk(clk),
         .rst(rst),
-        .blocked(w_blocking_mem),
-        .out(w_stage)
+        .blocked(w_blocking_mem | w_start_fetch | w_start_memory),
+        .out(w_stage),
+        .start_fetch(w_start_fetch),
+        .start_memory(w_start_memory)
     );
 
     wire w_current_instruction_register_write_enable;
@@ -88,15 +92,14 @@ module cpu_synth(
     memory_control_synth mem_ctrl(
         .clk(clk),
         .start(
-            w_stage == `STAGE_FETCH
-            || (w_stage == `STAGE_MEMORY && (w_func7 == `RISCV_LOAD
-                                            || w_func7 == `RISCV_STORE))
+            w_start_fetch
+            || (w_start_memory && (w_opcode == `RISCV_LOAD || w_opcode == `RISCV_STORE))
         ),
         .address(
-            w_pc_output
+            w_stage == `STAGE_FETCH ? w_pc_output : w_register_src_0_register + w_immediate
         ),
-        .mode(w_func3),
-        .write_enable(w_stage == `STAGE_MEMORY && w_func7 == `RISCV_STORE),
+        .mode(w_stage == `STAGE_FETCH ? 3'b010 : w_func3),
+        .write_enable(w_stage == `STAGE_MEMORY && w_opcode == `RISCV_STORE),
         .write_data(w_register_src_1_register),
         .done(w_done),
         .read_data(w_read_data),

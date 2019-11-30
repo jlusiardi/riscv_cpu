@@ -124,24 +124,31 @@ const int FUNC7_ALT_OP = 0b0100000;
 #define read_byte(SRC, POSITION) \
         (signed char)(read_unsigned_byte((SRC), (POSITION)))
 
-uint32_t create_LUI(int32_t immediate, Register::E rd) {
-  int32_t tmp = (0xFFFFF & immediate) << 12;
-  tmp = tmp | (0b11111 & rd) << 7;
-  tmp = tmp | Opcode::E::LUI;
-  return tmp;
-}
-
-uint32_t create_SW(int32_t offset, uint8_t rs1, uint8_t rs2) {
-  int p1 = (0b11111 & offset) << 7;
-  int p2 = (0b11111111111100000 & offset) << 20;
-  int32_t tmp = p1 | p2;
+uint32_t create_ADD(Register::E rd, Register::E rs1, Register::E rs2) {
+  int32_t tmp = 0;
   tmp = tmp | (0b11111 & rs1) << 15;
   tmp = tmp | (0b11111 & rs2) << 20;
-  tmp = tmp | 0b0100011 | (0b010 << 12);
+  tmp = tmp | (0b11111 & rd) << 7;
+  tmp = tmp | Opcode::E::OP;
   return tmp;
 }
 
-uint32_t create_BEQ(int32_t offset, Register::E rs1, Register::E rs2) {
+uint32_t create_ADDI(Register::E rd, Register::E rs1, int32_t immediate) {
+  int32_t tmp = (0b111111111111 & immediate) << 20;
+  tmp = tmp | (0b11111 & rs1) << 15;
+  tmp = tmp | (0b11111 & rd) << 7;
+  tmp = tmp | Opcode::E::OP_IMM;
+  return tmp;
+}
+
+uint32_t create_AUIPC(Register::E rd, int32_t immediate) {
+  int32_t tmp = (0b11111111111111111111 & immediate) << 12;
+  tmp = tmp | (0b11111 & rd) << 7;
+  tmp = tmp | Opcode::E::AUIPC;
+  return tmp;
+}
+
+uint32_t create_BEQ(Register::E rs1, Register::E rs2, int32_t offset) {
   std::bitset<12> bs = std::bitset<12>((offset / 2));
   std::bitset<5> imm1;
   std::bitset<7> imm2;
@@ -164,7 +171,7 @@ uint32_t create_BEQ(int32_t offset, Register::E rs1, Register::E rs2) {
   return tmp;
 }
 
-uint32_t create_BNE(int32_t offset, Register::E rs1, Register::E rs2) {
+uint32_t create_BNE(Register::E rs1, Register::E rs2, int32_t offset) {
   std::bitset<12> bs = std::bitset<12>((offset / 2));
   std::bitset<5> imm1;
   std::bitset<7> imm2;
@@ -187,13 +194,164 @@ uint32_t create_BNE(int32_t offset, Register::E rs1, Register::E rs2) {
   return tmp;
 }
 
-uint32_t create_ADDI(int32_t immediate, Register::E rs1, Register::E rd) {
-  int32_t tmp = (0b111111111111 & immediate) << 20;
-  tmp = tmp | (0b11111 & rs1) << 15;
-  tmp = tmp | (0b11111 & rd) << 7;
-  tmp = tmp | Opcode::E::OP_IMM;
+uint32_t create_ECALL() {
+  int32_t tmp = 0;
+  tmp |= Opcode::E::SYSTEM;
   return tmp;
 }
+
+uint32_t create_EBREAK() {
+  int32_t tmp = 0;
+  tmp |= 1 << 20;
+  tmp |= Opcode::E::SYSTEM;
+  return tmp;
+}
+
+// TODO clarify ordering?
+uint32_t create_FENCE(uint8_t fm, uint8_t pred, uint32_t succ,  Register::E rs1, Register::E rd) {
+  int32_t tmp = 0;
+  tmp |= (0b1111 & fm) << 28;
+  tmp |= (0b1111 & pred) << 24;
+  tmp |= (0b1111 & succ) << 20;
+  tmp |= (0b11111 & rs1) << 15;
+  tmp |= (0b11111 & rd) << 7;
+  tmp |= Opcode::E::MEM_MISC;
+  return tmp;
+}
+
+uint32_t create_JAL(Register::E rd, int32_t offset) {
+  std::bitset<20> repr, bs = std::bitset<20>((offset / 2));
+  for (int i = 0; i < 10; i++) {
+    repr[9 + i] = bs[i];
+  }
+  repr[8] = bs[10];
+  for (int i = 0; i < 10; i++) {
+    repr[i] = bs[11 + i];
+  }
+  if (offset < 0) {
+    repr[19] = 1;
+  }
+
+  repr[18] = bs[11];
+
+  int32_t tmp = repr.to_ulong() << 12;
+  tmp = tmp | (0b11111 & rd) << 7;
+  tmp = tmp | 0b1101111;
+  return tmp;
+}
+
+uint32_t create_JALR(Register::E rd, int32_t offset, Register::E rs1) {
+  int32_t tmp = 0;
+  tmp |= (0b111111111111 & offset) << 20;
+  tmp |= (0b11111 & rs1) << 15;
+  tmp |= (0b11111 & rd) << 7;
+  tmp |= Opcode::E::JALR;
+  return tmp;
+}
+
+uint32_t create_LB(Register::E rd, int32_t offset, Register::E rs1) {
+  int32_t tmp = 0;
+  tmp |= (0b111111111111 & offset) << 20;
+  tmp |= (0b11111 & rs1) << 15;
+  tmp |= FUNC3_LB << 12;
+  tmp |= (0b11111 & rd) << 7;
+  tmp |= Opcode::E::LOAD;
+  return tmp;
+}
+
+uint32_t create_LBU(Register::E rd, int32_t offset, Register::E rs1) {
+  int32_t tmp = 0;
+  tmp |= (0b111111111111 & offset) << 20;
+  tmp |= (0b11111 & rs1) << 15;
+  tmp |= FUNC3_LBU << 12;
+  tmp |= (0b11111 & rd) << 7;
+  tmp |= Opcode::E::LOAD;
+  return tmp;
+}
+
+uint32_t create_LH(Register::E rd ,int32_t offset, Register::E rs1) {
+  int32_t tmp = 0;
+  tmp |= (0b111111111111 & offset) << 20;
+  tmp |= (0b11111 & rs1) << 15;
+  tmp |= FUNC3_LH << 12;
+  tmp |= (0b11111 & rd) << 7;
+  tmp |= Opcode::E::LOAD;
+  return tmp;
+}
+
+uint32_t create_LHU(Register::E rd, int32_t offset, Register::E rs1) {
+  int32_t tmp = 0;
+  tmp |= (0b111111111111 & offset) << 20;
+  tmp |= (0b11111 & rs1) << 15;
+  tmp |= FUNC3_LHU << 12;
+  tmp |= (0b11111 & rd) << 7;
+  tmp |= Opcode::E::LOAD;
+  return tmp;
+}
+
+uint32_t create_LW(Register::E rd, int32_t offset, Register::E rs1) {
+  int32_t tmp = 0;
+  tmp |= (0b111111111111 & offset) << 20;
+  tmp |= (0b11111 & rs1) << 15;
+  tmp |= FUNC3_LW << 12;
+  tmp |= (0b11111 & rd) << 7;
+  tmp |= Opcode::E::LOAD;
+  return tmp;
+}
+
+uint32_t create_LUI(Register::E rd, int32_t immediate) {
+  int32_t tmp = (0xFFFFF & immediate) << 12;
+  tmp = tmp | (0b11111 & rd) << 7;
+  tmp = tmp | Opcode::E::LUI;
+  return tmp;
+}
+
+/*
+ *  sb rs2, offset(rs1)
+ *    M[rs1 + sext(offset)] = rs2[7:0]
+ */
+uint32_t create_SB(Register::E rs2, int32_t offset, Register::E rs1) {
+  int32_t tmp = 0;
+  tmp |= (0b111111100000 & offset) << 25;
+  tmp |= (0b11111 & offset) << 7;
+  tmp |= (0b11111 & rs1) << 15;
+  tmp |= FUNC3_SB << 12;
+  tmp |= (0b11111 & rs2) << 20;
+  tmp |= Opcode::E::STORE;
+  return tmp;
+}
+
+/*
+ *  sh rs2, offset(rs1)
+ *    M[rs1 + sext(offset)] = rs2[15:0]
+ */
+uint32_t create_SH(Register::E rs2, int32_t offset, Register::E rs1) {
+  int32_t tmp = 0;
+  tmp |= (0b111111100000 & offset) << 25;
+  tmp |= (0b11111 & offset) << 7;
+  tmp |= (0b11111 & rs1) << 15;
+  tmp |= FUNC3_SH << 12;
+  tmp |= (0b11111 & rs2) << 20;
+  tmp |= Opcode::E::STORE;
+  return tmp;
+}
+
+/*
+ *  sw rs2, offset(rs1)
+ *    M[rs1 + sext(offset)] = rs2[31:0]
+ */
+ uint32_t create_SW(Register::E rs2, int32_t offset, Register::E rs1) {
+  int32_t tmp = 0;
+  tmp |= (0b111111100000 & offset) << 25;
+  tmp |= (0b11111 & offset) << 7;
+  tmp |= (0b11111 & rs1) << 15;
+  tmp |= FUNC3_SW << 12;
+  tmp |= (0b11111 & rs2) << 20;
+  tmp |= Opcode::E::STORE;
+  return tmp;
+}
+
+// ===================
 
 uint32_t create_SRLI(uint32_t immediate, Register::E rs1, Register::E rd) {
   int32_t tmp = 0;
@@ -272,22 +430,6 @@ uint32_t create_SRAI(uint32_t immediate, Register::E rs1, Register::E rd) {
   return tmp;
 }
 
-uint32_t create_AUIPC(int32_t immediate, Register::E rd) {
-  int32_t tmp = (0b11111111111111111111 & immediate) << 12;
-  tmp = tmp | (0b11111 & rd) << 7;
-  tmp = tmp | Opcode::E::AUIPC;
-  return tmp;
-}
-
-uint32_t create_ADD(Register::E rs1, Register::E rs2, Register::E rd) {
-  int32_t tmp = 0;
-  tmp = tmp | (0b11111 & rs1) << 15;
-  tmp = tmp | (0b11111 & rs2) << 20;
-  tmp = tmp | (0b11111 & rd) << 7;
-  tmp = tmp | Opcode::E::OP;
-  return tmp;
-}
-
 uint32_t create_SUB(Register::E rs1, Register::E rs2, Register::E rd) {
   int32_t tmp = 0;
   tmp = tmp | (0b11111 & rs1) << 15;
@@ -295,150 +437,5 @@ uint32_t create_SUB(Register::E rs1, Register::E rs2, Register::E rd) {
   tmp = tmp | (0b11111 & rd) << 7;
   tmp = tmp | Opcode::E::OP;
   tmp = tmp | (FUNC7_ALT_OP << 25);
-  return tmp;
-}
-
-uint32_t create_JAL(int32_t offset, uint8_t rd) {
-  std::bitset<20> repr, bs = std::bitset<20>((offset / 2));
-  for (int i = 0; i < 10; i++) {
-    repr[9 + i] = bs[i];
-  }
-  repr[8] = bs[10];
-  for (int i = 0; i < 10; i++) {
-    repr[i] = bs[11 + i];
-  }
-  if (offset < 0) {
-    repr[19] = 1;
-  }
-
-  repr[18] = bs[11];
-
-  int32_t tmp = repr.to_ulong() << 12;
-  tmp = tmp | (0b11111 & rd) << 7;
-  tmp = tmp | 0b1101111;
-  return tmp;
-}
-
-uint32_t create_LB(int32_t offset, Register::E rs1, Register::E rd) {
-  int32_t tmp = 0;
-  tmp |= (0b111111111111 & offset) << 20;
-  tmp |= (0b11111 & rs1) << 15;
-  tmp |= FUNC3_LB << 12;
-  tmp |= (0b11111 & rd) << 7;
-  tmp |= Opcode::E::LOAD;
-  return tmp;
-}
-
-uint32_t create_LBU(int32_t offset, Register::E rs1, Register::E rd) {
-  int32_t tmp = 0;
-  tmp |= (0b111111111111 & offset) << 20;
-  tmp |= (0b11111 & rs1) << 15;
-  tmp |= FUNC3_LBU << 12;
-  tmp |= (0b11111 & rd) << 7;
-  tmp |= Opcode::E::LOAD;
-  return tmp;
-}
-
-uint32_t create_LH(int32_t offset, Register::E rs1, Register::E rd) {
-  int32_t tmp = 0;
-  tmp |= (0b111111111111 & offset) << 20;
-  tmp |= (0b11111 & rs1) << 15;
-  tmp |= FUNC3_LH << 12;
-  tmp |= (0b11111 & rd) << 7;
-  tmp |= Opcode::E::LOAD;
-  return tmp;
-}
-
-uint32_t create_LHU(int32_t offset, Register::E rs1, Register::E rd) {
-  int32_t tmp = 0;
-  tmp |= (0b111111111111 & offset) << 20;
-  tmp |= (0b11111 & rs1) << 15;
-  tmp |= FUNC3_LHU << 12;
-  tmp |= (0b11111 & rd) << 7;
-  tmp |= Opcode::E::LOAD;
-  return tmp;
-}
-
-uint32_t create_LW(int32_t offset, Register::E rs1, Register::E rd) {
-  int32_t tmp = 0;
-  tmp |= (0b111111111111 & offset) << 20;
-  tmp |= (0b11111 & rs1) << 15;
-  tmp |= FUNC3_LW << 12;
-  tmp |= (0b11111 & rd) << 7;
-  tmp |= Opcode::E::LOAD;
-  return tmp;
-}
-
-uint32_t create_SB(int32_t offset, Register::E rs1, Register::E rs2) {
-  int32_t tmp = 0;
-  tmp |= (0b111111100000 & offset) << 25;
-  tmp |= (0b11111 & offset) << 7;
-  tmp |= (0b11111 & rs1) << 15;
-  tmp |= FUNC3_SB << 12;
-  tmp |= (0b11111 & rs2) << 20;
-  tmp |= Opcode::E::STORE;
-  return tmp;
-}
-
-uint32_t create_SH(int32_t offset, Register::E rs1, Register::E rs2) {
-  int32_t tmp = 0;
-  tmp |= (0b111111100000 & offset) << 25;
-  tmp |= (0b11111 & offset) << 7;
-  tmp |= (0b11111 & rs1) << 15;
-  tmp |= FUNC3_SH << 12;
-  tmp |= (0b11111 & rs2) << 20;
-  tmp |= Opcode::E::STORE;
-  return tmp;
-}
-
-uint32_t create_SW(int32_t offset, Register::E rs1, Register::E rs2) {
-  int32_t tmp = 0;
-  tmp |= (0b111111100000 & offset) << 25;
-  tmp |= (0b11111 & offset) << 7;
-  tmp |= (0b11111 & rs1) << 15;
-  tmp |= FUNC3_SW << 12;
-  tmp |= (0b11111 & rs2) << 20;
-  tmp |= Opcode::E::STORE;
-  return tmp;
-}
-
-uint32_t create_JALR(int32_t offset, Register::E rs1, Register::E rd) {
-  int32_t tmp = 0;
-  tmp |= (0b111111111111 & offset) << 20;
-  tmp |= (0b11111 & rs1) << 15;
-  tmp |= (0b11111 & rd) << 7;
-  tmp |= Opcode::E::JALR;
-  return tmp;
-}
-
-uint32_t create_JAL(int32_t offset, Register::E rd) {
-  int32_t tmp = 0;
-  tmp |= (0b111111111111 & offset) << 20;
-  tmp |= (0b11111 & rd) << 7;
-  tmp |= Opcode::E::JAL;
-  return tmp;
-}
-
-uint32_t create_FENCE(uint8_t fm, uint8_t pred, uint32_t succ,  Register::E rs1, Register::E rd) {
-  int32_t tmp = 0;
-  tmp |= (0b1111 & fm) << 28;
-  tmp |= (0b1111 & pred) << 24;
-  tmp |= (0b1111 & succ) << 20;
-  tmp |= (0b11111 & rs1) << 15;
-  tmp |= (0b11111 & rd) << 7;
-  tmp |= Opcode::E::MEM_MISC;
-  return tmp;
-}
-
-uint32_t create_ECALL() {
-  int32_t tmp = 0;
-  tmp |= Opcode::E::SYSTEM;
-  return tmp;
-}
-
-uint32_t create_EBREAK() {
-  int32_t tmp = 0;
-  tmp |= 1 << 20;
-  tmp |= Opcode::E::SYSTEM;
   return tmp;
 }

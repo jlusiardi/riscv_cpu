@@ -29,6 +29,9 @@ int ERROR_COUNTER = 0;
 #define EXECUTE_INSTR \
         do {\
             clock_cycle();\
+        } while (top->STAGE == STAGE_FETCH);\
+        do {\
+            clock_cycle();\
         } while (top->STAGE != STAGE_FETCH);
 
 template<class TOP>
