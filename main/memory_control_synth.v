@@ -27,6 +27,8 @@ module memory_control_synth(
     wire[7:0] read_data_reg;
     reg[31:0] result_data_reg;
     reg first;
+    reg active_reg;
+    reg done_reg;
 
     memory_synth mem ( 
         .read_data(read_data_reg),
@@ -47,7 +49,7 @@ module memory_control_synth(
 
     always @(posedge clk) begin
         if (start == 1) begin
-            active <= 1;
+            active_reg <= 1;
             first <= 1;
             if (mode[1:0] == 2'b0) begin
                 counter <= 1;
@@ -67,17 +69,17 @@ module memory_control_synth(
                 end else begin
                     result_data_reg <= {24'h000000, read_data_reg};
                 end;
-            end else if (! done ) begin
+            end else if (! done_reg ) begin
                 result_data_reg <= (result_data_reg << 8) 
                                     | ({24'b0, read_data_reg});
             end
             if (offset == 0 && counter == 1) begin
-                done <= 1;
-                active <= 0;
+                done_reg <= 1;
+                active_reg <= 0;
             end;
             if (counter == 0) begin
-                done <= 0;
-                active <= 0;
+                done_reg <= 0;
+                active_reg <= 0;
             end else begin
                 counter <= counter - 1;
                 offset <= offset - 1;
@@ -86,5 +88,6 @@ module memory_control_synth(
     end
 
     assign read_data = result_data_reg;
-
+    assign active = active_reg;
+    assign done = done_reg;
 endmodule
