@@ -5,10 +5,10 @@
 
 module cpu_synth(
         input clk,
-        input rst
+        input rst,
+        output[2:0] w_stage
     );
 
-    wire [2:0] w_stage;
     wire w_start_fetch;
     wire w_start_memory;
 
@@ -29,7 +29,7 @@ module cpu_synth(
         .enable(w_current_instruction_register_write_enable)
     );
 
-    reg_async_reset current_instruction_register(
+    reg_async_reset_synth current_instruction_register(
         .clk(clk),
         .rst(rst),
         .en(w_current_instruction_register_write_enable),
@@ -74,7 +74,7 @@ module cpu_synth(
         .pc_en(w_pc_write_enable)
     );
 
-    reg_async_reset pc_register(
+    reg_async_reset_synth pc_register(
         .clk(clk),
         .rst(rst),
         .en(w_pc_write_enable),
@@ -163,7 +163,7 @@ module cpu_synth(
         .clk(clk)
     );
 
-    reg_async_reset register_src_0_register(
+    reg_async_reset_synth register_src_0_register(
         .clk(clk),
         .rst(rst),
         .en(1'b1),
@@ -171,7 +171,7 @@ module cpu_synth(
         .Q(w_register_src_0_register)
     );
 
-    reg_async_reset register_src_1_register(
+    reg_async_reset_synth register_src_1_register(
         .clk(clk),
         .rst(rst),
         .en(1'b1),

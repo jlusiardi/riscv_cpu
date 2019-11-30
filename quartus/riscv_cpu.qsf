@@ -71,6 +71,7 @@ set_global_assignment -name VERILOG_FILE ../main/pc_control.v -hdl_version Syste
 set_global_assignment -name VERILOG_FILE ../main/ram_memory_synth.v -hdl_version SystemVerilog_2005
 set_global_assignment -name VERILOG_FILE ../main/ram_memory.v -hdl_version SystemVerilog_2005
 set_global_assignment -name VERILOG_FILE ../main/reg_async_reset.v -hdl_version SystemVerilog_2005
+set_global_assignment -name VERILOG_FILE ../main/reg_async_reset_synth.v -hdl_version SystemVerilog_2005
 set_global_assignment -name VERILOG_FILE ../main/register_file_control.v -hdl_version SystemVerilog_2005
 set_global_assignment -name VERILOG_FILE ../main/register_file.v -hdl_version SystemVerilog_2005
 set_global_assignment -name VERILOG_FILE ../main/rom_memory_synth.v -hdl_version SystemVerilog_2005
@@ -80,4 +81,5 @@ set_global_assignment -name VERILOG_FILE ../main/stage_counter.v -hdl_version Sy
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
