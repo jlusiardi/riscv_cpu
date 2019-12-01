@@ -29,34 +29,36 @@ module decoder(
     wire [31:0] b_imm = {{20{instruction[31]}}, instruction[7], instruction[30:25], instruction[11:8], 1'b0};
     wire [31:0] u_imm = {instruction[31:12], {12{1'b0}}};
     wire [31:0] j_imm = {{12{instruction[31]}}, instruction[19:12], instruction[20], instruction[30:21], 1'b0};
+    reg [31:0] imm_reg;
+	 reg instr_valid_reg;
 
     always @(*)
     begin
         if (opcode == `RISCV_JALR)  begin
-            imm = i_imm;
-            instr_valid = 1'b1;
+            imm_reg = i_imm;
+            instr_valid_reg = 1'b1;
         end
         else if (opcode == `RISCV_LOAD) begin
-            imm = i_imm;
-            instr_valid = 1'b1;
+            imm_reg = i_imm;
+            instr_valid_reg = 1'b1;
         end
         else if (opcode == `RISCV_OP) begin
-            imm = 32'b0;
-            instr_valid = 1'b1;
+            imm_reg = 32'b0;
+            instr_valid_reg = 1'b1;
         end
         else if (opcode == `RISCV_OP_IMM) begin
-            imm = i_imm;
-            instr_valid = 1'b1;
+            imm_reg = i_imm;
+            instr_valid_reg = 1'b1;
         end
         else if (opcode == `RISCV_STORE) begin
-            imm = s_imm;
-            instr_valid = (func3 == `STORE_BYTE) 
+            imm_reg = s_imm;
+            instr_valid_reg = (func3 == `STORE_BYTE)
                         | (func3 == `STORE_HALFWORD) 
                         | (func3 ==  `STORE_WORD) ;
         end
         else if (opcode == `RISCV_BRANCH) begin
-            imm = b_imm;
-            instr_valid = (func3 == `BRANCH_EQ) 
+            imm_reg = b_imm;
+            instr_valid_reg = (func3 == `BRANCH_EQ)
                         | (func3 == `BRANCH_NE) 
                         | (func3 == `BRANCH_LT) 
                         | (func3 == `BRANCH_GE) 
@@ -64,33 +66,35 @@ module decoder(
                         | (func3 == `BRANCH_GEU);
         end
         else if (opcode == `RISCV_LUI) begin
-            imm = u_imm;
-            instr_valid = 1'b1;
+            imm_reg = u_imm;
+            instr_valid_reg = 1'b1;
         end
         else if (opcode == `RISCV_AUIPC) begin
-            imm = u_imm;
-            instr_valid = 1'b1;
+            imm_reg = u_imm;
+            instr_valid_reg = 1'b1;
         end
         else if (opcode == `RISCV_JAL) begin
-            imm = j_imm;
-            instr_valid = 1'b1;
+            imm_reg = j_imm;
+            instr_valid_reg = 1'b1;
         end
         else if (opcode == `RISCV_MEM_MISC) begin
-            imm = 32'b0;
-            instr_valid = (func3 == 3'b0);
+            imm_reg = 32'b0;
+            instr_valid_reg = (func3 == 3'b0);
         end
         else if (opcode == `RISCV_SYSTEM) begin
-            imm = 32'b0;
-            instr_valid = 1'b1;
+            imm_reg = 32'b0;
+            instr_valid_reg = 1'b1;
         end
         // TODO include fence, ecall and ebreak here
         else begin
-            imm = 32'b0;
-            instr_valid = 1'b0;
+            imm_reg = 32'b0;
+            instr_valid_reg = 1'b0;
         end
     end
 
     assign reg_source_0 = instruction[19:15];
     assign reg_source_1 = instruction[24:20];
     assign reg_dest = instruction[11:7];
+    assign imm = imm_reg;
+    assign instr_valid = instr_valid_reg;
 endmodule

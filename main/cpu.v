@@ -5,11 +5,22 @@
 
 module cpu(
         input clk,
-        input rst
+        input rst,
+        output [7:0] stage
     );
 
+    wire [31:0] w_pc_input;
     wire [2:0] w_stage;
-
+    wire [6:0] w_opcode;
+    wire [31:0] w_pc_output;
+    wire [31:0] w_read_address;
+    wire [31:0] w_read_data;
+    wire [31:0] w_write_address;
+    wire [31:0] w_write_data;
+    wire [31:0] w_register_src_0_register;
+    wire [31:0] w_register_src_1_register;
+    wire w_write_enable;
+    assign stage = w_pc_input[7:0];
     stage_counter stage_counter(
         .clk(clk),
         .rst(rst),
@@ -56,7 +67,6 @@ module cpu(
 
     /* verilator lint_off UNDRIVEN */
     wire w_jump_condition;
-    wire [31:0] w_pc_input;
     wire w_pc_write_enable;
 
     pc_control pc_control(
@@ -78,9 +88,6 @@ module cpu(
         .Q(w_pc_output)
     );
 
-    wire [6:0] w_opcode;
-    wire [31:0] w_pc_output;
-
     memory_control mem_ctrl(
       .stage(w_stage),
       .opcode(w_opcode),
@@ -96,16 +103,11 @@ module cpu(
       .write_enable(w_write_enable)
    );
 
-    wire [31:0] w_read_address;
-    wire [31:0] w_read_data;
     // TODO what should happen, if those go high?
     /* verilator lint_off UNUSED */
     wire w_illegal_write_address;
     wire w_illegal_read_address;
     /* verilator lint_on UNUSED */
-    wire [31:0] w_write_address;
-    wire [31:0] w_write_data;
-    wire w_write_enable;
 
     memory mem(
         .read_address(w_read_address),
@@ -120,9 +122,7 @@ module cpu(
     );
 
     wire [31:0] w_register_src_0_register_int;
-    wire [31:0] w_register_src_0_register;
     wire [31:0] w_register_src_1_register_int;
-    wire [31:0] w_register_src_1_register;
     wire w_reg_file_write_en;
     wire [31:0] w_register_dest_register;
 

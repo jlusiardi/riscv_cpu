@@ -30,6 +30,10 @@ module memory_control_synth(
     reg active_reg;
     reg done_reg;
 
+	 initial begin
+        active_reg = 0;
+	 end
+
     memory_synth mem ( 
         .read_data(read_data_reg),
         .address(address + {28'b0, offset}),
