@@ -68,7 +68,7 @@ module memory_control_synth(
                     result_data_reg <= {24'hFFFFFF, read_data_reg};
                 end else begin
                     result_data_reg <= {24'h000000, read_data_reg};
-                end;
+                end
             end else if (! done_reg ) begin
                 result_data_reg <= (result_data_reg << 8) 
                                     | ({24'b0, read_data_reg});
@@ -76,7 +76,7 @@ module memory_control_synth(
             if (offset == 0 && counter == 1) begin
                 done_reg <= 1;
                 active_reg <= 0;
-            end;
+            end
             if (counter == 0) begin
                 done_reg <= 0;
                 active_reg <= 0;
