@@ -63,6 +63,8 @@ class GeneralTest {
         std::cout << "writing trace to '" << filename << "'." << std::endl;
         trace->open(filename);
       }
+      // have the verilator code do the initial blocks first
+      step();
       test();
       step();
       top->final();

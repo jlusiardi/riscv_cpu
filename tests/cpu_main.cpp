@@ -267,7 +267,7 @@ class TestVcpuSw: public GeneralTest<Vcpu> {
       insert_4bytes(top->ROM, 4, create_LUI(Register::E::x2, 0x87654));
       insert_4bytes(top->ROM, 8, create_ADDI(Register::E::x2, Register::E::x2, 801));
       // sw x2, 0(x1)
-      insert_4bytes(top->ROM, 12, create_SH(Register::E::x2, 1, Register::E::x1));
+      insert_4bytes(top->ROM, 12, create_SW(Register::E::x2, 1, Register::E::x1));
       insert_4bytes(top->ROM, 16, create_LW(Register::E::x1, 1, Register::E::x2));
 
       top->rst = 0;
@@ -286,11 +286,11 @@ class TestVcpuSw: public GeneralTest<Vcpu> {
       EXECUTE_INSTR;
 
       ASSERT_EQUALS(top->RAM[0], 0xCA);
-      ASSERT_EQUALS(top->RAM[5], 0xCA);
       ASSERT_EQUALS(top->RAM[1], 0x21);
       ASSERT_EQUALS(top->RAM[2], 0x43);
       ASSERT_EQUALS(top->RAM[3], 0x65);
       ASSERT_EQUALS(top->RAM[4], 0x87);
+      ASSERT_EQUALS(top->RAM[5], 0xCA);
       EXECUTE_INSTR;
 
       ASSERT_EQUALS(top->REGISTERS[0], 0x87654321);
@@ -587,7 +587,6 @@ class TestVcpuMemory: public GeneralTest<Vcpu> {
 int main(const int argc, char** argv) {
   cout << "---- CPU RISCV tests passed" << endl;
   (new TestVcpuMemory())->run("vcds/cpu_memory.vcd");
-/*  
   (new TestVcpuStageCounter())->run("vcds/cpu_stage_counter.vcd");
   (new TestVcpuAddi())->run("vcds/cpu_addis.vcd");
   (new TestVcpuAdd())->run("vcds/cpu_adds.vcd");
@@ -609,7 +608,6 @@ int main(const int argc, char** argv) {
   (new TestVcpuSlli())->run("vcds/cpu_slli.vcd");
   (new TestVcpuJalr())->run("vcds/cpu_jalr.vcd");
   (new TestVcpuJal())->run("vcds/cpu_jal.vcd");
-  */
   cout << "$$$$ CPU RISCV tests passed" << endl;
   HANDLE_ERROR_COUNTER;
 }
