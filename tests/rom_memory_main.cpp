@@ -7,32 +7,22 @@
 
 using namespace std;
 
-#define ROM rom_memory__DOT__rom
+#define ROM rom_memory__DOT__mem
 
 class TestRomLegalR: public GeneralTest<Vrom_memory> {
   public:
     virtual void test() {
       // initialize rom
       for (int i = 0; i < 512; i++) {
-        insert_4bytes(top->ROM, 4 * i, i);
+        top->ROM[i] = i % 256;
       }
 
       for (int i = 0; i < 512; i++) {
-        top->read_address = 4*i;
+        top->address = i;
         step();
-        ASSERT_EQUALS(top->read_data, i);
-        ASSERT_EQUALS(top->illegal_read_address, 0);
+        ASSERT_EQUALS(top->read_data, i % 256);
+        ASSERT_EQUALS(top->illegal_address, 0);
       }
-
-      top->read_address = 1;
-      step();
-      ASSERT_EQUALS(top->read_data, 0x01000000);
-      ASSERT_EQUALS(top->illegal_read_address, 0);
-
-      top->read_address = 5;
-      step();
-      ASSERT_EQUALS(top->read_data, 0x02000000);
-      ASSERT_EQUALS(top->illegal_read_address, 0);
     }
 };
 
@@ -40,9 +30,9 @@ class TestRomIllegalR: public GeneralTest<Vrom_memory> {
   public:
     virtual void test() {
       // assuming a capacity of 512 32bit words, the range is from 0 to 2047 for bytes.
-      top->read_address = 4 * 512;
+      top->address = 4 * 512;
       step();
-      ASSERT_EQUALS(top->illegal_read_address, 1);
+      ASSERT_EQUALS(top->illegal_address, 1);
     }
 };
 

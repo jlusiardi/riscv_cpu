@@ -1,7 +1,7 @@
 module rom_memory(
-        input [31:0]  read_address,
-        output [31:0] read_data,
-        output illegal_read_address
+        input [31:0] address,
+        output [7:0] read_data,
+        output illegal_address
     );
 
     parameter depth = 512;
@@ -10,9 +10,10 @@ module rom_memory(
      * The rom must be initialized by the calling top modules or by the test!
      */
     /* verilator lint_off UNDRIVEN */
-    reg [7:0] rom[4 * depth - 1 : 0];
+    reg [7:0] mem[4 * depth - 1 : 0];
+    /* verilator lint_on UNDRIVEN */
 
-    assign read_data = {rom[read_address+3], rom[read_address + 2], rom[read_address + 1], rom[read_address + 0]};
-    assign illegal_read_address = (read_address >= 4 * depth);
+    assign read_data = mem[address + 0];
+    assign illegal_address = (address >= 4 * depth);
 
 endmodule

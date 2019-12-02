@@ -2,14 +2,14 @@
 #include <bitset>
 
 #include "verilated.h"
-#include "Vstage_counter_synth.h"
+#include "Vstage_counter.h"
 #include "general_test.h"
 #include "riscv.h"
 
 using namespace std;
 
 
-class TestVstage_counter_synth: public GeneralTest<Vstage_counter_synth> {
+class TestVstage_counter: public GeneralTest<Vstage_counter> {
   public:
     virtual void test() {
       top->rst = 0;
@@ -33,8 +33,8 @@ class TestVstage_counter_synth: public GeneralTest<Vstage_counter_synth> {
 };
 
 int main(const int argc, char** argv) {
-  cout << "---- CPU RISCV tests passed" << endl;
-  (new TestVstage_counter_synth())->run("vcds/stage_counter_synth.vcd");
-  cout << "$$$$ CPU RISCV tests passed" << endl;
+  cout << "---- Stage counter tests started" << endl;
+  (new TestVstage_counter())->run("vcds/stage_counter.vcd");
+  cout << "$$$$ Stage counter tests passed" << endl;
   HANDLE_ERROR_COUNTER;
 }

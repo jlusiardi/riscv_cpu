@@ -9,82 +9,68 @@ using namespace std;
 
 #define RAM ram_memory__DOT__mem
 
-class TestRamLegalR: public GeneralTest<Vram_memory> {
+class TestRamRead: public GeneralTest<Vram_memory> {
   public:
     virtual void test() {
       // initialize ram
-      for (int i = 0; i < 1024; i++) {
-        insert_4bytes(top->RAM, 4 * i, i);
+      for (int i = 0; i < 4*2048; i++) {
+        top->RAM[i] = i % 256;
       }
 
-      for (int i = 0; i < 1024; i++) {
-        top->read_address = 4*i;
-        step();
-        assert(top->read_data == i);
-        assert(top->illegal_read_address == 0);
+      for (int i = 0; i < 255; i++) {
+        top->address = i;
+        clock_cycle();
+        ASSERT_EQUALS(top->read_data, i);
+        ASSERT_EQUALS(top->illegal_address, 0);
       }
 
-      top->read_address = 1;
-      step();
-      assert(top->read_data == 0x01000000);
-      assert(top->illegal_read_address == 0);
-
-      top->read_address = 5;
-      step();
-      assert(top->read_data == 0x02000000);
-      assert(top->illegal_read_address == 0);
+      top->address = 0xFFFFFFFF;
+      clock_cycle();
+      ASSERT_EQUALS(top->illegal_address, 1);
     }
 };
 
-class TestMemoryLegalRW: public GeneralTest<Vram_memory> {
+class TestRamWrite: public GeneralTest<Vram_memory> {
   public:
     virtual void test() {
-      top->write_enable = 1;
-      top->size_and_sign = FUNC3_SW;
-      for (int i = 0; i < 1024; i+=4) {
-        top->write_address = i;
-        top->write_data = 1023 - i;
-        clock_cycle();
-        assert(top->illegal_write_address == 0);
+      // initialize ram
+      for (int i = 0; i < 4*2048; i++) {
+        top->RAM[i] = 0;
       }
 
       top->write_enable = 0;
-      for (int i = 0; i < 1024; i+=4) {
+      for (int i = 0; i < 255; i++) {
+        top->address = i;
+        top->write_data = i;
         clock_cycle();
-        top->read_address = i;
-        assert(top->illegal_read_address == 0);
-        clock_cycle();
-        assert(top->read_data == 1023 - i);
+        ASSERT_EQUALS(top->illegal_address, 0);
       }
-    }
-};
+      
+      for (int i = 0; i < 255; i++) {
+        ASSERT_EQUALS(top->RAM[i], 0);
+      }
 
-class TestMemoryIllegalRW: public GeneralTest<Vram_memory> {
-  public:
-    virtual void test() {
       top->write_enable = 1;
+      for (int i = 0; i < 255; i++) {
+        top->address = i;
+        top->write_data = i;
+        clock_cycle();
+        ASSERT_EQUALS(top->illegal_address, 0);
+      }
+      
+      for (int i = 0; i < 255; i++) {
+        ASSERT_EQUALS(top->RAM[i], i);
+      }
 
+      top->address = 0xFFFFFFFF;
       clock_cycle();
-      top->write_address = 4 * 1024;
-      top->read_address = 0;
-      top->write_data = 2048;
-      assert(top->illegal_read_address == 0);
-      clock_cycle();
-      assert(top->illegal_write_address == 1);
-
-      top->write_enable = 0;
-      clock_cycle();
-      top->read_address = 4 * 1024;
-      top->write_address = 0;
-      clock_cycle();
-      assert(top->illegal_read_address == 1);
+      ASSERT_EQUALS(top->illegal_address, 1);
     }
 };
 
 int main(int argc, char** argv) {
-  cout << "---- Main Memory tests" << endl;
-  (new TestRamLegalR())->run("vcds/ram_legalr.vcd");
-  (new TestMemoryLegalRW())->run("vcds/memory_legalrw.vcd");
-  (new TestMemoryIllegalRW())->run("vcds/memory_illegalrw.vcd");
-  cout << "$$$$ Main Memory" << endl;
+  cout << "---- RAM Memory tests" << endl;
+  (new TestRamRead())->run("vcds/ram_read.vcd");
+  (new TestRamWrite())->run("vcds/ram_write.vcd");
+  cout << "$$$$ RAM Memory" << endl;
 }

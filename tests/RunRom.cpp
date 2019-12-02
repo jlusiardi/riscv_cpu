@@ -10,8 +10,8 @@
 
 using namespace std;
 
-#define ROM cpu__DOT__mem__DOT__rom___DOT__rom
-#define RAM cpu__DOT__mem__DOT__ram__DOT__mem
+#define ROM cpu__DOT__mem_ctrl__DOT__mem__DOT__rom__DOT__mem
+#define RAM cpu__DOT__mem_ctrl__DOT__mem__DOT__ram__DOT__mem
 #define PC cpu__DOT__pc_register__DOT__Q_data
 #define STAGE cpu__DOT__stage_counter__DOT__data
 #define REGISTERS cpu__DOT__register_file__DOT__registers
@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
   std::string testfile = result["T"].as<std::string>();
 
   cout << "---- Testing " << romfile << endl;
-  (new RunRom(romfile, testfile))->run(vcdfile.c_str(), do_trace);
+  (new RunRom(romfile, testfile))->run(vcdfile.c_str(), do_trace, true);
   cout << "$$$$ " << romfile << " tests passed" << endl;
   HANDLE_ERROR_COUNTER;
 }

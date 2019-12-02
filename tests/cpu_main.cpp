@@ -8,8 +8,8 @@
 
 using namespace std;
 
-#define ROM cpu__DOT__mem__DOT__rom___DOT__rom
-#define RAM cpu__DOT__mem__DOT__ram__DOT__mem
+#define ROM cpu__DOT__mem_ctrl__DOT__mem__DOT__rom__DOT__mem
+#define RAM cpu__DOT__mem_ctrl__DOT__mem__DOT__ram__DOT__mem
 #define PC cpu__DOT__pc_register__DOT__Q_data
 #define STAGE cpu__DOT__stage_counter__DOT__data
 #define REGISTERS cpu__DOT__register_file__DOT__registers
@@ -37,14 +37,16 @@ class TestVcpuAddi: public GeneralTest<Vcpu> {
 class TestVcpuAdd: public GeneralTest<Vcpu> {
   public:
     virtual void test() {
-      top->REGISTERS[0] = 2;
-      insert_4bytes(top->ROM, 0, create_ADD(Register::E::x2, Register::E::x1, Register::E::x1));
-      insert_4bytes(top->ROM, 4, create_ADD(Register::E::x3, Register::E::x2, Register::E::x1));
+      insert_4bytes(top->ROM, 0, create_ADDI(Register::E::x1, Register::E::x0, 2));
+      insert_4bytes(top->ROM, 4, create_ADD(Register::E::x2, Register::E::x1, Register::E::x1));
+      insert_4bytes(top->ROM, 8, create_ADD(Register::E::x3, Register::E::x1, Register::E::x2));
 
       top->rst = 0;
       clock_cycle();
       clock_cycle();
       top->rst = 1;
+      EXECUTE_INSTR;
+      ASSERT_EQUALS(top->REGISTERS[0], 2);
       EXECUTE_INSTR;
       ASSERT_EQUALS(top->REGISTERS[1], 4);
       EXECUTE_INSTR;
@@ -55,15 +57,19 @@ class TestVcpuAdd: public GeneralTest<Vcpu> {
 class TestVcpuSub: public GeneralTest<Vcpu> {
   public:
     virtual void test() {
-      top->REGISTERS[0] = 2;
-      top->REGISTERS[1] = 3;
-      insert_4bytes(top->ROM, 0, create_SUB(Register::E::x2, Register::E::x1, Register::E::x3));
-      insert_4bytes(top->ROM, 4, create_SUB(Register::E::x1, Register::E::x2, Register::E::x3));
+      insert_4bytes(top->ROM, 0, create_ADDI(Register::E::x1, Register::E::x0, 2));
+      insert_4bytes(top->ROM, 4, create_ADDI(Register::E::x2, Register::E::x0, 3));
+      insert_4bytes(top->ROM, 8, create_SUB(Register::E::x2, Register::E::x1, Register::E::x3));
+      insert_4bytes(top->ROM, 12, create_SUB(Register::E::x1, Register::E::x2, Register::E::x3));
 
       top->rst = 0;
       clock_cycle();
       clock_cycle();
       top->rst = 1;
+      EXECUTE_INSTR;
+      ASSERT_EQUALS(top->REGISTERS[0], 2);
+      EXECUTE_INSTR;
+      ASSERT_EQUALS(top->REGISTERS[1], 3);
       EXECUTE_INSTR;
       ASSERT_EQUALS(top->REGISTERS[2], 1);
       EXECUTE_INSTR;
@@ -108,20 +114,13 @@ class TestVcpuAuipc: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuLb: public GeneralTest<Vcpu> {
+class TestVcpuLb_no_signextend: public GeneralTest<Vcpu> {
   public:
     virtual void test() {
-      insert_4bytes(top->RAM, 0, 0x12345678);
-      insert_4bytes(top->RAM, 4, 0xFFFFFFFF);
-      top->RAM[8] = 0x21;
-      top->RAM[9] = 0x43;
-      top->RAM[10] = 0x65;
-      top->RAM[11] = 0x87;
-
-      insert_4bytes(top->ROM, 0, create_LUI(Register::E::x2, 0x00001));
-      insert_4bytes(top->ROM, 4, create_LB(Register::E::x1, 0, Register::E::x2));
-      insert_4bytes(top->ROM, 8, create_LB(Register::E::x1, 4, Register::E::x2));
-      insert_4bytes(top->ROM, 12, create_LB(Register::E::x1, 8, Register::E::x2));
+      top->REGISTERS[0] = 0x0000;
+      top->REGISTERS[1] = 0x1000;
+      top->RAM[0] = 0x78;
+      insert_4bytes(top->ROM, 0, create_LB(Register::E::x1, 0, Register::E::x2));
 
       top->rst = 0;
       clock_cycle();
@@ -129,16 +128,25 @@ class TestVcpuLb: public GeneralTest<Vcpu> {
       top->rst = 1;
       EXECUTE_INSTR;
 
-      ASSERT_EQUALS(top->REGISTERS[1], 0x1000);
-      EXECUTE_INSTR;
-
       ASSERT_EQUALS(top->REGISTERS[0], 0x78);
+    }
+};
+
+class TestVcpuLb_signextend: public GeneralTest<Vcpu> {
+  public:
+    virtual void test() {
+      top->REGISTERS[0] = 0x0000;
+      top->REGISTERS[1] = 0x1000;
+      top->RAM[0] = 0x88;
+      insert_4bytes(top->ROM, 0, create_LB(Register::E::x1, 0, Register::E::x2));
+
+      top->rst = 0;
+      clock_cycle();
+      clock_cycle();
+      top->rst = 1;
       EXECUTE_INSTR;
 
-      ASSERT_EQUALS(top->REGISTERS[0], 0xFFFFFFFF);
-      EXECUTE_INSTR;
-
-      ASSERT_EQUALS(top->REGISTERS[0], 0x00000021);
+      ASSERT_EQUALS(top->REGISTERS[0], 0xFFFFFF88);
     }
 };
 
@@ -266,9 +274,10 @@ class TestVcpuSw: public GeneralTest<Vcpu> {
       insert_4bytes(top->ROM, 0, create_LUI(Register::E::x1, 0x00001));
       insert_4bytes(top->ROM, 4, create_LUI(Register::E::x2, 0x87654));
       insert_4bytes(top->ROM, 8, create_ADDI(Register::E::x2, Register::E::x2, 801));
-      // sw x2, 0(x1)
+      // sw x2, 1(x1)
       insert_4bytes(top->ROM, 12, create_SW(Register::E::x2, 1, Register::E::x1));
-      insert_4bytes(top->ROM, 16, create_LW(Register::E::x1, 1, Register::E::x2));
+      // sw x3, 1(x1)
+      insert_4bytes(top->ROM, 16, create_LW(Register::E::x3, 1, Register::E::x1));
 
       top->rst = 0;
       clock_cycle();
@@ -286,28 +295,32 @@ class TestVcpuSw: public GeneralTest<Vcpu> {
       EXECUTE_INSTR;
 
       ASSERT_EQUALS(top->RAM[0], 0xCA);
+      ASSERT_EQUALS(top->RAM[5], 0xCA);
       ASSERT_EQUALS(top->RAM[1], 0x21);
       ASSERT_EQUALS(top->RAM[2], 0x43);
       ASSERT_EQUALS(top->RAM[3], 0x65);
       ASSERT_EQUALS(top->RAM[4], 0x87);
-      ASSERT_EQUALS(top->RAM[5], 0xCA);
       EXECUTE_INSTR;
 
-      ASSERT_EQUALS(top->REGISTERS[0], 0x87654321);
+      ASSERT_EQUALS(top->REGISTERS[2], 0x87654321);
     }
 };
 
 class TestVcpuSh: public GeneralTest<Vcpu> {
   public:
     virtual void test() {
+      top->REGISTERS[0] = 0x1000;
+      top->REGISTERS[1] = 0x87654321;
+      top->REGISTERS[2] = 0x12345678;
+
       top->RAM[0] = 0xCA;
+      top->RAM[1] = 0xCA;
+      top->RAM[2] = 0xCA;
       top->RAM[3] = 0xCA;
-      insert_4bytes(top->ROM, 0, create_LUI(Register::E::x1, 0x00001));
-      insert_4bytes(top->ROM, 4, create_LUI(Register::E::x2, 0x87654));
-      insert_4bytes(top->ROM, 8, create_ADDI(Register::E::x2, Register::E::x2, 801));
-      // sw x2, 0(x1)
-      insert_4bytes(top->ROM, 12, create_SH(Register::E::x2, 1, Register::E::x1));
-      insert_4bytes(top->ROM, 16, create_LH(Register::E::x1, 1, Register::E::x2));
+      // sh x2, 1(x1)
+      insert_4bytes(top->ROM, 0, create_SH(Register::E::x2, 1, Register::E::x1));
+      // lh x3, 1(x1)
+      insert_4bytes(top->ROM, 4, create_LH(Register::E::x3, 1, Register::E::x1));
 
       top->rst = 0;
       clock_cycle();
@@ -315,35 +328,30 @@ class TestVcpuSh: public GeneralTest<Vcpu> {
       top->rst = 1;
       EXECUTE_INSTR;
 
-      ASSERT_EQUALS(top->REGISTERS[0], 0x1000);
-      EXECUTE_INSTR;
-
-      ASSERT_EQUALS(top->REGISTERS[1], 0x87654000);
-      EXECUTE_INSTR;
-
-      ASSERT_EQUALS(top->REGISTERS[1], 0x87654321);
-      EXECUTE_INSTR;
       ASSERT_EQUALS(top->RAM[0], 0xCA);
-      ASSERT_EQUALS(top->RAM[3], 0xCA);
       ASSERT_EQUALS(top->RAM[1], 0x21);
       ASSERT_EQUALS(top->RAM[2], 0x43);
+      ASSERT_EQUALS(top->RAM[3], 0xCA);
       EXECUTE_INSTR;
 
-      ASSERT_EQUALS(top->REGISTERS[0], 0x00004321);
+      ASSERT_EQUALS(top->REGISTERS[2], 0x00004321);
     }
 };
 
 class TestVcpuSb: public GeneralTest<Vcpu> {
   public:
     virtual void test() {
+      top->REGISTERS[0] = 0x1000;
+      top->REGISTERS[1] = 0x87654321;
+      top->REGISTERS[2] = 0x12345678;
+
       top->RAM[0] = 0xCA;
+      top->RAM[1] = 0xCA;
       top->RAM[2] = 0xCA;
-      insert_4bytes(top->ROM, 0, create_LUI(Register::E::x1, 0x00001));
-      insert_4bytes(top->ROM, 4, create_LUI(Register::E::x2, 0x87654));
-      insert_4bytes(top->ROM, 8, create_ADDI(Register::E::x2, Register::E::x2, 801));
-      // sw x2, 0(x1)
-      insert_4bytes(top->ROM, 12, create_SB(Register::E::x2, 1, Register::E::x1));
-      insert_4bytes(top->ROM, 16, create_LB(Register::E::x1, 1, Register::E::x2));
+      // sw x2, 1(x1)
+      insert_4bytes(top->ROM, 0, create_SB(Register::E::x2, 1, Register::E::x1));
+      // lb x3, 1(x1)
+      insert_4bytes(top->ROM, 4, create_LB(Register::E::x3, 1, Register::E::x1));
 
       top->rst = 0;
       clock_cycle();
@@ -351,21 +359,12 @@ class TestVcpuSb: public GeneralTest<Vcpu> {
       top->rst = 1;
       EXECUTE_INSTR;
 
-      ASSERT_EQUALS(top->REGISTERS[0], 0x1000);
-      EXECUTE_INSTR;
-
-      ASSERT_EQUALS(top->REGISTERS[1], 0x87654000);
-      EXECUTE_INSTR;
-
-      ASSERT_EQUALS(top->REGISTERS[1], 0x87654321);
-      EXECUTE_INSTR;
-
       ASSERT_EQUALS(top->RAM[0], 0xCA);
-      ASSERT_EQUALS(top->RAM[2], 0xCA);
       ASSERT_EQUALS(top->RAM[1], 0x21);
+      ASSERT_EQUALS(top->RAM[2], 0xCA);
       EXECUTE_INSTR;
 
-      ASSERT_EQUALS(top->REGISTERS[0], 0x00000021);
+      ASSERT_EQUALS(top->REGISTERS[2], 0x00000021);
     }
 };
 
@@ -567,36 +566,19 @@ class TestVcpuJal: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuMemory: public GeneralTest<Vcpu> {
-  public:
-    virtual void test() {
-      top->REGISTERS[1] = 0x1000;
-      top->REGISTERS[0] = 0x2342;
-      insert_4bytes(top->ROM, 0, create_SH(Register::E::x1, 0, Register::E::x2));
-
-      top->rst = 0;
-      clock_cycle();
-      clock_cycle();
-      top->rst = 1;
-      EXECUTE_INSTR;
-      ASSERT_EQUALS(top->RAM[0], 0x42);
-      ASSERT_EQUALS(top->RAM[1], 0x23);
-    }
-};
-
 int main(const int argc, char** argv) {
   cout << "---- CPU RISCV tests passed" << endl;
-  (new TestVcpuMemory())->run("vcds/cpu_memory.vcd");
-  (new TestVcpuStageCounter())->run("vcds/cpu_stage_counter.vcd");
+//  (new TestVcpuStageCounter())->run("vcds/cpu_stage_counter.vcd");
   (new TestVcpuAddi())->run("vcds/cpu_addis.vcd");
   (new TestVcpuAdd())->run("vcds/cpu_adds.vcd");
   (new TestVcpuSub())->run("vcds/cpu_subs.vcd");
   (new TestVcpuLi())->run("vcds/cpu_li.vcd");
   (new TestVcpuAuipc())->run("vcds/cpu_auipc.vcd");
-  (new TestVcpuLb())->run("vcds/cpu_lb.vcd");
+  (new TestVcpuLb_no_signextend())->run("vcds/cpu_lb_no_signextend.vcd");
+  (new TestVcpuLb_signextend())->run("vcds/cpu_lb_signextend.vcd");
   (new TestVcpuLbu())->run("vcds/cpu_lbu.vcd");
-  (new TestVcpuLh())->run("vcds/cpu_lh.vcd");
-  (new TestVcpuLhu())->run("vcds/cpu_lhu.vcd");
+  (new TestVcpuLh())->run("vcds/cpu_lb.vcd");
+  (new TestVcpuLhu())->run("vcds/cpu_lbu.vcd");
   (new TestVcpuLw())->run("vcds/cpu_lw.vcd");
   (new TestVcpuSb())->run("vcds/cpu_sb.vcd");
   (new TestVcpuSh())->run("vcds/cpu_sh.vcd");

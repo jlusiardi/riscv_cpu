@@ -28,7 +28,7 @@ check_for_binary ar
 if [ $# -ge 1 ]; then
     MODULES="$@"
 else
-    MODULES="alu memory register_file ram_memory ram_memory_synth rom_memory decoder memory_control compare_unit cpu memory_control_synth memory_synth ram_memory_synth rom_memory_synth cpu_synth"
+    MODULES="alu memory register_file decoder compare_unit memory_control memory ram_memory rom_memory cpu"
 fi
 
 for MODULE in $MODULES

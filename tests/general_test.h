@@ -67,7 +67,7 @@ class GeneralTest {
      *    can be used to turn off tracing by setting to false (event if a
      *    filename was given)
      */
-    void run(const char* filename=nullptr, bool do_trace=true) {
+    void run(const char* filename=nullptr, bool do_trace=true, bool print_stats=false) {
       if (filename && do_trace) {
         std::cout << "writing trace to '" << filename << "'." << std::endl;
         trace->open(filename);
@@ -81,8 +81,11 @@ class GeneralTest {
         trace->flush();
         trace->close();
       }
-      std::cout << "used " << this->cycles << " clock cycles." << std::endl;
-      std::cout << "executed " << this->instructions << " instructions." << std::endl;
+      if (print_stats) {
+        std::cout << "used " << this->cycles << " clock cycles, " 
+            << "executed " << this->instructions << " instructions." 
+            << std::endl;
+      }
     }
 
     /**
