@@ -11,6 +11,8 @@ check_for_binary riscv32-unknown-elf-objdump
 
 TMPDIR=`mktemp -d`
 INPUT="$1"
+# use this to enable compressed extension
+#CC_OPTS="-Wa,-march=rv32ic"
 
 cat <<EOT >> ${TMPDIR}/link.ld
 OUTPUT_FORMAT(elf32-littleriscv)
@@ -30,8 +32,8 @@ SECTIONS {
 }
 EOT
 
-riscv32-unknown-elf-gcc -c -nostdlib -ffreestanding ${INPUT}.c -o ${TMPDIR}/main.o
-riscv32-unknown-elf-gcc -c ${INPUT}.s -o ${TMPDIR}/as.o 
+riscv32-unknown-elf-gcc ${CC_OPTS} -c -nostdlib -ffreestanding ${INPUT}.c -o ${TMPDIR}/main.o
+riscv32-unknown-elf-gcc ${CC_OPTS} -c ${INPUT}.s -o ${TMPDIR}/as.o 
 riscv32-unknown-elf-ld -T${TMPDIR}/link.ld ${TMPDIR}/*.o -o ${TMPDIR}/a.out
 riscv32-unknown-elf-objcopy -O binary ${TMPDIR}/a.out ${INPUT}.rom
 
