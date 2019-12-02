@@ -1,0 +1,116 @@
+/home/jlusiardi/Dokumente/src/riscv_cpu/main/testbenches/stage_counter_synth_tb.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/testbenches/stage_counter_synth_tb.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
+-- Compiling module stage_counter_synth_tb
+
+Top level modules:
+	stage_counter_synth_tb
+
+} {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/ram_memory_synth.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/ram_memory_synth.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
+-- Compiling module ram_memory_synth
+
+Top level modules:
+	ram_memory_synth
+
+} {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/compare_unit.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/compare_unit.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
+-- Compiling module compare_unit
+
+Top level modules:
+	compare_unit
+
+} {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/memory_control_synth.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/memory_control_synth.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
+-- Compiling module memory_control_synth
+
+Top level modules:
+	memory_control_synth
+
+} {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/stage_counter_synth.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/stage_counter_synth.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
+-- Compiling module stage_counter_synth
+
+Top level modules:
+	stage_counter_synth
+
+} {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/current_instruction_register_control.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/current_instruction_register_control.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
+-- Compiling module current_instruction_register_control
+
+Top level modules:
+	current_instruction_register_control
+
+} {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/alu_control.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/alu_control.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
+-- Compiling module alu_control
+
+Top level modules:
+	alu_control
+
+} {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/arch_defines.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/arch_defines.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
+
+} {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/pc_control.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/pc_control.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
+-- Compiling module pc_control
+
+Top level modules:
+	pc_control
+
+} {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/register_file_control.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/register_file_control.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
+-- Compiling module register_file_control
+
+Top level modules:
+	register_file_control
+
+} {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/cpu_synth.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/cpu_synth.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
+-- Compiling module cpu_synth
+
+Top level modules:
+	cpu_synth
+
+} {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/memory_synth.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/memory_synth.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
+-- Compiling module memory_synth
+
+Top level modules:
+	memory_synth
+
+} {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/decoder.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/decoder.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
+-- Compiling module decoder
+
+Top level modules:
+	decoder
+
+} {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/testbenches/cpu_synth_tb.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/testbenches/cpu_synth_tb.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
+-- Compiling module cpu_synth_tb
+
+Top level modules:
+	cpu_synth_tb
+
+} {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/reg_async_reset_synth.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/reg_async_reset_synth.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
+-- Compiling module reg_async_reset_synth
+
+Top level modules:
+	reg_async_reset_synth
+
+} {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/alu.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/alu.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
+-- Compiling module alu
+
+Top level modules:
+	alu
+
+} {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/rom_memory_synth.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/rom_memory_synth.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
+-- Compiling module rom_memory_synth
+
+Top level modules:
+	rom_memory_synth
+
+} {} {}}

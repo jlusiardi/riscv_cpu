@@ -37,6 +37,6 @@ riscv32-unknown-elf-gcc ${CC_OPTS} -c ${INPUT}.s -o ${TMPDIR}/as.o
 riscv32-unknown-elf-ld -T${TMPDIR}/link.ld ${TMPDIR}/*.o -o ${TMPDIR}/a.out
 riscv32-unknown-elf-objcopy -O binary ${TMPDIR}/a.out ${INPUT}.rom
 
-riscv32-unknown-elf-objdump -d ${TMPDIR}/a.out
-riscv32-unknown-elf-size ${TMPDIR}/a.out
+#riscv32-unknown-elf-objdump -d ${TMPDIR}/a.out
+#riscv32-unknown-elf-size ${TMPDIR}/a.out
 

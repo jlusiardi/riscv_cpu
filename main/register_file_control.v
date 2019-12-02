@@ -1,6 +1,6 @@
 `ifndef ARCH_DEFINES
 `define ARCH_DEFINES
-`include "../common/arch_defines.v"
+`include "arch_defines.v"
 `endif // ARCH_DEFINES
 
 module register_file_control(
@@ -29,20 +29,22 @@ module register_file_control(
     wire use_pc;
     assign use_pc = (opcode == `RISCV_JALR || opcode == `RISCV_JAL);
 
+    reg [31:0] output_value_reg;
+
     always @(*) begin
         if (use_alu_result) begin
-            output_value = alu_result;
+            output_value_reg = alu_result;
         end else if (use_mem_result) begin
-            output_value = memory_result;
+            output_value_reg = memory_result;
         end else if (use_immediate) begin
-            output_value = immediate;
+            output_value_reg = immediate;
         end else if (use_pc) begin
-            output_value = pc + 4;
+            output_value_reg = pc + 4;
         end else begin
-            output_value = 32'b0;
+            output_value_reg = 32'b0;
         end
     end
 
     assign write_enable = (stage == `STAGE_REGISTER_UPDATE) && (use_pc || use_immediate || use_alu_result || use_mem_result);
-
+    assign output_value = output_value_reg;
 endmodule

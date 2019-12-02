@@ -4,6 +4,7 @@
 `define STAGE_EXECUTE 2
 `define STAGE_MEMORY 3
 `define STAGE_REGISTER_UPDATE 4
+`define STAGE_RESET 5
 
 `define NUM_STAGES 5
 `define STAGE_WIDTH [2:0]

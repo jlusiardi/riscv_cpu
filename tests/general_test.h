@@ -29,7 +29,11 @@ int ERROR_COUNTER = 0;
 #define EXECUTE_INSTR \
         do {\
             clock_cycle();\
-        } while (top->STAGE != STAGE_FETCH);
+        } while (top->STAGE == STAGE_FETCH);\
+        do {\
+            clock_cycle();\
+        } while (top->STAGE != STAGE_FETCH);\
+        count_instruction();
 
 template<class TOP>
 class GeneralTest {
@@ -37,6 +41,8 @@ class GeneralTest {
     TOP* top;
     VerilatedVcdC *trace;
     int time;
+    int cycles;
+    int instructions;
 
   public:
     GeneralTest() {
@@ -44,6 +50,12 @@ class GeneralTest {
       top = new TOP; 
       trace = new VerilatedVcdC;
       top->trace(trace, 99);
+      this->cycles = 0;
+      this->instructions = 0;
+    }
+
+    void count_instruction() {
+      this->instructions++;
     }
 
     /**
@@ -60,6 +72,8 @@ class GeneralTest {
         std::cout << "writing trace to '" << filename << "'." << std::endl;
         trace->open(filename);
       }
+      // have the verilator code do the initial blocks first
+      step();
       test();
       step();
       top->final();
@@ -67,6 +81,8 @@ class GeneralTest {
         trace->flush();
         trace->close();
       }
+      std::cout << "used " << this->cycles << " clock cycles." << std::endl;
+      std::cout << "executed " << this->instructions << " instructions." << std::endl;
     }
 
     /**
@@ -86,6 +102,7 @@ class GeneralTest {
       assert(top->clk == 0);
       step();
       top->clk = 1;
+      this->cycles++;
       step();
       top->clk = 0;
     }

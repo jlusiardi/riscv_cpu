@@ -11,6 +11,14 @@ module register_file(
 
     reg [31:0] registers[30:0];
 
+    integer i;
+
+    initial begin
+        for (i=0;i<=30;i=i+1) begin
+            registers[i] = 0;
+        end
+    end
+
     always @(posedge clk) begin
         if (write_enable) begin
             if (write_address != 0)

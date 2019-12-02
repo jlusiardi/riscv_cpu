@@ -1,0 +1,367 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+d/home/jlusiardi
+valu
+Z0 !s110 1575236829
+!i10b 1
+!s100 zAQWG75Jm4K`AdZ^10oHE1
+I11DGSYMTNB8lTBnEk[5h92
+Z1 VDg1SIo80bB@j0V0VzS_@n1
+Z2 d/home/jlusiardi/Dokumente/src/riscv_cpu/modelsim
+Z3 w1574058076
+8/home/jlusiardi/Dokumente/src/riscv_cpu/main/alu.v
+F/home/jlusiardi/Dokumente/src/riscv_cpu/main/alu.v
+L0 6
+Z4 OV;L;10.5c;63
+r1
+!s85 0
+31
+Z5 !s108 1575236829.000000
+!s107 /home/jlusiardi/Dokumente/src/riscv_cpu/main/arch_defines.v|/home/jlusiardi/Dokumente/src/riscv_cpu/main/alu.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/jlusiardi/Dokumente/src/riscv_cpu/main/alu.v|
+!i113 1
+Z6 o-work work
+Z7 tCvgOpt 0
+valu_control
+R0
+!i10b 1
+!s100 HV2bTEP]hfGF9<XCd6bAn0
+I7ZDg<7ACYgeQN6S>G6fhQ2
+R1
+R2
+R3
+8/home/jlusiardi/Dokumente/src/riscv_cpu/main/alu_control.v
+F/home/jlusiardi/Dokumente/src/riscv_cpu/main/alu_control.v
+L0 6
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/jlusiardi/Dokumente/src/riscv_cpu/main/arch_defines.v|/home/jlusiardi/Dokumente/src/riscv_cpu/main/alu_control.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/jlusiardi/Dokumente/src/riscv_cpu/main/alu_control.v|
+!i113 1
+R6
+R7
+vcompare_unit
+R0
+!i10b 1
+!s100 lBe[<6FoiNIhfYRd2ol4l2
+Ii5cS87AbbCVnaDi8l4Ag83
+R1
+R2
+w1575195193
+8/home/jlusiardi/Dokumente/src/riscv_cpu/main/compare_unit.v
+F/home/jlusiardi/Dokumente/src/riscv_cpu/main/compare_unit.v
+L0 6
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/jlusiardi/Dokumente/src/riscv_cpu/main/arch_defines.v|/home/jlusiardi/Dokumente/src/riscv_cpu/main/compare_unit.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/jlusiardi/Dokumente/src/riscv_cpu/main/compare_unit.v|
+!i113 1
+R6
+R7
+vcpu_synth
+R0
+!i10b 1
+!s100 2NA_hoTWCTXTd]kOTlaYG1
+I6LdP[DKiFZOjYi?d<^z[23
+R1
+R2
+w1575234416
+8/home/jlusiardi/Dokumente/src/riscv_cpu/main/cpu_synth.v
+F/home/jlusiardi/Dokumente/src/riscv_cpu/main/cpu_synth.v
+L0 6
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/jlusiardi/Dokumente/src/riscv_cpu/main/arch_defines.v|/home/jlusiardi/Dokumente/src/riscv_cpu/main/cpu_synth.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/jlusiardi/Dokumente/src/riscv_cpu/main/cpu_synth.v|
+!i113 1
+R6
+R7
+vcpu_synth_tb
+!s110 1575237571
+!i10b 1
+!s100 :RzjTSR;Ko520bLBfhJVf0
+IR>dR=^NUVATY8eJ1TAzTD0
+R1
+R2
+w1575237567
+8/home/jlusiardi/Dokumente/src/riscv_cpu/main/testbenches/cpu_synth_tb.v
+F/home/jlusiardi/Dokumente/src/riscv_cpu/main/testbenches/cpu_synth_tb.v
+L0 6
+R4
+r1
+!s85 0
+31
+!s108 1575237570.000000
+!s107 /home/jlusiardi/Dokumente/src/riscv_cpu/main/testbenches/../arch_defines.v|/home/jlusiardi/Dokumente/src/riscv_cpu/main/testbenches/cpu_synth_tb.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/jlusiardi/Dokumente/src/riscv_cpu/main/testbenches/cpu_synth_tb.v|
+!i113 1
+R6
+R7
+vcurrent_instruction_register_control
+R0
+!i10b 1
+!s100 lncKUk[8]I5fBC6z0MEn`3
+IFW0?`l4e=a]g`8MZ>[1HY0
+R1
+R2
+w1573537353
+8/home/jlusiardi/Dokumente/src/riscv_cpu/main/current_instruction_register_control.v
+F/home/jlusiardi/Dokumente/src/riscv_cpu/main/current_instruction_register_control.v
+L0 9
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/jlusiardi/Dokumente/src/riscv_cpu/main/arch_defines.v|/home/jlusiardi/Dokumente/src/riscv_cpu/main/current_instruction_register_control.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/jlusiardi/Dokumente/src/riscv_cpu/main/current_instruction_register_control.v|
+!i113 1
+R6
+R7
+vdecoder
+R0
+!i10b 1
+!s100 >k1SS`ol?ZAoh9Ee^0IMd2
+IYLlH]FO`Pz0IIllgZoC>@0
+R1
+R2
+w1575195385
+8/home/jlusiardi/Dokumente/src/riscv_cpu/main/decoder.v
+F/home/jlusiardi/Dokumente/src/riscv_cpu/main/decoder.v
+L0 6
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/jlusiardi/Dokumente/src/riscv_cpu/main/arch_defines.v|/home/jlusiardi/Dokumente/src/riscv_cpu/main/decoder.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/jlusiardi/Dokumente/src/riscv_cpu/main/decoder.v|
+!i113 1
+R6
+R7
+vmemory_control_synth
+R0
+!i10b 1
+!s100 U]HI8A8l:e3AilGI1DGj:0
+I2jW]Tnc][4H?L^z;<;LR[3
+R1
+R2
+w1575222221
+8/home/jlusiardi/Dokumente/src/riscv_cpu/main/memory_control_synth.v
+F/home/jlusiardi/Dokumente/src/riscv_cpu/main/memory_control_synth.v
+L0 6
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/jlusiardi/Dokumente/src/riscv_cpu/main/arch_defines.v|/home/jlusiardi/Dokumente/src/riscv_cpu/main/memory_control_synth.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/jlusiardi/Dokumente/src/riscv_cpu/main/memory_control_synth.v|
+!i113 1
+R6
+R7
+vmemory_synth
+R0
+!i10b 1
+!s100 ek::L5bJfE=dP`l@z<22K2
+IV]NbgMhc5FAj@FAjN?j^P1
+R1
+R2
+Z8 w1575130496
+8/home/jlusiardi/Dokumente/src/riscv_cpu/main/memory_synth.v
+F/home/jlusiardi/Dokumente/src/riscv_cpu/main/memory_synth.v
+L0 10
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/jlusiardi/Dokumente/src/riscv_cpu/main/arch_defines.v|/home/jlusiardi/Dokumente/src/riscv_cpu/main/memory_synth.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/jlusiardi/Dokumente/src/riscv_cpu/main/memory_synth.v|
+!i113 1
+R6
+R7
+vpc_control
+R0
+!i10b 1
+!s100 on;l5dT=;cBl`iCjmH8j]3
+IVL6n`?o?4Z9;7BmjCSaV_1
+R1
+R2
+w1574318846
+8/home/jlusiardi/Dokumente/src/riscv_cpu/main/pc_control.v
+F/home/jlusiardi/Dokumente/src/riscv_cpu/main/pc_control.v
+L0 6
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/jlusiardi/Dokumente/src/riscv_cpu/main/arch_defines.v|/home/jlusiardi/Dokumente/src/riscv_cpu/main/pc_control.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/jlusiardi/Dokumente/src/riscv_cpu/main/pc_control.v|
+!i113 1
+R6
+R7
+vram_memory_synth
+R0
+!i10b 1
+!s100 0OWKHW9OS2:L5;M^479_^3
+ICHUhOW]_;Hl;efMdVSAS^3
+R1
+R2
+R8
+8/home/jlusiardi/Dokumente/src/riscv_cpu/main/ram_memory_synth.v
+F/home/jlusiardi/Dokumente/src/riscv_cpu/main/ram_memory_synth.v
+L0 1
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/jlusiardi/Dokumente/src/riscv_cpu/main/ram_memory_synth.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/jlusiardi/Dokumente/src/riscv_cpu/main/ram_memory_synth.v|
+!i113 1
+R6
+R7
+vreg_async_reset_synth
+R0
+!i10b 1
+!s100 7Me>F;1z2;]H:dYaCRD@30
+IO:6YUiK>AT2=RP8nIKg5?3
+R1
+R2
+w1575195517
+8/home/jlusiardi/Dokumente/src/riscv_cpu/main/reg_async_reset_synth.v
+F/home/jlusiardi/Dokumente/src/riscv_cpu/main/reg_async_reset_synth.v
+L0 1
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/jlusiardi/Dokumente/src/riscv_cpu/main/reg_async_reset_synth.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/jlusiardi/Dokumente/src/riscv_cpu/main/reg_async_reset_synth.v|
+!i113 1
+R6
+R7
+vregister_file
+!s110 1575267929
+!i10b 1
+!s100 WaBD2zbEBk>CMNeeZDPU63
+IX]K6m^Fk>^[O5@PLQ?hkh0
+R1
+R2
+w1575267549
+8/home/jlusiardi/Dokumente/src/riscv_cpu/main/register_file.v
+F/home/jlusiardi/Dokumente/src/riscv_cpu/main/register_file.v
+L0 1
+R4
+r1
+!s85 0
+31
+!s108 1575267929.000000
+!s107 /home/jlusiardi/Dokumente/src/riscv_cpu/main/register_file.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/jlusiardi/Dokumente/src/riscv_cpu/main/register_file.v|
+!i113 1
+R6
+R7
+vregister_file_control
+R0
+!i10b 1
+!s100 k@1AkB3<XBEzK8g@>KnhV2
+IU7iEBcbUoa=OU9S5@^]W03
+R1
+R2
+w1575223836
+8/home/jlusiardi/Dokumente/src/riscv_cpu/main/register_file_control.v
+F/home/jlusiardi/Dokumente/src/riscv_cpu/main/register_file_control.v
+L0 6
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/jlusiardi/Dokumente/src/riscv_cpu/main/arch_defines.v|/home/jlusiardi/Dokumente/src/riscv_cpu/main/register_file_control.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/jlusiardi/Dokumente/src/riscv_cpu/main/register_file_control.v|
+!i113 1
+R6
+R7
+vrom_memory_synth
+R0
+!i10b 1
+!s100 Gg`DC=2OY;z6o7:Dl]XV[0
+I=ALGJfNLb1RBUAQ[VSFR;2
+R1
+R2
+R8
+8/home/jlusiardi/Dokumente/src/riscv_cpu/main/rom_memory_synth.v
+F/home/jlusiardi/Dokumente/src/riscv_cpu/main/rom_memory_synth.v
+L0 1
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/jlusiardi/Dokumente/src/riscv_cpu/main/rom_memory_synth.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/jlusiardi/Dokumente/src/riscv_cpu/main/rom_memory_synth.v|
+!i113 1
+R6
+R7
+vstage_counter_synth
+R0
+!i10b 1
+!s100 NeWLn9ISh22zoU=D[zEig2
+IJYP:F[f`OgT=ibGIO=[Xa1
+R1
+R2
+R8
+8/home/jlusiardi/Dokumente/src/riscv_cpu/main/stage_counter_synth.v
+F/home/jlusiardi/Dokumente/src/riscv_cpu/main/stage_counter_synth.v
+L0 6
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/jlusiardi/Dokumente/src/riscv_cpu/main/arch_defines.v|/home/jlusiardi/Dokumente/src/riscv_cpu/main/stage_counter_synth.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/jlusiardi/Dokumente/src/riscv_cpu/main/stage_counter_synth.v|
+!i113 1
+R6
+R7
+vstage_counter_synth_tb
+R0
+!i10b 1
+!s100 8]3`;?0g9a1;GZ^9iN5AA2
+IM@iAR7<PS?adaAz2nMnPa0
+R1
+R2
+w1575233428
+8/home/jlusiardi/Dokumente/src/riscv_cpu/main/testbenches/stage_counter_synth_tb.v
+F/home/jlusiardi/Dokumente/src/riscv_cpu/main/testbenches/stage_counter_synth_tb.v
+L0 6
+R4
+r1
+!s85 0
+31
+R5
+!s107 /home/jlusiardi/Dokumente/src/riscv_cpu/main/testbenches/../arch_defines.v|/home/jlusiardi/Dokumente/src/riscv_cpu/main/testbenches/stage_counter_synth_tb.v|
+!s90 -reportprogress|300|-work|work|-stats=none|/home/jlusiardi/Dokumente/src/riscv_cpu/main/testbenches/stage_counter_synth_tb.v|
+!i113 1
+R6
+R7
