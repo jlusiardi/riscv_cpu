@@ -3,13 +3,13 @@
 `include "../arch_defines.v"
 `endif // ARCH_DEFINES
 
-module cpu_synth_tb;
+module cpu_tb;
     reg clk_tb;
     reg rst_tb;
 
     wire [2:0] stage_tb;
 
-    cpu_synth dut(
+    cpu dut(
         .clk(clk_tb),
         .rst(rst_tb),
         .w_stage(stage_tb)
@@ -19,7 +19,7 @@ module cpu_synth_tb;
     begin: CLOCK_GENERATOR
         clk_tb = 0;
         forever begin
-            #5 
+            #5
             clk_tb = ~ clk_tb;
             if (clk_tb) begin
                 $display("stage: %d", dut.stage_counter.data);
@@ -30,7 +30,7 @@ module cpu_synth_tb;
                     $display("x1: %h", dut.register_file.registers[0]);
                 end
             end
-        end        
+        end
     end
 
     initial begin
@@ -45,4 +45,4 @@ module cpu_synth_tb;
 
     end
 
-endmodule	
+endmodule
