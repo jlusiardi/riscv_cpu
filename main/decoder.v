@@ -30,7 +30,7 @@ module decoder(
     wire [31:0] u_imm = {instruction[31:12], {12{1'b0}}};
     wire [31:0] j_imm = {{12{instruction[31]}}, instruction[19:12], instruction[20], instruction[30:21], 1'b0};
     reg [31:0] imm_reg;
-	 reg instr_valid_reg;
+	reg instr_valid_reg;
 
     always @(*)
     begin
