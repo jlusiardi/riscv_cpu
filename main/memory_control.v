@@ -4,6 +4,7 @@
 `endif // ARCH_DEFINES
 
 module memory_control(
+        input rst,
         input clk,              // the system's clock
         input start,            // indiction of the start of a memory operation,
                                 // while high on a positive clock edge store all 
@@ -30,10 +31,6 @@ module memory_control(
     reg active_reg;
     reg done_reg;
 
-	 initial begin
-        active_reg = 0;
-	 end
-
     memory mem ( 
         .read_data(read_data_reg),
         .address(address + {28'b0, offset}),
@@ -52,7 +49,14 @@ module memory_control(
     );
 
     always @(posedge clk) begin
-        if (start == 1) begin
+        if (!rst) begin
+            counter <= 0;
+            offset <= 0;
+            result_data_reg <= 0;
+            first <= 0;
+            active_reg <= 0;
+            done_reg <= 0;
+        end else if (start == 1) begin
             active_reg <= 1;
             first <= 1;
             if (mode[1:0] == 2'b0) begin

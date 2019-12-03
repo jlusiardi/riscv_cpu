@@ -101,6 +101,7 @@ module cpu(
     );
 
     memory_control mem_ctrl(
+        .rst(rst),
         .clk(clk),
         .start(
             w_start_fetch

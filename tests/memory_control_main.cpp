@@ -12,6 +12,7 @@ using namespace std;
 class TestMemoryControl_ReadSB: public GeneralTest<Vmemory_control> {
   public:
     virtual void test() {
+        top->rst=1;
         top->write_enable = 1;
         top->start=1;
         top->mode=FUNC3_SB;
@@ -33,6 +34,7 @@ class TestMemoryControl_ReadSB: public GeneralTest<Vmemory_control> {
 class TestMemoryControl_ReadSH: public GeneralTest<Vmemory_control> {
   public:
     virtual void test() {
+        top->rst=1;
         top->write_enable = 1;
         top->start=1;
         top->mode=FUNC3_SH;
@@ -57,6 +59,7 @@ class TestMemoryControl_ReadSH: public GeneralTest<Vmemory_control> {
 class TestMemoryControl_ReadSW: public GeneralTest<Vmemory_control> {
   public:
     virtual void test() {
+        top->rst=1;
         top->write_enable = 1;
         top->start=1;
         top->mode=FUNC3_SW;
@@ -87,6 +90,7 @@ class TestMemoryControl_ReadSW: public GeneralTest<Vmemory_control> {
 class TestMemoryControl_ReadLB: public GeneralTest<Vmemory_control> {
   public:
     virtual void test() {
+        top->rst=1;
         top->ROM[0x20] = 0x84;
         top->ROM[0x21] = 0x44;
 
@@ -124,6 +128,7 @@ class TestMemoryControl_ReadLB: public GeneralTest<Vmemory_control> {
 class TestMemoryControl_ReadLBU: public GeneralTest<Vmemory_control> {
   public:
     virtual void test() {
+        top->rst=1;
         top->ROM[0x20] = 0x84;
         top->ROM[0x21] = 0x44;
 
@@ -161,6 +166,7 @@ class TestMemoryControl_ReadLBU: public GeneralTest<Vmemory_control> {
 class TestMemoryControl_ReadLH: public GeneralTest<Vmemory_control> {
   public:
     virtual void test() {
+        top->rst=1;
         top->ROM[0x20] = 0x42; 
         top->ROM[0x21] = 0x23;
         top->ROM[0x22] = 0x42;
@@ -204,6 +210,7 @@ class TestMemoryControl_ReadLH: public GeneralTest<Vmemory_control> {
 class TestMemoryControl_ReadLHU: public GeneralTest<Vmemory_control> {
   public:
     virtual void test() {
+        top->rst=1;
         top->ROM[0x20] = 0x42; 
         top->ROM[0x21] = 0x23;
         top->ROM[0x22] = 0x42;
@@ -247,6 +254,7 @@ class TestMemoryControl_ReadLHU: public GeneralTest<Vmemory_control> {
 class TestMemoryControl_ReadLW: public GeneralTest<Vmemory_control> {
   public:
     virtual void test() {
+        top->rst=1;
         top->ROM[0x20] = 0x42; 
         top->ROM[0x21] = 0x23;
         top->ROM[0x22] = 0x42;
