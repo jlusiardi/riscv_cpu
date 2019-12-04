@@ -10,7 +10,7 @@ module rom_memory(
      * The rom must be initialized by the calling top modules or by the test!
      */
     /* verilator lint_off UNDRIVEN */
-    reg [7:0] mem[4 * depth - 1 : 0];
+    (* ram_init_file = "../main/riscv_cpu.mif" *) reg [7:0] mem[4 * depth - 1 : 0];
     /* verilator lint_on UNDRIVEN */
 
     assign read_data = mem[address + 0];
