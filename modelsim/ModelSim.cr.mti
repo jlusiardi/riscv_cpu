@@ -19,13 +19,6 @@ Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 2
 Top level modules:
 	compare_unit
 
-} {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/cpu.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/cpu.v
-Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
--- Compiling module cpu
-
-Top level modules:
-	cpu
-
 } {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/current_instruction_register_control.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/current_instruction_register_control.v
 Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
 -- Compiling module current_instruction_register_control
@@ -78,19 +71,19 @@ Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 2
 Top level modules:
 	decoder
 
-} {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/rom_memory.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/rom_memory.v
-Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
--- Compiling module rom_memory
-
-Top level modules:
-	rom_memory
-
 } {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/ram_memory.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/ram_memory.v
 Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
 -- Compiling module ram_memory
 
 Top level modules:
 	ram_memory
+
+} {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/memory_control.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/memory_control.v
+Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
+-- Compiling module memory_control
+
+Top level modules:
+	memory_control
 
 } {} {}} /home/jlusiardi/Dokumente/src/riscv_cpu/main/alu.v {1 {vlog -work work -stats=none /home/jlusiardi/Dokumente/src/riscv_cpu/main/alu.v
 Model Technology ModelSim - Intel FPGA Edition vlog 10.5c Compiler 2017.01 Jan 23 2017
