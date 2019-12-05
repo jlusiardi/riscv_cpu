@@ -6,25 +6,23 @@
 #include "riscv.h"
 using namespace std;
 
-#define ROM memory_control__DOT__mem__DOT__rom__DOT__mem
-#define RAM memory_control__DOT__mem__DOT__ram__DOT__mem
-
 class TestMemoryControl_ReadSB: public GeneralTest<Vmemory_control> {
   public:
     virtual void test() {
         top->rst=1;
-        top->write_enable = 1;
         top->start=1;
         top->mode=FUNC3_SB;
         top->address=0x1000;
         top->write_data = 0x00000023;
         clock_cycle();
+        ASSERT_EQUALS(top->address_to_mem, 0x1000);
+        ASSERT_EQUALS(top->data_to_mem, 0x23);
         ASSERT_EQUALS(top->active, 1);
         top->start=0;
         clock_cycle();
+        ASSERT_EQUALS(top->data_to_mem, 0x00);
         ASSERT_EQUALS(top->done, 1);
         ASSERT_EQUALS(top->active, 0);
-        ASSERT_EQUALS(top->RAM[0x0], 0x23);
         clock_cycle();
         ASSERT_EQUALS(top->done, 0);
         clock_cycle();
@@ -35,21 +33,23 @@ class TestMemoryControl_ReadSH: public GeneralTest<Vmemory_control> {
   public:
     virtual void test() {
         top->rst=1;
-        top->write_enable = 1;
         top->start=1;
         top->mode=FUNC3_SH;
         top->address=0x1000;
         top->write_data = 0x00004223;
         clock_cycle();
+        ASSERT_EQUALS(top->address_to_mem, 0x1001);
+        ASSERT_EQUALS(top->data_to_mem, 0x42);
         ASSERT_EQUALS(top->active, 1);
         top->start=0;
         clock_cycle();
+        ASSERT_EQUALS(top->address_to_mem, 0x1000);
+        ASSERT_EQUALS(top->data_to_mem, 0x23);
         ASSERT_EQUALS(top->active, 1);
         clock_cycle();
+        ASSERT_EQUALS(top->data_to_mem, 0x00);
         ASSERT_EQUALS(top->done, 1);
         ASSERT_EQUALS(top->active, 0);
-        ASSERT_EQUALS(top->RAM[0x0], 0x23);
-        ASSERT_EQUALS(top->RAM[0x1], 0x42);
         clock_cycle();
         ASSERT_EQUALS(top->done, 0);
         clock_cycle();
@@ -60,27 +60,30 @@ class TestMemoryControl_ReadSW: public GeneralTest<Vmemory_control> {
   public:
     virtual void test() {
         top->rst=1;
-        top->write_enable = 1;
         top->start=1;
         top->mode=FUNC3_SW;
         top->address=0x1000;
         top->write_data = 0x87654321;
         clock_cycle();
+        ASSERT_EQUALS(top->address_to_mem, 0x1003);
+        ASSERT_EQUALS(top->data_to_mem, 0x87);
         ASSERT_EQUALS(top->active, 1);
         top->start=0;
         clock_cycle();
+        ASSERT_EQUALS(top->address_to_mem, 0x1002);
+        ASSERT_EQUALS(top->data_to_mem, 0x65);
         ASSERT_EQUALS(top->active, 1);
         clock_cycle();
+        ASSERT_EQUALS(top->address_to_mem, 0x1001);
+        ASSERT_EQUALS(top->data_to_mem, 0x43);
         ASSERT_EQUALS(top->active, 1);
         clock_cycle();
+        ASSERT_EQUALS(top->address_to_mem, 0x1000);
+        ASSERT_EQUALS(top->data_to_mem, 0x21);
         ASSERT_EQUALS(top->active, 1);
         clock_cycle();
         ASSERT_EQUALS(top->done, 1);
         ASSERT_EQUALS(top->active, 0);
-        ASSERT_EQUALS(top->RAM[0x0], 0x21);
-        ASSERT_EQUALS(top->RAM[0x1], 0x43);
-        ASSERT_EQUALS(top->RAM[0x2], 0x65);
-        ASSERT_EQUALS(top->RAM[0x3], 0x87);
         clock_cycle();
         ASSERT_EQUALS(top->done, 0);
         clock_cycle();
@@ -91,15 +94,12 @@ class TestMemoryControl_ReadLB: public GeneralTest<Vmemory_control> {
   public:
     virtual void test() {
         top->rst=1;
-        top->ROM[0x20] = 0x84;
-        top->ROM[0x21] = 0x44;
-
-        top->write_enable = 0;
         top->start=1;
         top->mode=FUNC3_LB;
         top->address=0x20;
         clock_cycle();
         top->start=0;
+        top->data_from_mem=0x84;
         ASSERT_EQUALS(top->active, 1);
         clock_cycle();
         ASSERT_EQUALS(top->done, 1);
@@ -115,6 +115,7 @@ class TestMemoryControl_ReadLB: public GeneralTest<Vmemory_control> {
         clock_cycle();
         ASSERT_EQUALS(top->active, 1);
         top->start=0;
+        top->data_from_mem=0x44;
         clock_cycle();
         ASSERT_EQUALS(top->done, 1);
         ASSERT_EQUALS(top->active, 0);
@@ -129,16 +130,14 @@ class TestMemoryControl_ReadLBU: public GeneralTest<Vmemory_control> {
   public:
     virtual void test() {
         top->rst=1;
-        top->ROM[0x20] = 0x84;
-        top->ROM[0x21] = 0x44;
 
-        top->write_enable = 0;
         top->start=1;
         top->mode=FUNC3_LBU;
         top->address=0x20;
         clock_cycle();
         ASSERT_EQUALS(top->active, 1);
         top->start=0;
+        top->data_from_mem=0x84;
         clock_cycle();
         ASSERT_EQUALS(top->done, 1);
         ASSERT_EQUALS(top->active, 0);
@@ -153,6 +152,7 @@ class TestMemoryControl_ReadLBU: public GeneralTest<Vmemory_control> {
         clock_cycle();
         ASSERT_EQUALS(top->active, 1);
         top->start=0;
+        top->data_from_mem=0x44;
         clock_cycle();
         ASSERT_EQUALS(top->done, 1);
         ASSERT_EQUALS(top->active, 0);
@@ -167,20 +167,17 @@ class TestMemoryControl_ReadLH: public GeneralTest<Vmemory_control> {
   public:
     virtual void test() {
         top->rst=1;
-        top->ROM[0x20] = 0x42; 
-        top->ROM[0x21] = 0x23;
-        top->ROM[0x22] = 0x42;
-        top->ROM[0x23] = 0x84;
 
-        top->write_enable = 0;
         top->start=1;
         top->mode=FUNC3_LH;
         top->address=0x20;
         clock_cycle();
         ASSERT_EQUALS(top->active, 1);
         top->start=0;
+        top->data_from_mem=0x23;
         clock_cycle();
         ASSERT_EQUALS(top->active, 1);
+        top->data_from_mem=0x42;
         clock_cycle();
         ASSERT_EQUALS(top->done, 1);
         ASSERT_EQUALS(top->active, 0);
@@ -195,8 +192,10 @@ class TestMemoryControl_ReadLH: public GeneralTest<Vmemory_control> {
         clock_cycle();
         ASSERT_EQUALS(top->active, 1);
         top->start=0;
+        top->data_from_mem=0x84;
         clock_cycle();
         ASSERT_EQUALS(top->active, 1);
+        top->data_from_mem=0x42;
         clock_cycle();
         ASSERT_EQUALS(top->done, 1);
         ASSERT_EQUALS(top->active, 0);
@@ -211,19 +210,15 @@ class TestMemoryControl_ReadLHU: public GeneralTest<Vmemory_control> {
   public:
     virtual void test() {
         top->rst=1;
-        top->ROM[0x20] = 0x42; 
-        top->ROM[0x21] = 0x23;
-        top->ROM[0x22] = 0x42;
-        top->ROM[0x23] = 0x84;
-
-        top->write_enable = 0;
         top->start=1;
         top->mode=FUNC3_LHU;
         top->address=0x20;
         clock_cycle();
         ASSERT_EQUALS(top->active, 1);
         top->start=0;
+        top->data_from_mem=0x23;
         clock_cycle();
+        top->data_from_mem=0x42;
         ASSERT_EQUALS(top->active, 1);
         clock_cycle();
         ASSERT_EQUALS(top->done, 1);
@@ -239,7 +234,9 @@ class TestMemoryControl_ReadLHU: public GeneralTest<Vmemory_control> {
         clock_cycle();
         ASSERT_EQUALS(top->active, 1);
         top->start=0;
+        top->data_from_mem=0x84;
         clock_cycle();
+        top->data_from_mem=0x42;
         ASSERT_EQUALS(top->active, 1);
         clock_cycle();
         ASSERT_EQUALS(top->done, 1);
@@ -255,24 +252,22 @@ class TestMemoryControl_ReadLW: public GeneralTest<Vmemory_control> {
   public:
     virtual void test() {
         top->rst=1;
-        top->ROM[0x20] = 0x42; 
-        top->ROM[0x21] = 0x23;
-        top->ROM[0x22] = 0x42;
-        top->ROM[0x23] = 0x84;
-
-        top->write_enable = 0;
         top->start=1;
         top->mode=FUNC3_LW;
         top->address=0x20;
         clock_cycle();
         ASSERT_EQUALS(top->active, 1);
         top->start=0;
+        top->data_from_mem=0x84;
         clock_cycle();
         ASSERT_EQUALS(top->active, 1);
+        top->data_from_mem=0x42;
         clock_cycle();
         ASSERT_EQUALS(top->active, 1);
+        top->data_from_mem=0x23;
         clock_cycle();
         ASSERT_EQUALS(top->active, 1);
+        top->data_from_mem=0x42;
         clock_cycle();
         ASSERT_EQUALS(top->done, 1);
         ASSERT_EQUALS(top->active, 0);
@@ -282,7 +277,6 @@ class TestMemoryControl_ReadLW: public GeneralTest<Vmemory_control> {
         clock_cycle();
     }
 };
-
 
 int main(int argc, char** argv) {
   cout << "---- Memory Control Tests" << endl;

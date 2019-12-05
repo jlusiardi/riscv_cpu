@@ -47,6 +47,10 @@ module cpu(
     wire [31:0] w_alu_in2;
     wire [31:0] w_alu_result;
 
+    wire[7:0] w_ram_read_data;
+    wire[31:0] w_ram_address;
+    wire[7:0] w_ram_write_data;
+
     stage_counter stage_counter(
         .clk(clk),
         .rst(rst),
@@ -111,11 +115,21 @@ module cpu(
             w_stage == `STAGE_FETCH ? w_pc_output : w_register_src_0_register + w_immediate
         ),
         .mode(w_stage == `STAGE_FETCH ? 3'b010 : w_func3),
-        .write_enable(w_stage == `STAGE_MEMORY && w_opcode == `RISCV_STORE),
         .write_data(w_register_src_1_register),
         .done(w_done),
         .read_data(w_read_data),
-        .active(w_blocking_mem)
+        .active(w_blocking_mem),
+        .data_from_mem(w_ram_read_data),
+        .address_to_mem(w_ram_address),
+        .data_to_mem(w_ram_write_data)
+    );
+
+    memory mem (
+        .read_data(w_ram_read_data),
+        .address(w_ram_address),
+        .write_data(w_ram_write_data),
+        .write_enable(w_stage == `STAGE_MEMORY && w_opcode == `RISCV_STORE),
+        .clk(!clk)
     );
 
     register_file register_file(
