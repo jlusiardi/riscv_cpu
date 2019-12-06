@@ -2,19 +2,19 @@
 #include <bitset>
 
 #include "verilated.h"
-#include "Vcpu.h"
+#include "Vsoc.h"
 #include "general_test.h"
 #include "riscv.h"
 
 using namespace std;
 
-#define ROM cpu__DOT__mem__DOT__rom__DOT__mem
-#define RAM cpu__DOT__mem__DOT__ram__DOT__mem
-#define PC cpu__DOT__pc_register__DOT__Q_data
-#define STAGE cpu__DOT__stage_counter__DOT__data
-#define REGISTERS cpu__DOT__register_file__DOT__registers
+#define ROM soc__DOT__mem__DOT__rom__DOT__mem
+#define RAM soc__DOT__mem__DOT__ram__DOT__mem
+#define PC soc__DOT__cpu__DOT__pc_register__DOT__Q_data
+#define STAGE soc__DOT__cpu__DOT__stage_counter__DOT__data
+#define REGISTERS soc__DOT__cpu__DOT__register_file__DOT__registers
 
-class TestVcpuAddi: public GeneralTest<Vcpu> {
+class TestVsocAddi: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       insert_4bytes(top->ROM, 0, create_ADDI(Register::E::x1, Register::E::x0, 1));
@@ -34,7 +34,7 @@ class TestVcpuAddi: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuAdd: public GeneralTest<Vcpu> {
+class TestVsocAdd: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       insert_4bytes(top->ROM, 0, create_ADDI(Register::E::x1, Register::E::x0, 2));
@@ -54,7 +54,7 @@ class TestVcpuAdd: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuSub: public GeneralTest<Vcpu> {
+class TestVsocSub: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       insert_4bytes(top->ROM, 0, create_ADDI(Register::E::x1, Register::E::x0, 2));
@@ -77,7 +77,7 @@ class TestVcpuSub: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuLi: public GeneralTest<Vcpu> {
+class TestVsocLi: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       insert_4bytes(top->ROM, 0, create_LUI(Register::E::x15, 0xaaaab));
@@ -94,7 +94,7 @@ class TestVcpuLi: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuAuipc: public GeneralTest<Vcpu> {
+class TestVsocAuipc: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       insert_4bytes(top->ROM, 0, create_AUIPC(Register::E::x1, 1048575));
@@ -114,7 +114,7 @@ class TestVcpuAuipc: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuLb_no_signextend: public GeneralTest<Vcpu> {
+class TestVsocLb_no_signextend: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       top->REGISTERS[0] = 0x0000;
@@ -132,7 +132,7 @@ class TestVcpuLb_no_signextend: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuLb_signextend: public GeneralTest<Vcpu> {
+class TestVsocLb_signextend: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       top->REGISTERS[0] = 0x0000;
@@ -150,7 +150,7 @@ class TestVcpuLb_signextend: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuLbu: public GeneralTest<Vcpu> {
+class TestVsocLbu: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       insert_4bytes(top->RAM, 3, -1);
@@ -181,7 +181,7 @@ class TestVcpuLbu: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuLh: public GeneralTest<Vcpu> {
+class TestVsocLh: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       insert_4bytes(top->RAM, 0, 0x12345678);
@@ -215,7 +215,7 @@ class TestVcpuLh: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuLhu: public GeneralTest<Vcpu> {
+class TestVsocLhu: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       insert_4bytes(top->RAM, 3, -1);
@@ -237,7 +237,7 @@ class TestVcpuLhu: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuLw: public GeneralTest<Vcpu> {
+class TestVsocLw: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       insert_4bytes(top->RAM, 0, 0x12345678);
@@ -266,7 +266,7 @@ class TestVcpuLw: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuSw: public GeneralTest<Vcpu> {
+class TestVsocSw: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       top->RAM[0] = 0xCA;
@@ -306,7 +306,7 @@ class TestVcpuSw: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuSh: public GeneralTest<Vcpu> {
+class TestVsocSh: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       top->REGISTERS[0] = 0x1000;
@@ -338,7 +338,7 @@ class TestVcpuSh: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuSb: public GeneralTest<Vcpu> {
+class TestVsocSb: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       top->REGISTERS[0] = 0x1000;
@@ -368,7 +368,7 @@ class TestVcpuSb: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuStageCounter: public GeneralTest<Vcpu> {
+class TestVsocStageCounter: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       for (int i =0; i<512; i++) {
@@ -399,7 +399,7 @@ class TestVcpuStageCounter: public GeneralTest<Vcpu> {
   }
 };
 
-class TestVcpuBeq: public GeneralTest<Vcpu> {
+class TestVsocBeq: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       insert_4bytes(top->ROM, 0, create_BEQ(Register::E::x0, Register::E::x0, 8));
@@ -432,7 +432,7 @@ class TestVcpuBeq: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuBne: public GeneralTest<Vcpu> {
+class TestVsocBne: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       insert_4bytes(top->ROM, 0, create_BNE(Register::E::x0, Register::E::x0, 8));
@@ -465,7 +465,7 @@ class TestVcpuBne: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuSrai: public GeneralTest<Vcpu> {
+class TestVsocSrai: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       insert_4bytes(top->ROM, 0, create_LUI(Register::E::x1, 524288));
@@ -487,7 +487,7 @@ class TestVcpuSrai: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuSrli: public GeneralTest<Vcpu> {
+class TestVsocSrli: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       insert_4bytes(top->ROM, 0, create_LUI(Register::E::x1, 524288));
@@ -509,7 +509,7 @@ class TestVcpuSrli: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuSlli: public GeneralTest<Vcpu> {
+class TestVsocSlli: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       insert_4bytes(top->ROM, 0, create_LUI(Register::E::x1, 524288));
@@ -531,7 +531,7 @@ class TestVcpuSlli: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuJalr: public GeneralTest<Vcpu> {
+class TestVsocJalr: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       insert_4bytes(top->ROM, 0, create_ADDI(Register::E::x1, Register::E::x0, 16));
@@ -550,7 +550,7 @@ class TestVcpuJalr: public GeneralTest<Vcpu> {
     }
 };
 
-class TestVcpuJal: public GeneralTest<Vcpu> {
+class TestVsocJal: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
       insert_4bytes(top->ROM, 0, create_JAL(Register::E::x2, 8));
@@ -567,29 +567,29 @@ class TestVcpuJal: public GeneralTest<Vcpu> {
 };
 
 int main(const int argc, char** argv) {
-  cout << "---- CPU RISCV tests passed" << endl;
-//  (new TestVcpuStageCounter())->run("vcds/cpu_stage_counter.vcd");
-  (new TestVcpuAddi())->run("vcds/cpu_addis.vcd");
-  (new TestVcpuAdd())->run("vcds/cpu_adds.vcd");
-  (new TestVcpuSub())->run("vcds/cpu_subs.vcd");
-  (new TestVcpuLi())->run("vcds/cpu_li.vcd");
-  (new TestVcpuAuipc())->run("vcds/cpu_auipc.vcd");
-  (new TestVcpuLb_no_signextend())->run("vcds/cpu_lb_no_signextend.vcd");
-  (new TestVcpuLb_signextend())->run("vcds/cpu_lb_signextend.vcd");
-  (new TestVcpuLbu())->run("vcds/cpu_lbu.vcd");
-  (new TestVcpuLh())->run("vcds/cpu_lb.vcd");
-  (new TestVcpuLhu())->run("vcds/cpu_lbu.vcd");
-  (new TestVcpuLw())->run("vcds/cpu_lw.vcd");
-  (new TestVcpuSb())->run("vcds/cpu_sb.vcd");
-  (new TestVcpuSh())->run("vcds/cpu_sh.vcd");
-  (new TestVcpuSw())->run("vcds/cpu_sw.vcd");
-  (new TestVcpuBeq())->run("vcds/cpu_beq.vcd");
-  (new TestVcpuBne())->run("vcds/cpu_bne.vcd");
-  (new TestVcpuSrai())->run("vcds/cpu_srai.vcd");
-  (new TestVcpuSrli())->run("vcds/cpu_srli.vcd");
-  (new TestVcpuSlli())->run("vcds/cpu_slli.vcd");
-  (new TestVcpuJalr())->run("vcds/cpu_jalr.vcd");
-  (new TestVcpuJal())->run("vcds/cpu_jal.vcd");
-  cout << "$$$$ CPU RISCV tests passed" << endl;
+  cout << "---- soc RISCV tests passed" << endl;
+//  (new TestVsocStageCounter())->run("vcds/soc_stage_counter.vcd");
+  (new TestVsocAddi())->run("vcds/soc_addis.vcd");
+  (new TestVsocAdd())->run("vcds/soc_adds.vcd");
+  (new TestVsocSub())->run("vcds/soc_subs.vcd");
+  (new TestVsocLi())->run("vcds/soc_li.vcd");
+  (new TestVsocAuipc())->run("vcds/soc_auipc.vcd");
+  (new TestVsocLb_no_signextend())->run("vcds/soc_lb_no_signextend.vcd");
+  (new TestVsocLb_signextend())->run("vcds/soc_lb_signextend.vcd");
+  (new TestVsocLbu())->run("vcds/soc_lbu.vcd");
+  (new TestVsocLh())->run("vcds/soc_lb.vcd");
+  (new TestVsocLhu())->run("vcds/soc_lbu.vcd");
+  (new TestVsocLw())->run("vcds/soc_lw.vcd");
+  (new TestVsocSb())->run("vcds/soc_sb.vcd");
+  (new TestVsocSh())->run("vcds/soc_sh.vcd");
+  (new TestVsocSw())->run("vcds/soc_sw.vcd");
+  (new TestVsocBeq())->run("vcds/soc_beq.vcd");
+  (new TestVsocBne())->run("vcds/soc_bne.vcd");
+  (new TestVsocSrai())->run("vcds/soc_srai.vcd");
+  (new TestVsocSrli())->run("vcds/soc_srli.vcd");
+  (new TestVsocSlli())->run("vcds/soc_slli.vcd");
+  (new TestVsocJalr())->run("vcds/soc_jalr.vcd");
+  (new TestVsocJal())->run("vcds/soc_jal.vcd");
+  cout << "$$$$ soc RISCV tests passed" << endl;
   HANDLE_ERROR_COUNTER;
 }

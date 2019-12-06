@@ -6,7 +6,12 @@
 module cpu(
         input clk,
         input rst,
-        output[2:0] w_stage
+        output[2:0] w_stage,
+
+        input[7:0] read_from_memory,
+        output[31:0] memory_address,
+        output[7:0] write_to_memory,
+        output write_enable
     );
 
     wire w_start_fetch;
@@ -26,30 +31,26 @@ module cpu(
     wire [2:0] w_func3;
     wire [6:0] w_func7;
     wire [31:0] w_immediate;
-    /* verilator lint_off UNUSED */
-    wire w_instr_valid;
-    /* verilator lint_on UNUSED */
     wire [4:0] w_reg_dest_addr;
     wire w_jump_condition;
     wire [31:0] w_pc_input;
     wire w_pc_write_enable;
-    /* verilator lint_off UNUSED */
-    wire w_done;
-    /* verilator lint_on UNUSED */
-    // TODO what should happen, if those go high?
-    /* verilator lint_off UNUSED */
-    wire w_illegal_write_address;
-    wire w_illegal_read_address;
-    /* verilator lint_on UNUSED */
     wire w_reg_file_write_en;
     wire [31:0] w_register_dest_register;
     wire [31:0] w_alu_in1;
     wire [31:0] w_alu_in2;
     wire [31:0] w_alu_result;
 
-    wire[7:0] w_ram_read_data;
     wire[31:0] w_ram_address;
     wire[7:0] w_ram_write_data;
+
+    /* verilator lint_off UNUSED */
+    wire w_instr_valid;
+    wire w_done;
+    // TODO what should happen, if those go high?
+    wire w_illegal_write_address;
+    wire w_illegal_read_address;
+    /* verilator lint_on UNUSED */
 
     stage_counter stage_counter(
         .clk(clk),
@@ -119,17 +120,9 @@ module cpu(
         .done(w_done),
         .read_data(w_read_data),
         .active(w_blocking_mem),
-        .data_from_mem(w_ram_read_data),
+        .data_from_mem(read_from_memory),
         .address_to_mem(w_ram_address),
         .data_to_mem(w_ram_write_data)
-    );
-
-    memory mem (
-        .read_data(w_ram_read_data),
-        .address(w_ram_address),
-        .write_data(w_ram_write_data),
-        .write_enable(w_stage == `STAGE_MEMORY && w_opcode == `RISCV_STORE),
-        .clk(!clk)
     );
 
     register_file register_file(
@@ -195,5 +188,9 @@ module cpu(
         .cmp_op(w_func3),
         .jump_condition(w_jump_condition)
     );
+
+    assign write_enable = w_stage == `STAGE_MEMORY && w_opcode == `RISCV_STORE;
+    assign memory_address = w_ram_address;
+    assign write_to_memory = w_ram_write_data;
 
 endmodule

@@ -2,7 +2,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "Vcpu.h"
+#include "Vsoc.h"
 #include "cxxopts.hpp"
 #include "general_test.h"
 #include "riscv.h"
@@ -10,13 +10,13 @@
 
 using namespace std;
 
-#define ROM cpu__DOT__mem__DOT__rom__DOT__mem
-#define RAM cpu__DOT__mem__DOT__ram__DOT__mem
-#define PC cpu__DOT__pc_register__DOT__Q_data
-#define STAGE cpu__DOT__stage_counter__DOT__data
-#define REGISTERS cpu__DOT__register_file__DOT__registers
+#define ROM soc__DOT__mem__DOT__rom__DOT__mem
+#define RAM soc__DOT__mem__DOT__ram__DOT__mem
+#define PC soc__DOT__cpu__DOT__pc_register__DOT__Q_data
+#define STAGE soc__DOT__cpu__DOT__stage_counter__DOT__data
+#define REGISTERS soc__DOT__cpu__DOT__register_file__DOT__registers
 
-class RunRom : public GeneralTest<Vcpu> {
+class RunRom : public GeneralTest<Vsoc> {
 private:
   string rom_file;
   string test_file;
