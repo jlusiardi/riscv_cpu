@@ -19,6 +19,7 @@ class TestRamRead: public GeneralTest<Vram_memory> {
 
       for (int i = 0; i < 255; i++) {
         top->address = i;
+        top->output_enable = 1;
         clock_cycle();
         ASSERT_EQUALS(top->read_data, i);
         ASSERT_EQUALS(top->illegal_address, 0);

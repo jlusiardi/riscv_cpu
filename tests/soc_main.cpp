@@ -8,8 +8,8 @@
 
 using namespace std;
 
-#define ROM soc__DOT__mem__DOT__rom__DOT__mem
-#define RAM soc__DOT__mem__DOT__ram__DOT__mem
+#define ROM soc__DOT__rom__DOT__mem
+#define RAM soc__DOT__ram__DOT__mem
 #define PC soc__DOT__cpu__DOT__pc_register__DOT__Q_data
 #define STAGE soc__DOT__cpu__DOT__stage_counter__DOT__data
 #define REGISTERS soc__DOT__cpu__DOT__register_file__DOT__registers

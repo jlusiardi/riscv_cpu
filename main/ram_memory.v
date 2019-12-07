@@ -1,4 +1,5 @@
 module ram_memory(
+        output_enable,
         read_data,
         address,
         write_data,
@@ -7,6 +8,7 @@ module ram_memory(
         clk
     );
 
+    input output_enable;
     output[7:0] read_data;
     input [7:0] write_data;
     /* verilator lint_off UNUSED */
@@ -24,8 +26,11 @@ module ram_memory(
     always @(posedge clk) begin
         if (write_enable)
             mem[address] <= write_data;
-        read_data <= mem[address];
+            
     end
     assign illegal_address = (address >= 4 * depth);
+    assign read_data = output_enable ?
+                         mem[address] :
+                         8'hZ;
 
 endmodule

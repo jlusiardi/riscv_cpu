@@ -32,12 +32,31 @@ module synth_soc(
 
     );
 
-    memory mem(
+    rom_memory rom (
+        .output_enable(
+            $signed(rom_start) <= $signed(w_address)
+                && $signed(w_address) < $signed(rom_start + rom_size) ?
+            0'b1 :
+            0'b0
+        ),
+        .address(w_address - rom_start),
         .read_data(w_read_data),
-        .address(w_address),
+        .illegal_address(rom_illegal_address)
+    );
+
+    ram_memory ram (
+        .output_enable(
+            $signed(ram_start) <= $signed(w_address)
+                && $signed(w_address) < $signed(ram_start + ram_size) ?
+            0'b1 :
+            0'b0
+        ),
+        .read_data(w_read_data),
+        .address(w_address - ram_start),
         .write_data(w_write_data),
         .write_enable(w_write_enable),
-        .clk(clk_low)
+        .illegal_address(ram_illegal_address),
+        .clk(clk)
     );
 
     assign data = w_write_data;

@@ -19,6 +19,7 @@ class TestRomLegalR: public GeneralTest<Vrom_memory> {
 
       for (int i = 0; i < 512; i++) {
         top->address = i;
+        top->output_enable = 1;
         step();
         ASSERT_EQUALS(top->read_data, i % 256);
         ASSERT_EQUALS(top->illegal_address, 0);
