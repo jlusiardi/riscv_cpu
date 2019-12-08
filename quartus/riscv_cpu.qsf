@@ -69,7 +69,6 @@ set_global_assignment -name VERILOG_FILE ../main/cpu.v -hdl_version SystemVerilo
 set_global_assignment -name VERILOG_FILE ../main/current_instruction_register_control.v -hdl_version SystemVerilog_2005
 set_global_assignment -name VERILOG_FILE ../main/decoder.v -hdl_version SystemVerilog_2005
 set_global_assignment -name VERILOG_FILE ../main/memory_control.v -hdl_version SystemVerilog_2005
-set_global_assignment -name VERILOG_FILE ../main/memory.v -hdl_version SystemVerilog_2005
 set_global_assignment -name VERILOG_FILE ../main/pc_control.v -hdl_version SystemVerilog_2005
 set_global_assignment -name VERILOG_FILE ../main/ram_memory.v -hdl_version SystemVerilog_2005
 set_global_assignment -name VERILOG_FILE ../main/reg_async_reset.v -hdl_version SystemVerilog_2005

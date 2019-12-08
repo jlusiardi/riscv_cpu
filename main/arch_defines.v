@@ -1,13 +1,13 @@
 
-`define STAGE_FETCH 0
-`define STAGE_DECODE 1
-`define STAGE_EXECUTE 2
-`define STAGE_MEMORY 3
-`define STAGE_REGISTER_UPDATE 4
-`define STAGE_RESET 5
+`define STAGE_FETCH             0
+`define STAGE_DECODE            1
+`define STAGE_EXECUTE           2
+`define STAGE_MEMORY            3
+`define STAGE_REGISTER_UPDATE   4
+`define STAGE_RESET             5
 
-`define NUM_STAGES 5
-`define STAGE_WIDTH [2:0]
+`define NUM_STAGES      5
+`define STAGE_WIDTH     [2:0]
 
 `define RISCV_LUI           7'b0110111
 `define RISCV_AUIPC         7'b0010111
@@ -54,6 +54,10 @@
 `define BRANCH_LTU  3'b110
 `define BRANCH_GEU  3'b111
 
-`define RISCV_STD_OP        7'b0000000
-`define RISCV_ALT_OP        7'b0100000
+`define RISCV_STD_OP    7'b0000000
+`define RISCV_ALT_OP    7'b0100000
 
+`define RAM_SIZE    8192
+`define RAM_START   32'h00001000
+`define ROM_SIZE    2048
+`define ROM_START   32'h00000000
