@@ -38,6 +38,7 @@ module tx_uart(
         /* verilator lint_off UNUSED */
         // only the 4 lower bits are currently used.
         input[7:0] config_data,
+        input config_enable,
         /* verilator lint_on UNUSED */
         output tx_line
     );
@@ -60,80 +61,68 @@ module tx_uart(
             // keep everythin stationary for some cycles
             counter_reg <= counter_reg - 1;
         end else begin
-            if (write_enable) begin
-                write_data_reg <= write_data;
-                tx_line_reg <= 1;
-                case (config_data[3:0])
-                    `BAUD_50: begin
-                        cycles <= 1000000;
-                        counter_reg <= 1000000;
-                    end
-                    `BAUD_110: begin
-                        cycles <= 454545;
-                        counter_reg <= 454545;
-                    end
-                    `BAUD_150: begin
-                        cycles <= 333333;
-                        counter_reg <= 333333;
-                    end
-                    `BAUD_300: begin
-                        cycles <= 166666;
-                        counter_reg <= 166666;
-                    end
-                    `BAUD_1200: begin
-                        cycles <= 41666;
-                        counter_reg <= 41666;
-                    end
-                    `BAUD_2400: begin
-                        cycles <= 20833;
-                        counter_reg <= 20833;
-                    end
-                    `BAUD_4800: begin
-                        cycles <= 10416;
-                        counter_reg <= 10416;
-                    end
-                    `BAUD_9600: begin
-                        cycles <= 5208;
-                        counter_reg <= 5208;
-                    end
-                    `BAUD_19200: begin
-                        cycles <= 2604;
-                        counter_reg <= 2604;
-                    end
-                    `BAUD_38400: begin
-                        cycles <= 1302;
-                        counter_reg <= 1302;
-                    end
-                    `BAUD_57600: begin
-                        cycles <= 868;
-                        counter_reg <= 868;
-                    end
-                    `BAUD_115200: begin
-                        cycles <= 434;
-                        counter_reg <= 434;
-                    end
-                    `BAUD_230400: begin
-                        cycles <= 217;
-                        counter_reg <= 217;
-                    end
-                    `BAUD_460800: begin
-                        cycles <= 108;
-                        counter_reg <= 108;
-                    end
-                    `BAUD_500000: begin
-                        cycles <= 100;
-                        counter_reg <= 100;
-                    end
-                    `BAUD_MAX: begin
-                        cycles <= 2;
-                        counter_reg <= 2;
-                    end
-                    default: begin
-                        cycles <= 2;
-                        counter_reg <= 2;
-                    end
-                endcase
-                state_reg <= `START_BIT;
+            if (write_enable || config_enable) begin
+                if (write_enable) begin
+                    write_data_reg <= write_data;
+                    tx_line_reg <= 1;
+                    state_reg <= `START_BIT;
+                    counter_reg <= cycles;
+                end
+                if (config_enable) begin
+                    case (config_data[3:0])
+                        `BAUD_50: begin
+                            cycles <= 1000000;
+                        end
+                        `BAUD_110: begin
+                            cycles <= 454545;
+                        end
+                        `BAUD_150: begin
+                            cycles <= 333333;
+                        end
+                        `BAUD_300: begin
+                            cycles <= 166666;
+                        end
+                        `BAUD_1200: begin
+                            cycles <= 41666;
+                        end
+                        `BAUD_2400: begin
+                            cycles <= 20833;
+                        end
+                        `BAUD_4800: begin
+                            cycles <= 10416;
+                        end
+                        `BAUD_9600: begin
+                            cycles <= 5208;
+                        end
+                        `BAUD_19200: begin
+                            cycles <= 2604;
+                        end
+                        `BAUD_38400: begin
+                            cycles <= 1302;
+                        end
+                        `BAUD_57600: begin
+                            cycles <= 868;
+                        end
+                        `BAUD_115200: begin
+                            cycles <= 434;
+                        end
+                        `BAUD_230400: begin
+                            cycles <= 217;
+                        end
+                        `BAUD_460800: begin
+                            cycles <= 108;
+                        end
+                        `BAUD_500000: begin
+                            cycles <= 100;
+                        end
+                        `BAUD_MAX: begin
+                            cycles <= 2;
+                        end
+                        default: begin
+                            cycles <= 2;
+                        end
+                    endcase
+                end
             end else begin
                 if (state_reg == `START_BIT) begin
                     tx_line_reg <= 0;

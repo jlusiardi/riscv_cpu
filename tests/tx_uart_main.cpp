@@ -14,11 +14,13 @@ class TestTxUart: public GeneralTest<Vtx_uart> {
     virtual void test() {
       top->write_enable = 0;
       clock_cycle();
+      top->config_data = 0x0E;
+      top->config_enable = 1;
       clock_cycle();
+      top->config_enable = 0;
       clock_cycle();
 
       top->write_data = 2;
-      top->config_data = 0x0E;
       top->write_enable = 1;
       clock_cycle();
       top->write_enable = 0;
@@ -28,7 +30,6 @@ class TestTxUart: public GeneralTest<Vtx_uart> {
 
       top->write_data = 'H';
       top->write_enable = 1;
-      top->config_data = 0x0E;
       clock_cycle();
       top->write_enable = 0;
       for(int i = 0; i < 100 * 15; i++) {

@@ -6,7 +6,8 @@
 module soc(
         input clk,
         input rst,
-        output[2:0] leds
+        output[2:0] leds,
+        output tx_line
     );
 
     /* verilator lint_off UNUSED */
@@ -44,6 +45,16 @@ module soc(
         .write_enable(w_write_enable),
         .illegal_address(ram_illegal_address),
         .clk(!clk)
+    );
+
+    tx_uart tx_uart(
+        .write_data(w_write_data),
+        .write_enable(w_address == `UART_SEND),
+        .clk(clk),
+        .config_data(w_write_data),
+        .config_enable(w_address == `UART_CONFIG),
+        .tx_line(tx_line)
+
     );
 
     assign w_read_data =

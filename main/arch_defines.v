@@ -57,7 +57,14 @@
 `define RISCV_STD_OP    7'b0000000
 `define RISCV_ALT_OP    7'b0100000
 
-`define RAM_SIZE    8192
-`define RAM_START   32'h00001000
-`define ROM_SIZE    2048
 `define ROM_START   32'h00000000
+`define ROM_SIZE    2048
+// ROM goes till 0x00000800
+
+`define UART_CONFIG  32'h00000900
+`define UART_STATUS  32'h00000901
+`define UART_SEND    32'h00000902
+
+`define RAM_START   32'h00001000
+`define RAM_SIZE    8192
+// RAM goes till 0x00003000
