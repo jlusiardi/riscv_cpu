@@ -14,24 +14,45 @@
 `define BIT_7       8'b00000111
 `define STOP_BIT    8'b00001000
 
+`define BAUD_50      4'b0000
+`define BAUD_110     4'b0001
+`define BAUD_150     4'b0010
+`define BAUD_300     4'b0011
+`define BAUD_1200    4'b0100
+`define BAUD_2400    4'b0101
+`define BAUD_4800    4'b0110
+`define BAUD_9600    4'b0111
+`define BAUD_19200   4'b1000
+`define BAUD_38400   4'b1001
+`define BAUD_57600   4'b1010
+`define BAUD_115200  4'b1011
+`define BAUD_230400  4'b1100
+`define BAUD_460800  4'b1101
+`define BAUD_500000  4'b1110
+`define BAUD_MAX     4'b1111
 
 module tx_uart(
         input[7:0] write_data,
         input write_enable,
         input clk,
-        input[27:0] cycles,
+        /* verilator lint_off UNUSED */
+        // only the 4 lower bits are currently used.
+        input[7:0] config_data,
+        /* verilator lint_on UNUSED */
         output tx_line
     );
 
     reg[7:0] write_data_reg;
     reg tx_line_reg;
-    reg[27:0] counter_reg;
+    reg[22:0] counter_reg;
     reg[7:0] state_reg;
+    reg[22:0] cycles;
 
     initial begin
         tx_line_reg = 1;
-        counter_reg=28'd0;
-        state_reg=`START_BIT;
+        counter_reg = 23'd0;
+        state_reg=`STOP_BIT;
+        cycles = 2;
     end
 
     always @(posedge clk) begin
@@ -42,7 +63,76 @@ module tx_uart(
             if (write_enable) begin
                 write_data_reg <= write_data;
                 tx_line_reg <= 1;
-                counter_reg <= cycles -1 ;
+                case (config_data[3:0])
+                    `BAUD_50: begin
+                        cycles <= 1000000;
+                        counter_reg <= 1000000;
+                    end
+                    `BAUD_110: begin
+                        cycles <= 454545;
+                        counter_reg <= 454545;
+                    end
+                    `BAUD_150: begin
+                        cycles <= 333333;
+                        counter_reg <= 333333;
+                    end
+                    `BAUD_300: begin
+                        cycles <= 166666;
+                        counter_reg <= 166666;
+                    end
+                    `BAUD_1200: begin
+                        cycles <= 41666;
+                        counter_reg <= 41666;
+                    end
+                    `BAUD_2400: begin
+                        cycles <= 20833;
+                        counter_reg <= 20833;
+                    end
+                    `BAUD_4800: begin
+                        cycles <= 10416;
+                        counter_reg <= 10416;
+                    end
+                    `BAUD_9600: begin
+                        cycles <= 5208;
+                        counter_reg <= 5208;
+                    end
+                    `BAUD_19200: begin
+                        cycles <= 2604;
+                        counter_reg <= 2604;
+                    end
+                    `BAUD_38400: begin
+                        cycles <= 1302;
+                        counter_reg <= 1302;
+                    end
+                    `BAUD_57600: begin
+                        cycles <= 868;
+                        counter_reg <= 868;
+                    end
+                    `BAUD_115200: begin
+                        cycles <= 434;
+                        counter_reg <= 434;
+                    end
+                    `BAUD_230400: begin
+                        cycles <= 217;
+                        counter_reg <= 217;
+                    end
+                    `BAUD_460800: begin
+                        cycles <= 108;
+                        counter_reg <= 108;
+                    end
+                    `BAUD_500000: begin
+                        cycles <= 100;
+                        counter_reg <= 100;
+                    end
+                    `BAUD_MAX: begin
+                        cycles <= 2;
+                        counter_reg <= 2;
+                    end
+                    default: begin
+                        cycles <= 2;
+                        counter_reg <= 2;
+                    end
+                endcase
                 state_reg <= `START_BIT;
             end else begin
                 if (state_reg == `START_BIT) begin
@@ -57,7 +147,7 @@ module tx_uart(
                         || (state_reg == `BIT_5) 
                         || (state_reg == `BIT_6) 
                         || (state_reg == `BIT_7)) begin
-                    tx_line_reg <= ((write_data_reg & 8'b00000001 << state_reg) > state_reg) ? 1'b1 : 1'b0;
+                    tx_line_reg <= ((write_data_reg & 8'b00000001 << state_reg) > 0) ? 1'b1 : 1'b0;
                     counter_reg <= cycles;
                     state_reg <= state_reg + 1;
                 end else if (state_reg == `STOP_BIT) begin

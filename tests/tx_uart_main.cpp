@@ -12,25 +12,28 @@ using namespace std;
 class TestTxUart: public GeneralTest<Vtx_uart> {
   public:
     virtual void test() {
+      top->write_enable = 0;
       clock_cycle();
+      clock_cycle();
+      clock_cycle();
+
       top->write_data = 2;
+      top->config_data = 0x0E;
       top->write_enable = 1;
-      top->cycles = 2;
       clock_cycle();
       top->write_enable = 0;
-      for(int i = 0; i < top->cycles * 15; i++) {
+      for(int i = 0; i < 100 * 15; i++) {
         clock_cycle();
       }
 
       top->write_data = 'H';
       top->write_enable = 1;
-      top->cycles = 2;
+      top->config_data = 0x0E;
       clock_cycle();
       top->write_enable = 0;
-      for(int i = 0; i < top->cycles * 15; i++) {
+      for(int i = 0; i < 100 * 15; i++) {
         clock_cycle();
       }
-
     }
 };
 
