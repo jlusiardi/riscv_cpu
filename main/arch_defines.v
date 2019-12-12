@@ -65,6 +65,8 @@
 `define UART_STATUS  32'h00000901
 `define UART_SEND    32'h00000902
 
+`define OUT_PORT     32'h00000916
+
 `define RAM_START   32'h00001000
 `define RAM_SIZE    8192
 // RAM goes till 0x00003000

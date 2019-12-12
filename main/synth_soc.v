@@ -64,11 +64,17 @@ module synth_soc(
 
     );
 
+    out_port outport(
+        .write_data(w_write_data),
+        .write_enable(w_address == `OUT_PORT),
+        .clk(clk),
+        .out_lines(port)
+    );
+
     assign w_read_data =
                         ($signed(`RAM_START) <= $signed(w_address) && $signed(w_address) < $signed(`RAM_START + `RAM_SIZE)
                             ? w_ram_read_data : 8'b0 )
                         | ($signed(`ROM_START) <= $signed(w_address) && $signed(w_address) < $signed(`ROM_START + `ROM_SIZE)
                             ? w_rom_read_data : 8'b0 );
 
-    assign data = w_write_data;
 endmodule

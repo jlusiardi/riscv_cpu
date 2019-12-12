@@ -7,7 +7,8 @@ module soc(
         input clk,
         input rst,
         output[2:0] leds,
-        output tx_line
+        output tx_line,
+        output[7:0] port
     );
 
     /* verilator lint_off UNUSED */
@@ -55,6 +56,13 @@ module soc(
         .config_enable(w_address == `UART_CONFIG),
         .tx_line(tx_line)
 
+    );
+
+    out_port outport(
+        .write_data(w_write_data),
+        .write_enable(w_address == `OUT_PORT),
+        .clk(clk),
+        .out_lines(port)
     );
 
     assign w_read_data =
