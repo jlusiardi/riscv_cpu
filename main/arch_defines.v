@@ -6,7 +6,7 @@
 `define STAGE_REGISTER_UPDATE   4
 `define STAGE_RESET             5
 
-`define NUM_STAGES      5
+`define NUM_STAGES      6
 `define STAGE_WIDTH     [2:0]
 
 `define RISCV_LUI           7'b0110111

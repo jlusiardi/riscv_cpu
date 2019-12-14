@@ -8,7 +8,8 @@ const int STAGE_DECODE = 1;
 const int STAGE_EXECUTE = 2;
 const int STAGE_MEMORY = 3;
 const int STAGE_REGISTER_UPDATE = 4;
-const int STAGE_COUNT = 5;
+const int STAGE_RESET = 5;
+const int STAGE_COUNT = 6;
 
 struct Register {
    enum E {
