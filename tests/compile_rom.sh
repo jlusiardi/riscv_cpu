@@ -7,6 +7,7 @@ check_for_binary riscv32-unknown-elf-ld
 check_for_binary riscv32-unknown-elf-objcopy
 check_for_binary riscv32-unknown-elf-size
 check_for_binary riscv32-unknown-elf-objdump
+check_for_binary srec_cat
 
 
 TMPDIR=`mktemp -d`
@@ -21,7 +22,7 @@ ENTRY(_start);
 
 MEMORY {
   rom (rx) : ORIGIN = 0x00000000, LENGTH = 2048
-  ram (wx) : ORIGIN = 0x00000400, LENGTH = 4096
+  ram (wx) : ORIGIN = 0x00001000, LENGTH = 8912
 }
 
 SECTIONS {
@@ -36,7 +37,8 @@ riscv32-unknown-elf-gcc ${CC_OPTS} -c -nostdlib -ffreestanding ${INPUT}.c -o ${T
 riscv32-unknown-elf-gcc ${CC_OPTS} -c ${INPUT}.s -o ${TMPDIR}/as.o 
 riscv32-unknown-elf-ld -T${TMPDIR}/link.ld ${TMPDIR}/*.o -o ${TMPDIR}/a.out
 riscv32-unknown-elf-objcopy -O binary ${TMPDIR}/a.out ${INPUT}.rom
+srec_cat ${INPUT}.rom -binary -output ${INPUT}.mif -mif
 
-#riscv32-unknown-elf-objdump -d ${TMPDIR}/a.out
+riscv32-unknown-elf-objdump -d ${TMPDIR}/a.out > ${INPUT}_all.s
 #riscv32-unknown-elf-size ${TMPDIR}/a.out
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 . functions.sh
 
 check_for_binary verilator
