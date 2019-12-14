@@ -20,7 +20,7 @@ int main() {
 
     *(unsigned char *)UART_CONFIG = 0x0E;
 
-    for(int i=0;i<str_len(text)-1; i++) {
+    for(int i=0;i<str_len(text); i++) {
         *(unsigned char *)UART_SEND   = text[i];
         sleep();
     }
