@@ -1,3 +1,4 @@
+#include "uart.h"
 void volatile * const UART_CONFIG = (void *) 0x00000900;
 void volatile * const UART_SEND   = (void *) 0x00000902;
 void volatile * const MEM = (void *) 0x00001000;
@@ -18,7 +19,7 @@ int main() {
     char* text = "Hello Ceara";
     *(unsigned char *)MEM = str_len(text);
 
-    *(unsigned char *)UART_CONFIG = 0x0E;
+    *(unsigned char *)UART_CONFIG = BAUD_MAX;
 
     for(int i=0;i<str_len(text); i++) {
         *(unsigned char *)UART_SEND   = text[i];

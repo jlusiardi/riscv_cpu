@@ -14,22 +14,22 @@
 `define BIT_7       8'b00000111
 `define STOP_BIT    8'b00001000
 
-`define BAUD_50      4'b0000
-`define BAUD_110     4'b0001
-`define BAUD_150     4'b0010
-`define BAUD_300     4'b0011
-`define BAUD_1200    4'b0100
-`define BAUD_2400    4'b0101
-`define BAUD_4800    4'b0110
-`define BAUD_9600    4'b0111
-`define BAUD_19200   4'b1000
-`define BAUD_38400   4'b1001
-`define BAUD_57600   4'b1010
-`define BAUD_115200  4'b1011
-`define BAUD_230400  4'b1100
-`define BAUD_460800  4'b1101
-`define BAUD_500000  4'b1110
-`define BAUD_MAX     4'b1111
+`define BAUD_50      4'b0000    //  0 0x00
+`define BAUD_110     4'b0001    //  1 0x01
+`define BAUD_150     4'b0010    //  2 0x02
+`define BAUD_300     4'b0011    //  3 0x03
+`define BAUD_1200    4'b0100    //  4 0x04
+`define BAUD_2400    4'b0101    //  5 0x05
+`define BAUD_4800    4'b0110    //  6 0x06
+`define BAUD_9600    4'b0111    //  7 0x07
+`define BAUD_19200   4'b1000    //  8 0x08
+`define BAUD_38400   4'b1001    //  9 0x09
+`define BAUD_57600   4'b1010    // 10 0x0a
+`define BAUD_115200  4'b1011    // 11 0x0b
+`define BAUD_230400  4'b1100    // 12 0x0c
+`define BAUD_460800  4'b1101    // 13 0x0d
+`define BAUD_500000  4'b1110    // 14 0x0e
+`define BAUD_MAX     4'b1111    // 15 0x0f
 
 module tx_uart(
         input[7:0] write_data,
