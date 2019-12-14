@@ -15,6 +15,7 @@ class TestOutPort: public GeneralTest<Vout_port> {
       clock_cycle();
       top->write_data = 0xF0;
       top->write_enable = 1;
+      top->rst = 1;
       clock_cycle();
       ASSERT_EQUALS(top->out_lines, 0xF0);
       top->write_enable = 0;
