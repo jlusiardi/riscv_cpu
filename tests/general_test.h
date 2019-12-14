@@ -50,6 +50,7 @@ class GeneralTest {
       top = new TOP; 
       trace = new VerilatedVcdC;
       top->trace(trace, 99);
+      this->time = 0;
       this->cycles = 0;
       this->instructions = 0;
     }
