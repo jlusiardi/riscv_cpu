@@ -37,7 +37,7 @@ riscv32-unknown-elf-gcc ${CC_OPTS} -c -nostdlib -ffreestanding ${INPUT}.c -o ${T
 riscv32-unknown-elf-gcc ${CC_OPTS} -c ${INPUT}.s -o ${TMPDIR}/as.o 
 riscv32-unknown-elf-ld -T${TMPDIR}/link.ld ${TMPDIR}/*.o -o ${TMPDIR}/a.out
 riscv32-unknown-elf-objcopy -O binary ${TMPDIR}/a.out ${INPUT}.rom
-srec_cat ${INPUT}.rom -binary -output ${INPUT}.mif -mif
+srec_cat ${INPUT}.rom -binary -output ${INPUT}.mif -mif -enable=header -HEAder "MIF for >${INPUT}<"
 
 riscv32-unknown-elf-objdump -d ${TMPDIR}/a.out > ${INPUT}_all.s
 #riscv32-unknown-elf-size ${TMPDIR}/a.out
