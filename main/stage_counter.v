@@ -32,9 +32,10 @@ module stage_counter(
             start_memory_reg <= 0;
             start_memory_reg <= 0;
         end else if (!blocked) begin
-            if (data == (`NUM_STAGES - 1) || data == `STAGE_RESET) begin
+
+            if (data == (`STAGE_REGISTER_UPDATE) || data == `STAGE_RESET) begin
                 start_fetch_reg <= 1;
-                data <= 0;
+                data <= `STAGE_FETCH;
             end else begin
                 if (data == `STAGE_EXECUTE)
                     start_memory_reg <= 1;
