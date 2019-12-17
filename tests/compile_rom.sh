@@ -33,12 +33,12 @@ SECTIONS {
 }
 EOT
 
-riscv32-unknown-elf-gcc ${CC_OPTS} -c -nostdlib -ffreestanding ${INPUT}.c -o ${TMPDIR}/main.o
-riscv32-unknown-elf-gcc ${CC_OPTS} -c ${INPUT}.s -o ${TMPDIR}/as.o 
+riscv32-unknown-elf-gcc ${CC_OPTS} -c -nostdlib -ffreestanding ${INPUT}/${INPUT}.c -o ${TMPDIR}/main.o
+riscv32-unknown-elf-gcc ${CC_OPTS} -c ${INPUT}/${INPUT}.s -o ${TMPDIR}/as.o 
 riscv32-unknown-elf-ld -T${TMPDIR}/link.ld ${TMPDIR}/*.o -o ${TMPDIR}/a.out
-riscv32-unknown-elf-objcopy -O binary ${TMPDIR}/a.out ${INPUT}.rom
-srec_cat ${INPUT}.rom -binary -output ${INPUT}.mif -mif -enable=header -HEAder "MIF for >${INPUT}<"
+riscv32-unknown-elf-objcopy -O binary ${TMPDIR}/a.out ${INPUT}/${INPUT}.rom
+srec_cat ${INPUT}/${INPUT}.rom -binary -output ${INPUT}/${INPUT}.mif -mif -enable=header -HEAder "MIF for >${INPUT}<"
 
-riscv32-unknown-elf-objdump -d ${TMPDIR}/a.out > ${INPUT}_all.s
+riscv32-unknown-elf-objdump -d ${TMPDIR}/a.out > ${INPUT}/${INPUT}_all.s
 #riscv32-unknown-elf-size ${TMPDIR}/a.out
 

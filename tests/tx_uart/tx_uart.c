@@ -1,4 +1,4 @@
-#include "uart.h"
+#include "../uart.h"
 void volatile * const UART_CONFIG = (void *) 0x00000900;
 void volatile * const UART_SEND   = (void *) 0x00000902;
 void volatile * const MEM = (void *) 0x00001000;
