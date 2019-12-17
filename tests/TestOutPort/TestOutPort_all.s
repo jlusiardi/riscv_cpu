@@ -1,5 +1,4 @@
 
-/tmp/tmp.zTXzRzkorF/a.out:     file format elf32-littleriscv
 
 
 Disassembly of section .text:

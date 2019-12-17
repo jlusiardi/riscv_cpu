@@ -39,6 +39,6 @@ riscv32-unknown-elf-ld -T${TMPDIR}/link.ld ${TMPDIR}/*.o -o ${TMPDIR}/a.out
 riscv32-unknown-elf-objcopy -O binary ${TMPDIR}/a.out ${INPUT}/${INPUT}.rom
 srec_cat ${INPUT}/${INPUT}.rom -binary -output ${INPUT}/${INPUT}.mif -mif -enable=header -HEAder "MIF for >${INPUT}<"
 
-riscv32-unknown-elf-objdump -d ${TMPDIR}/a.out > ${INPUT}/${INPUT}_all.s
+riscv32-unknown-elf-objdump -d ${TMPDIR}/a.out | grep -v ${TMPDIR} > ${INPUT}/${INPUT}_all.s
 #riscv32-unknown-elf-size ${TMPDIR}/a.out
 
