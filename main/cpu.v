@@ -56,7 +56,7 @@ module cpu(
         .clk(clk),
         .rst(rst),
         .blocked(w_blocking_mem | w_start_fetch | w_start_memory),
-        .out(w_stage),
+        .stage(w_stage),
         .start_fetch(w_start_fetch),
         .start_memory(w_start_memory)
     );
@@ -126,6 +126,7 @@ module cpu(
     );
 
     register_file register_file(
+        .rst(rst),
         .read_address_0(w_reg_src_0_addr),
         .read_data_0(w_register_src_0_register_int),
         .read_address_1(w_reg_src_1_addr),

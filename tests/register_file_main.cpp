@@ -17,6 +17,7 @@ class TestRegisterFileRiscv: public GeneralTest<Vregister_file> {
       top->write_address = wr_add;
       top->write_data = data;
       top->write_enable = 1;
+      top->rst = 1;
 
       clock_cycle();
 

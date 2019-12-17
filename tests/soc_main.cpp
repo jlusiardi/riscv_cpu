@@ -11,7 +11,7 @@ using namespace std;
 #define ROM soc__DOT__rom__DOT__mem
 #define RAM soc__DOT__ram__DOT__mem
 #define PC soc__DOT__cpu__DOT__pc_register__DOT__Q_data
-#define STAGE soc__DOT__cpu__DOT__stage_counter__DOT__data
+#define STAGE soc__DOT__cpu__DOT__stage_counter__DOT__stage_reg
 #define REGISTERS soc__DOT__cpu__DOT__register_file__DOT__registers
 
 class TestVsocAddi: public GeneralTest<Vsoc> {
@@ -117,15 +117,17 @@ class TestVsocAuipc: public GeneralTest<Vsoc> {
 class TestVsocLb_no_signextend: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
-      top->REGISTERS[0] = 0x0000;
-      top->REGISTERS[1] = 0x1000;
-      top->RAM[0] = 0x78;
       insert_4bytes(top->ROM, 0, create_LB(Register::E::x1, 0, Register::E::x2));
 
       top->rst = 0;
       clock_cycle();
       clock_cycle();
       top->rst = 1;
+
+      top->REGISTERS[0] = 0x0000;
+      top->REGISTERS[1] = 0x1000;
+      top->RAM[0] = 0x78;
+
       EXECUTE_INSTR;
 
       ASSERT_EQUALS(top->REGISTERS[0], 0x78);
@@ -135,15 +137,17 @@ class TestVsocLb_no_signextend: public GeneralTest<Vsoc> {
 class TestVsocLb_signextend: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
-      top->REGISTERS[0] = 0x0000;
-      top->REGISTERS[1] = 0x1000;
-      top->RAM[0] = 0x88;
       insert_4bytes(top->ROM, 0, create_LB(Register::E::x1, 0, Register::E::x2));
 
       top->rst = 0;
       clock_cycle();
       clock_cycle();
       top->rst = 1;
+
+      top->REGISTERS[0] = 0x0000;
+      top->REGISTERS[1] = 0x1000;
+      top->RAM[0] = 0x88;
+
       EXECUTE_INSTR;
 
       ASSERT_EQUALS(top->REGISTERS[0], 0xFFFFFF88);
@@ -309,14 +313,6 @@ class TestVsocSw: public GeneralTest<Vsoc> {
 class TestVsocSh: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
-      top->REGISTERS[0] = 0x1000;
-      top->REGISTERS[1] = 0x87654321;
-      top->REGISTERS[2] = 0x12345678;
-
-      top->RAM[0] = 0xCA;
-      top->RAM[1] = 0xCA;
-      top->RAM[2] = 0xCA;
-      top->RAM[3] = 0xCA;
       // sh x2, 1(x1)
       insert_4bytes(top->ROM, 0, create_SH(Register::E::x2, 1, Register::E::x1));
       // lh x3, 1(x1)
@@ -326,6 +322,16 @@ class TestVsocSh: public GeneralTest<Vsoc> {
       clock_cycle();
       clock_cycle();
       top->rst = 1;
+
+      top->REGISTERS[0] = 0x1000;
+      top->REGISTERS[1] = 0x87654321;
+      top->REGISTERS[2] = 0x12345678;
+
+      top->RAM[0] = 0xCA;
+      top->RAM[1] = 0xCA;
+      top->RAM[2] = 0xCA;
+      top->RAM[3] = 0xCA;
+
       EXECUTE_INSTR;
 
       ASSERT_EQUALS(top->RAM[0], 0xCA);
@@ -341,13 +347,6 @@ class TestVsocSh: public GeneralTest<Vsoc> {
 class TestVsocSb: public GeneralTest<Vsoc> {
   public:
     virtual void test() {
-      top->REGISTERS[0] = 0x1000;
-      top->REGISTERS[1] = 0x87654321;
-      top->REGISTERS[2] = 0x12345678;
-
-      top->RAM[0] = 0xCA;
-      top->RAM[1] = 0xCA;
-      top->RAM[2] = 0xCA;
       // sw x2, 1(x1)
       insert_4bytes(top->ROM, 0, create_SB(Register::E::x2, 1, Register::E::x1));
       // lb x3, 1(x1)
@@ -357,6 +356,15 @@ class TestVsocSb: public GeneralTest<Vsoc> {
       clock_cycle();
       clock_cycle();
       top->rst = 1;
+
+      top->REGISTERS[0] = 0x1000;
+      top->REGISTERS[1] = 0x87654321;
+      top->REGISTERS[2] = 0x12345678;
+
+      top->RAM[0] = 0xCA;
+      top->RAM[1] = 0xCA;
+      top->RAM[2] = 0xCA;
+
       EXECUTE_INSTR;
 
       ASSERT_EQUALS(top->RAM[0], 0xCA);
