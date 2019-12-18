@@ -1,6 +1,7 @@
 #include <bitset>
 #include <fstream>
 #include <iostream>
+#include <chrono>
 
 #include "Vsoc.h"
 #include "cxxopts.hpp"
@@ -14,7 +15,6 @@ using namespace std;
 #define RAM soc__DOT__ram__DOT__mem
 #define PC soc__DOT__cpu__DOT__pc_register__DOT__Q_data
 #define STAGE soc__DOT__cpu__DOT__stage_counter__DOT__stage_reg
-#define STAGE soc__DOT__cpu__DOT__stage_counter__DOT__data
 #define REGISTERS soc__DOT__cpu__DOT__register_file__DOT__registers
 
 class RunRom : public GeneralTest<Vsoc> {
@@ -85,13 +85,26 @@ public:
 
     step();
     top->rst = 1;
+    do {
+        clock_cycle();
+    } while (top->STAGE == STAGE_RESET);
 
     uint32_t pc_old = -1;
+	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     // wait until the PC gets stationary ('while(while(1){})')
     while (top->PC != pc_old) {
       pc_old = top->PC;
       EXECUTE_INSTR;
     }
+	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
+	long ns = std::chrono::duration_cast<std::chrono::nanoseconds> (end - begin).count();
+	std::cout << "used " << this->cycles << " clock cycles, " 
+              << "executed " << this->instructions << " instructions." 
+              << std::endl;
+	std::cout << "used " << (int)((1.0 * this->cycles)/(ns/1000000000.0)) << " clock cycles/s, " 
+              << "executed " << (int)((1.0 * this->instructions)/(ns/1000000000.0)) << " instructions/s." 
+              << std::endl;
     if (this->test_file != "") {
       perform_tests(this->test_file);
     }
@@ -122,7 +135,7 @@ int main(int argc, char *argv[]) {
   std::string testfile = result["T"].as<std::string>();
 
   cout << "---- Testing " << romfile << endl;
-  (new RunRom(romfile, testfile))->run(vcdfile.c_str(), do_trace, true);
+  (new RunRom(romfile, testfile))->run(vcdfile.c_str(), do_trace);
   cout << "$$$$ " << romfile << " tests passed" << endl;
   HANDLE_ERROR_COUNTER;
 }

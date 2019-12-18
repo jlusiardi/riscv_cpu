@@ -59,6 +59,7 @@ module soc(
     );
 
     out_port outport(
+        .rst(rst),
         .write_data(w_write_data),
         .write_enable(w_address == `OUT_PORT),
         .clk(clk),
