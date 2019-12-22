@@ -19,7 +19,7 @@ int main() {
     char* text = "Hello Ceara";
     *(unsigned char *)MEM = str_len(text);
 
-    *(unsigned char *)UART_CONFIG = BAUD_MAX;
+    *(unsigned char *)UART_CONFIG = BAUD_500000;
 
     for(int i=0;i<str_len(text); i++) {
         *(unsigned char *)UART_SEND   = text[i];

@@ -18,7 +18,7 @@ using namespace std;
 #define STAGE soc__DOT__cpu__DOT__stage_counter__DOT__stage_reg
 #define REGISTERS soc__DOT__cpu__DOT__register_file__DOT__registers
 
-class RunRom : public GeneralTest<Vsoc> {
+class RunRom : public SerialTest<Vsoc> {
 private:
   string rom_file;
   string test_file;
@@ -77,6 +77,10 @@ public:
         signed int expected = stoi(line.substr(sep2 + 1));
         cout << expected << endl;
         ASSERT_EQUALS(read_word(top->RAM, position), expected);
+      } else if (size == "serial") {
+        string expected = line.substr(sep2 + 1);
+        cout << expected << endl;
+        ASSERT_EQUALS_STRING(this->received, expected);
       }
     }
   }
@@ -97,13 +101,13 @@ public:
       pc_old = top->PC;
       EXECUTE_INSTR;
     }
-	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+	  std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
-	long ns = std::chrono::duration_cast<std::chrono::nanoseconds> (end - begin).count();
-	std::cout << "used " << this->cycles << " clock cycles, " 
+	  long ns = std::chrono::duration_cast<std::chrono::nanoseconds> (end - begin).count();
+	  std::cout << "used " << this->cycles << " clock cycles, " 
               << "executed " << this->instructions << " instructions." 
               << std::endl;
-	std::cout << "used " << (int)((1.0 * this->cycles)/(ns/1000000000.0)) << " clock cycles/s, " 
+  	std::cout << "used " << (int)((1.0 * this->cycles)/(ns/1000000000.0)) << " clock cycles/s, " 
               << "executed " << (int)((1.0 * this->instructions)/(ns/1000000000.0)) << " instructions/s." 
               << std::endl;
     if (this->test_file != "") {

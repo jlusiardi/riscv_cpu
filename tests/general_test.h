@@ -16,6 +16,15 @@ int ERROR_COUNTER = 0;
         }\
     }
 
+#define ASSERT_EQUALS_STRING(RESULT, EXPECTED) {\
+        if (!((RESULT) == (EXPECTED))) {\
+            std::cout << "\x1B[31m[FAIL] " << std::hex << RESULT << " != " \
+                      << std::hex << (EXPECTED) << " (expected) in " << __FILE__ << ":" \
+                      << std::dec << __LINE__ << "\x1B[0m" << std::endl;\
+            ERROR_COUNTER++;\
+        }\
+    }
+
 #define HANDLE_ERROR_COUNTER {\
         if (ERROR_COUNTER > 0) { \
             exit(ERROR_COUNTER); \
@@ -136,4 +145,57 @@ class GeneralTest {
      *  Implement this function to perform actual test.
      */
     virtual void test() = 0;
+};
+
+#define IDLE_BIT -2
+#define START_BIT -1
+#define FIRST_BIT 0
+#define LAST_BIT 7
+#define STOP_BIT 8
+#define BAUD_500000_CYLCES 101
+
+template<class TOP>
+class SerialTest : public GeneralTest<TOP> {
+  protected:
+    int last_value = -1;
+    int next_cycle=0;
+    int bit = -2;
+    char rx_val;
+    std::string received;
+  public:
+    void reset_received() {
+      this->received = "";
+    }
+    /**
+     * 
+     */
+    void clock_cycle() {
+      assert(this->top->clk == 0);
+      this->step();
+      this->last_value = this->top->tx_line;
+      this->top->clk = 1;
+      this->cycles++;
+      this->step();
+      if (this->last_value and !this->top->tx_line and this->bit == IDLE_BIT) {
+        //std::cout << "Detected startbit at " << this->cycles << std::endl;
+        this->bit = START_BIT;
+        this->next_cycle = this->cycles + (BAUD_500000_CYLCES/2);
+        this->rx_val = 0;
+      }
+      this->last_value = this->top->tx_line;
+      if (this->cycles == this->next_cycle) {
+          if (this->bit >= FIRST_BIT && this->bit <= LAST_BIT) {
+            this->rx_val |= (this->top->tx_line << this->bit);
+          }
+          this->bit++;
+          this->next_cycle = this->cycles + BAUD_500000_CYLCES;
+      }
+      if (this->bit==STOP_BIT) {
+        this->next_cycle = 0;
+        this->bit = IDLE_BIT;
+        this->received += this->rx_val;
+        //std::cout << "STOP BIT '" << this->rx_val << "' " << (int)(this->rx_val) << " " << std::endl;
+      }
+      this->top->clk = 0;
+    }
 };

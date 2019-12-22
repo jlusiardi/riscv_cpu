@@ -62,7 +62,7 @@ Disassembly of section .text:
   c4:	00e78023          	sb	a4,0(a5) # 1000 <MEM+0xea8>
   c8:	000017b7          	lui	a5,0x1
   cc:	90078793          	addi	a5,a5,-1792 # 900 <MEM+0x7a8>
-  d0:	00f00713          	li	a4,15
+  d0:	00e00713          	li	a4,14
   d4:	00e78023          	sb	a4,0(a5)
   d8:	fe042623          	sw	zero,-20(s0)
   dc:	0300006f          	j	10c <main+0x74>
