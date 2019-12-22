@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <chrono>
+#include <algorithm>
 
 #include "Vsoc.h"
 #include "cxxopts.hpp"
@@ -131,7 +132,10 @@ int main(int argc, char *argv[]) {
 
   bool do_trace = result["t"].as<bool>();
   std::string romfile = result["f"].as<std::string>();
-  std::string vcdfile = "vcds/" + result["f"].as<std::string>() + ".vcd";
+  std::string vcdfile = result["f"].as<std::string>();
+  std::cout << vcdfile << std::endl;
+  std::replace(vcdfile.begin(), vcdfile.end(), '/', '_');
+  vcdfile = "vcds/" + vcdfile + ".vcd";
   std::string testfile = result["T"].as<std::string>();
 
   cout << "---- Testing " << romfile << endl;
