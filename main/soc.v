@@ -63,7 +63,7 @@ module soc(
         .write_data(w_write_data),
         .write_enable(w_address == `OUT_PORT),
         .clk(clk),
-        .out_lines(port)
+        .port(port)
     );
 
     assign w_read_data =

@@ -8,6 +8,8 @@
 #include "cxxopts.hpp"
 #include "general_test.h"
 #include "riscv.h"
+#include "SerialTest.h"
+#include "OutPortTest.h"
 #include "verilated.h"
 
 using namespace std;
@@ -18,13 +20,20 @@ using namespace std;
 #define STAGE soc__DOT__cpu__DOT__stage_counter__DOT__stage_reg
 #define REGISTERS soc__DOT__cpu__DOT__register_file__DOT__registers
 
-class RunRom : public SerialTest<Vsoc> {
+class RunRom : public GeneralTest<Vsoc> {
 private:
   string rom_file;
   string test_file;
-
+  SerialTest<Vsoc>* serialTest;
+  OutPortTest<Vsoc>* outportTest;
 public:
-  RunRom(string rom_file, string test_file="") : rom_file(rom_file), test_file(test_file) {}
+  RunRom(string rom_file, string test_file="") : rom_file(rom_file), test_file(test_file) {
+    serialTest = new SerialTest<Vsoc>(this->top);
+    this->addHardwareAddonTest(this->serialTest);
+
+    outportTest = new OutPortTest<Vsoc>(this->top);
+    this->addHardwareAddonTest(this->outportTest);
+  }
 
   void load_rom(string filename) {
     ifstream myfile;
@@ -80,7 +89,11 @@ public:
       } else if (size == "serial") {
         string expected = line.substr(sep2 + 1);
         cout << expected << endl;
-        ASSERT_EQUALS_STRING(this->received, expected);
+        ASSERT_EQUALS_STRING(this->serialTest->get_received(), expected);
+      } else if (size == "port") {
+        string expected = line.substr(sep2 + 1);
+        cout << expected << endl;
+        ASSERT_EQUALS_STRING(this->outportTest->get_received(), expected);
       }
     }
   }
@@ -95,7 +108,7 @@ public:
     } while (top->STAGE == STAGE_RESET);
 
     uint32_t pc_old = -1;
-	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+	  std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     // wait until the PC gets stationary ('while(while(1){})')
     while (top->PC != pc_old) {
       pc_old = top->PC;
@@ -110,6 +123,7 @@ public:
   	std::cout << "used " << (int)((1.0 * this->cycles)/(ns/1000000000.0)) << " clock cycles/s, " 
               << "executed " << (int)((1.0 * this->instructions)/(ns/1000000000.0)) << " instructions/s." 
               << std::endl;
+
     if (this->test_file != "") {
       perform_tests(this->test_file);
     }

@@ -8,7 +8,7 @@ module out_port(
         input write_enable,
         input rst,
         input clk,
-        output[7:0] out_lines
+        output[7:0] port
     );
 
     reg[7:0] write_data_reg;
@@ -21,5 +21,5 @@ module out_port(
         end
     end
 
-    assign out_lines = write_data_reg;
+    assign port = write_data_reg;
 endmodule
