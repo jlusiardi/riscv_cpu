@@ -16,5 +16,5 @@ quartus_asm --read_settings_files=off --write_settings_files=off riscv_cpu -c ri
 
 quartus_sta riscv_cpu -c riscv_cpu
 
-CABLE_NAME=`quartus_pgm -l | grep -v "Info" | sed 's/.*) //'`
+CABLE_NAME=`quartus_pgm -l | grep -v "Info" | sed -E 's/[0-9]+\) //'`
 quartus_pgm -c "${CABLE_NAME}" output_files/riscv_cpu.cdf
