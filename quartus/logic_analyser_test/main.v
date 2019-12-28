@@ -1,7 +1,8 @@
-module logic_analyser_test(
+module main(
         input clk,
         input rst,
-        output [7:0] port
+        output [7:0] port,
+        output clk_out
     );
 	 
     wire w_clk_low;
@@ -29,4 +30,5 @@ module logic_analyser_test(
     assign port[5] = counter[5];
     assign port[6] = counter[6];
     assign port[7] = counter[7];
+    assign clk_out = w_clk_low;
 endmodule

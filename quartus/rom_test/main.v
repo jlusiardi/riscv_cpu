@@ -1,7 +1,8 @@
 module main(
         input clk,
         input rst,
-        output [7:0] port
+        output [7:0] port,
+        output clk_out
     );
 	 
     wire w_clk_low;
@@ -39,5 +40,6 @@ module main(
     assign port[4] = w_data[4];
     assign port[5] = w_data[5];
     assign port[6] = w_data[6];
-    assign port[7] = w_clk_low; // w_data[7];
+    assign port[7] = w_data[7];
+    assign clk_out = w_clk_low;
 endmodule
