@@ -1,8 +1,15 @@
 #!/usr/bin/env bash
 
-set -e
-
 cd $1
+
+TMPFILE=`mktemp`
+function cleanup()
+{
+	echo "cleaning up $TMPFILE"
+    rm $TMPFILE
+}
+
+trap cleanup EXIT
 
 . ../../tests/functions.sh
 
@@ -13,27 +20,34 @@ check_for_binary quartus_sta
 check_for_binary quartus_pgm
 check_for_binary sigrok-cli
 
-PATTERN="Warning ("
+PATTERN="Warning|Error"
+PATTERN=".*"
 
 echo "#########################################################"
 echo "# Mapping!                                              #"
 echo "#########################################################"
-quartus_map --read_settings_files=on --write_settings_files=off main | grep "$PATTERN" || true
+quartus_map --read_settings_files=on --write_settings_files=off main > $TMPFILE
+RESULT=$?
+cat /tmp/foo | grep -E "$PATTERN" || true
+echo $RESULT
+if [ $RESULT -ne 0 ]; then
+	exit $RESULT
+fi
 
 echo "#########################################################"
 echo "# Fitting!                                              #"
 echo "#########################################################"
-quartus_fit --read_settings_files=off --write_settings_files=off main | grep "$PATTERN" || true
+quartus_fit --read_settings_files=off --write_settings_files=off main | grep -E "$PATTERN" || true
 
 echo "#########################################################"
 echo "# Assembling!                                           #"
 echo "#########################################################"
-quartus_asm --read_settings_files=off --write_settings_files=off main | grep "$PATTERN" || true
+quartus_asm --read_settings_files=off --write_settings_files=off main | grep -E "$PATTERN" || true
 
 echo "#########################################################"
 echo "# Analysing timing                                      #"
 echo "#########################################################"
-quartus_sta main | grep "$PATTERN" || true
+quartus_sta main | grep -E "$PATTERN" || true
 
 CABLE_NAME=`quartus_pgm -l | grep -v "Info" | sed -E 's/[0-9]+\) //'`
 
@@ -59,8 +73,6 @@ echo "# Flashing!                                             #"
 echo "#########################################################"
 quartus_pgm -c "${CABLE_NAME}" output_files/main.cdf | grep "$PATTERN" || true
 
-
-LA_DEV=`sigrok-cli -d fx2lafw --scan | grep -v "The following" | sed 's/ - .*//'`
-sigrok-cli -d ${LA_DEV} --config samplerate="16 MHz" \
-	-P parallel:d0=D0:d1=D1:d2=D2:d3=D3:d4=D4:d5=D5:d6=D6:d7=D7 \
-	--samples 200
+if [[ -x "check_output.sh" ]]; then
+	./check_output.sh
+fi
