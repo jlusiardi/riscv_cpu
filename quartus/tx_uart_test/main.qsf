@@ -51,14 +51,15 @@ set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
 set_location_assignment PIN_17 -to clk
 set_location_assignment PIN_144 -to rst
 
-set_location_assignment PIN_121 -to port[0]
-set_location_assignment PIN_120 -to port[1]
-set_location_assignment PIN_119 -to port[2]
-set_location_assignment PIN_118 -to port[3]
-set_location_assignment PIN_115 -to port[4]
-set_location_assignment PIN_114 -to port[5]
-set_location_assignment PIN_113 -to port[6]
-set_location_assignment PIN_112 -to port[7]
+set_location_assignment PIN_104 -to clk_out
+set_location_assignment PIN_93 -to port[0]
+set_location_assignment PIN_94 -to port[1]
+set_location_assignment PIN_96 -to port[2]
+set_location_assignment PIN_97 -to port[3]
+set_location_assignment PIN_99 -to port[4]
+set_location_assignment PIN_100 -to port[5]
+set_location_assignment PIN_101 -to port[6]
+set_location_assignment PIN_103 -to port[7]
 
 set_location_assignment PIN_32 -to tx_line
 
