@@ -28,16 +28,18 @@ echo "# Mapping!                                              #"
 echo "#########################################################"
 quartus_map --read_settings_files=on --write_settings_files=off main > $TMPFILE
 RESULT=$?
-cat /tmp/foo | grep -E "$PATTERN" || true
+cat $TMPFILE | grep -E "$PATTERN" || true
 echo $RESULT
 if [ $RESULT -ne 0 ]; then
 	exit $RESULT
 fi
+cat output_files/main.map.summary
 
 echo "#########################################################"
 echo "# Fitting!                                              #"
 echo "#########################################################"
 quartus_fit --read_settings_files=off --write_settings_files=off main | grep -E "$PATTERN" || true
+cat output_files/main.fit.summary
 
 echo "#########################################################"
 echo "# Assembling!                                           #"
@@ -48,6 +50,7 @@ echo "#########################################################"
 echo "# Analysing timing                                      #"
 echo "#########################################################"
 quartus_sta main | grep -E "$PATTERN" || true
+cat output_files/main.sta.summary
 
 CABLE_NAME=`quartus_pgm -l | grep -v "Info" | sed -E 's/[0-9]+\) //'`
 
