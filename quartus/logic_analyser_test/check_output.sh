@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+. ../../tests/functions.sh
+
 TMPFILE=`mktemp`
 function cleanup()
 {
@@ -9,9 +11,11 @@ function cleanup()
 
 trap cleanup EXIT
 
+set_green_foreground
 echo "#########################################################"
 echo "# Testing!                                              #"
 echo "#########################################################"
+set_normal_foreground
 
 LA_DEV=`sigrok-cli -d fx2lafw --scan | grep -v "The following" | sed 's/ - .*//'`
 sigrok-cli -d ${LA_DEV} \

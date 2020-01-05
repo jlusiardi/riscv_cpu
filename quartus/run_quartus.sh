@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-cd $1
+DIRECTORY=$1
+shift
+LOGLEVEL=$1
+shift
+
+cd $DIRECTORY
 
 TMPFILE=`mktemp`
 function cleanup()
@@ -20,37 +25,62 @@ check_for_binary quartus_sta
 check_for_binary quartus_pgm
 check_for_binary sigrok-cli
 
-PATTERN="Warning|Error"
-PATTERN=".*"
+if [ "$LOGLEVEL" = "LESS" ]; then
+	PATTERN="Warning|Error"
+else
+	PATTERN=".*"
+fi
 
+set_green_foreground
 echo "#########################################################"
 echo "# Mapping!                                              #"
 echo "#########################################################"
+set_normal_foreground
 quartus_map --read_settings_files=on --write_settings_files=off main > $TMPFILE
 RESULT=$?
 cat $TMPFILE | grep -E "$PATTERN" || true
-echo $RESULT
 if [ $RESULT -ne 0 ]; then
 	exit $RESULT
 fi
-cat output_files/main.map.summary
+show_file output_files/main.map.summary
 
+set_green_foreground
 echo "#########################################################"
 echo "# Fitting!                                              #"
 echo "#########################################################"
-quartus_fit --read_settings_files=off --write_settings_files=off main | grep -E "$PATTERN" || true
-cat output_files/main.fit.summary
+set_normal_foreground
+quartus_fit --read_settings_files=off --write_settings_files=off main > $TMPFILE
+RESULT=$?
+cat $TMPFILE | grep -E "$PATTERN" || true
+if [ $RESULT -ne 0 ]; then
+	exit $RESULT
+fi
+show_file output_files/main.fit.summary
 
+set_green_foreground
 echo "#########################################################"
 echo "# Assembling!                                           #"
 echo "#########################################################"
-quartus_asm --read_settings_files=off --write_settings_files=off main | grep -E "$PATTERN" || true
+set_normal_foreground
+quartus_asm --read_settings_files=off --write_settings_files=off main > $TMPFILE
+RESULT=$?
+cat $TMPFILE | grep -E "$PATTERN" || true
+if [ $RESULT -ne 0 ]; then
+	exit $RESULT
+fi
 
+set_green_foreground
 echo "#########################################################"
 echo "# Analysing timing                                      #"
 echo "#########################################################"
-quartus_sta main | grep -E "$PATTERN" || true
-cat output_files/main.sta.summary
+set_normal_foreground
+quartus_sta main > $TMPFILE
+RESULT=$?
+cat $TMPFILE | grep -E "$PATTERN" || true
+if [ $RESULT -ne 0 ]; then
+	exit $RESULT
+fi
+show_file output_files/main.sta.summary
 
 CABLE_NAME=`quartus_pgm -l | grep -v "Info" | sed -E 's/[0-9]+\) //'`
 
@@ -71,10 +101,17 @@ AlteraBegin;
 AlteraEnd;
 EOF
 
+set_green_foreground
 echo "#########################################################"
 echo "# Flashing!                                             #"
 echo "#########################################################"
-quartus_pgm -c "${CABLE_NAME}" output_files/main.cdf | grep "$PATTERN" || true
+set_normal_foreground
+quartus_pgm -c "${CABLE_NAME}" output_files/main.cdf > $TMPFILE
+RESULT=$?
+cat $TMPFILE | grep -E "$PATTERN" || true
+if [ $RESULT -ne 0 ]; then
+	exit $RESULT
+fi
 
 if [[ -x "check_output.sh" ]]; then
 	./check_output.sh
