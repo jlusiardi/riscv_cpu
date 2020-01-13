@@ -7,7 +7,7 @@ module clock_divider(
     /*
      * The f(clk_out) = f(clk_in) / DIVISOR
      */
-    parameter DIVISOR = 28'd5000000;
+    parameter DIVISOR = 28'd50;
 
     reg[27:0] counter=28'd0;
     always @(posedge clk_in)
@@ -19,6 +19,6 @@ module clock_divider(
         end
     end
 
-    assign clk_out = (counter < DIVISOR/2 ) ? 1'b0 : 1'b1;
+    assign clk_out = (counter == DIVISOR-1) ? 1'b0 : 1'b1;
 endmodule
 
